@@ -1,0 +1,1103 @@
+var comboIndex=1;													//表格
+var timeout = null; 												//延迟调用对象
+var inLazy=true; 
+var canEnter=true;
+
+
+var TextComboSimple=function(param){
+	/*初始化私有变量和方法*/	
+	var index=comboIndex++;							//当前Combo的序列号
+	//定义基本参数(外部)
+	var div=param.div_id;							//总DivId
+	var gridBase=param.grid_id;						//数据源DivId
+	var name=param.name;							//表单提交时的name
+	var change=param.grid_onChange;					//选择表格数据后所执行的业务事件
+	var columnShow=param.columnShow;				//文本框中数据取自哪一列
+	//定义基本参数(内部)
+	var textId="comboText"+index;					//文本框Id
+	var btnDivId="comboBtn"+index;					//放置清除和下拉按钮的DivId
+	var loadingDivId="loadingDiv"+index;			//放置加载效果图片的DivId
+	var currentTr=null;								//当前选中的TR对应的JQuery对象
+	var tableBase=null;								//数据源table
+	var gridFocus=false;							//是否正在操作当前表格
+	var keyEnter=param.onEnter;						//文本框回车或选中时的回调
+	//定义基本方法(内部)
+	var disable=function(){
+		$("#"+textId).attr("disabled","disabled");
+		$("#"+btnDivId+" a").attr("disabled","disabled");
+	};
+	var enable=function(){
+		$("#"+textId).removeAttr("disabled");
+		$("#"+btnDivId+" a").removeAttr("disabled");
+	};
+	var setText=function(val){
+		$("#"+textId).val(val);
+	};
+	var getText=function(){
+		return $("#"+textId).val();
+	};
+	var clear=function(){	
+		setText("");
+	};	
+	var hideGrid=function(){
+		$("#"+gridBase).hide();
+	};	
+	
+	//选中第一条
+	var selectFirst=function(){
+		if(currentTr!=null){
+			currentTr.removeClass("tablelist_now");
+			currentTr.children("td:eq(0)").removeClass("ico_now");
+		}		
+		currentTr=tableBase.children("tr:first").addClass("tablelist_now");		
+		currentTr.children("td:eq(0)").addClass("ico_now");
+	};
+	//选中下一条
+	var selectNext=function(){
+		if(currentTr!=null){
+			var next=currentTr.next();
+			if(next.size()>0){
+				currentTr.removeClass("tablelist_now");
+				currentTr.children("td:eq(0)").removeClass("ico_now");
+				currentTr=next.addClass("tablelist_now");
+				currentTr.children("td:eq(0)").addClass("ico_now");
+			}
+		}		
+		locationScroll(currentTr,$("#"+gridBase+" .tablelist"),"top");		
+	};	
+	//选中上一条
+	var selectPrevious=function(){
+		if(currentTr!=null){
+			var prev=currentTr.prev();
+			if(prev.size()>0){
+				currentTr.removeClass("tablelist_now");
+				currentTr.children("td:eq(0)").removeClass("ico_now");
+				currentTr=prev.addClass("tablelist_now");
+				currentTr.children("td:eq(0)").addClass("ico_now");
+			}
+		}
+		locationScroll(currentTr,$("#"+gridBase+" .tablelist"),"bottom");
+	};
+	var focus=function(){
+		$("#"+textId).focus();
+	};
+	//定义基本方法(外部)	
+	this.setText=setText;					//设置文本内容，不会触发查询
+	this.getText=getText;					//获得文本内容
+	this.clear=clear;						//清除内容，不会触发查询
+	this.disable=disable;					//禁用
+	this.enable=enable;						//启用
+	this.focus=focus;
+	//定义事件
+	var onTextChange=function() {			//文本框内容改变事件
+		if($("#"+textId).val()==" "){
+			setText("");
+			if($("#"+gridBase).is(":hidden")){
+				selectFirst();
+				$("#"+gridBase).show();
+			}
+			return;
+		}
+		//如果清空文本框则清空value，清空时触发业务事件
+		if(getText()==""){
+			hideGrid();
+			return;
+		}
+	};	
+	var onComboClick=function(){			//Combo按钮点击事件
+		gridFocus=true;
+		selectFirst();
+		if($("#"+gridBase).is(":hidden")){			
+			$("#"+gridBase).show();
+			if(!$(document.activeElement).is($("#"+textId))){
+				$("#"+textId).focus();
+			}
+		}
+		else{
+			hideGrid();
+			$("#"+textId).focus();
+		}
+	};
+	var onTextKeyUp=function(event){			//文本框按键事件
+		var isHide=$("#"+gridBase).is(":hidden");	
+		//显示按上——选中上一条，如果选中第一条则无操作
+		if(event.keyCode==38&&!isHide&&currentTr!=null){
+			selectPrevious();
+			$("#"+textId).focus();
+			return;
+		}
+		//显示按下——选中下一条，如果选中最后一条则无操作
+		if(event.keyCode==40){
+			if(isHide){
+				selectFirst();
+				$("#"+gridBase).show();
+			}
+			else if(currentTr!=null){
+				selectNext();
+				$("#"+textId).focus();
+			}
+			return;
+		}
+		//显示回车——提交选中
+		if(event.keyCode==13){			
+			if(!isHide){
+				if(currentTr!=null){
+					var name =currentTr.children("td:eq("+columnShow+")").text();
+					setText(name);
+					hideGrid();
+					change(currentTr);
+				}
+			}
+			keyEnter();			
+		}
+	};
+	var onTextBlur=function(event){			//文本框失去焦点事件
+		setTimeout(function(){onblurEventDelay(event);}, 300);
+	};
+	var onblurEventDelay=function(event){
+		if(gridFocus==false){
+			hideGrid();
+		}
+		else{
+			$("#"+textId).focus();
+			gridFocus=false;
+		}
+	};
+	var onRowSelected=function(){	//表格行选中事件
+		currentTr=$(this);
+		var name =currentTr.children("td:eq("+columnShow+")").text();
+		setText(name);
+		hideGrid();
+		$("#"+textId).focus();
+		change(currentTr);
+		keyEnter();
+	};
+	//初始化并建立索引
+	var init=function(){
+		$("#"+btnDivId).hide();
+		$("#"+loadingDivId).show();		
+		//初始化两个表格以及相关变量
+		tableBase=$("#"+gridBase+" .tablelist table>tbody");
+		tableBase.children("tr").click(onRowSelected);
+		$("#"+gridBase+" .tablelist").scroll(function(){
+			gridFocus=true;
+		});
+		$("#"+btnDivId).show();
+		$("#"+loadingDivId).hide();		
+	};
+	/*NipCombo的初始化和构造*/
+	//1、创建对应页面元素，配置样式和属性	
+	var realWidth=$("#"+div).width()-2;
+	var inputWidth=realWidth-13;
+	$("#"+div)
+	.width(realWidth)
+	.addClass("comboDiv")
+	.append(
+		$("<div></div>")
+		.attr("id",btnDivId)
+		.addClass("textDiv")
+		.append(
+			$("<input/>")
+			.attr("id",textId)
+			.attr("type","text")
+			.attr("name",name)
+			.width(inputWidth)
+		)
+		.append($("<a></a>").addClass("combobox-btn fa fa-chevron-down"))
+		.append("<p/>")
+		.append(
+			$("#"+gridBase)
+			.addClass("gridDiv")
+			.hide()
+		)
+	)
+	.append(
+		$("<div></div>")
+		.attr("id",loadingDivId)
+		.addClass("loadDiv")
+		.width(realWidth)
+		.hide()
+	);
+	//3、绑定文本框事件
+	$("#"+textId)
+	.bind("input",onTextChange)	
+	.bind("keyup",onTextKeyUp)
+	.bind("blur",onTextBlur)
+	.bind("click",function(){
+		$(this).select();
+	});
+	//4、绑定Combo下拉按钮点击事件
+	$("#"+div+" a.combobox-btn").click(onComboClick);
+	$("#"+gridBase).click(function(){
+		gridFocus=true;
+	});
+	//5、建立索引
+	setTimeout(function(){init();}, 100);	
+};
+
+var TEXTCOMBO_PARAM_TEMPLATE={			//下拉Grid参数模板
+	div_id:"somediv1", 					//对应表单DIV的id
+	grid_id:"somediv2", 				//对应数据源Grid的Id
+	name:"",							//在表单中对应的提交name
+	columnShow:1,						//将要在文本框中显示的列序号
+	clearOff:false,						//是否禁用clear按钮
+	grid_onChange:function(){},			//选择事件，传入被选中的tr对象，这是一个JQuery对象
+	searchColumn:[2,1],					//要搜索的列下标以及顺序，[2,1]就是优先搜索第3列，然后搜索第2列
+	lockBy:null,						//锁定Grid，传入数组[top,left]
+	onEnter:function(){},				//回车以后的回调方法
+	onClear:function(){},				//清空文本后的回调方法
+};
+var TextCombo=function(param){
+	/*初始化私有变量和方法*/	
+	var index=comboIndex++;							//当前Combo的序列号
+	//定义基本参数(外部)
+	var defaultParam=cloneJson(TEXTCOMBO_PARAM_TEMPLATE);//克隆的默认参数
+	//使用传递的参数覆盖默认参数
+	for(var key in param){
+		if(param[key]!=null){
+			defaultParam[key]=param[key];
+		}
+	}
+	var div=defaultParam.div_id;							//总DivId
+	var gridId = defaultParam.grid_id;					//参数定义的数据源divId
+	var gridBase=null;									//(真正使用的)数据源DivId
+	var name=defaultParam.name;							//表单提交时的name
+	var change=defaultParam.grid_onChange;					//选择表格数据后所执行的业务事件
+	var columnShow=defaultParam.columnShow;				//文本框中数据取自哪一列
+	var searchCol=defaultParam.searchColumn;				//搜索列
+	var clearOff=defaultParam.clearOff;					//是否禁用clear
+	var lockBy=defaultParam.lockBy;						//锁定Grid，传入数组[top,left]
+	var keyEnter=defaultParam.onEnter;						//文本框回车或选中时的回调
+	var textBlur=defaultParam.onTextBlur;				//文本框失去焦点事件
+	var onClear=defaultParam.onClear;					
+	//定义基本参数(内部)
+	var textId="comboText"+index;					//文本框Id
+	var hideTextId="comboHidden"+index;				//隐式文本框Id，用来提交表单
+	var btnDivId="comboBtn"+index;					//放置清除和下拉按钮的DivId
+	var loadingDivId="loadingDiv"+index;			//放置加载效果图片的DivId
+	var currentTr=null;								//当前选中的TR对应的JQuery对象
+	var tableBase=null;								//数据源table
+	var tableSearch=null;							//查询table
+	var currentTable=null;							//当前显示的table
+	var indexHead=null;								//头部包含索引的数组
+	var indexContain=null;							//中部包含索引的数组
+	var totalHeight=0;								//所有tr总高度
+	var gridFocus=false;							//是否正在操作当前表格
+	
+	$("*").click(function(e){
+		var parents=$(e.target).parents();
+		var targetID=$(e.target).attr("id");
+		var is_focus=false;
+		if(targetID==div||targetID==gridBase){
+			true;
+		}
+		for(var c=0;c<parents.length;c++){
+			var pID=$(parents[c]).attr("id");
+			if(pID==div||pID==gridBase){
+				is_focus=true;
+				break;
+			}
+		}
+		if(!is_focus){
+			hideGrid();
+			gridFocus=false;
+		}
+	});
+	
+	//定义基本方法(内部)
+	var disable=function(){
+		$("#"+textId).attr("disabled","disabled");
+		$("#"+btnDivId+" a").unbind("click");
+	};
+	var enable=function(){
+		$("#"+textId).removeAttr("disabled");
+		$("#"+btnDivId+" a").unbind("click");
+		$("#"+btnDivId+" a.combobox-btn").bind("click",onComboClick);
+		$("#"+btnDivId+" a.combobox-clear").bind("click",onComboClear);
+	};
+	var setText=function(val){
+		$("#"+textId).unbind("input",onTextChange );
+		$("#"+textId).val(val);
+		$("#"+textId).bind("input",onTextChange );
+	};
+	var getText=function(){
+		return $("#"+textId).val();
+	};
+	var checkValue=function(reset){	
+		selectByCurrentValue();	
+		if(currentTr!=null){
+			name =currentTr.children("td:eq("+columnShow+")").text();
+			if(name==$("#"+textId).val()){
+				return true;
+			}
+			else if(reset==null||reset==true){
+				setText(name);
+			}else if(reset==false){
+				setValue("");
+			}
+			return false;
+		}else{
+			setValue("");
+			return false;
+		}
+	};
+	var changeByValue=function(val,callback){
+		if(val!=null&&val!=""){
+			var tr=tableBase.children("[id='"+val+"']");
+			if(tr.size()>0){
+				changeCurrentTr(tr);
+				name =tr.children("td:eq("+columnShow+")").text();
+				$("#"+hideTextId).val(val);
+				setText(name);
+				change(currentTr);
+			}
+			else{
+				setText("Id["+val+"]已停用，请刷新重试");
+			}			
+		}
+		else{
+			clear();
+			hideGrid();
+			$("#"+textId).focus();
+			onClear();
+		}
+		if(callback){
+			callback();
+		}
+	};
+	var setValue=function(val,name){		
+		if(name!=null){
+			$("#"+hideTextId).val(val);
+			setText(name);
+		} 
+		else if(val!=null&&val!=""){
+			var tr=tableBase.children("[id='"+val+"']");
+			if(tr.size()>0){
+				changeCurrentTr(tr);
+				name =tr.children("td:eq("+columnShow+")").text();
+				$("#"+hideTextId).val(val);
+				setText(name);
+			}
+			else{
+				setText("Id["+val+"]已停用，请刷新重试");
+			}			
+		}
+		else{
+			$("#"+hideTextId).val("");
+		}
+	};
+	var getValue=function(){
+		return $("#"+hideTextId).val();
+	};	
+	var clear=function(){
+		currentTable=tableBase;
+		selectFirst();
+		setValue("","");
+	};	
+	var hideGrid=function(){
+		$("#"+gridBase).hide();
+	};	
+	//按输入内容进行过滤
+	var open=function(){		
+		changeCurrentTr(null);
+		var searchStr=trim(getText().toUpperCase());
+		//清空Grid
+		tableSearch.empty();		
+		var key=searchStr.substring(0,2);
+		if(searchStr.length==1){
+			key=searchStr;
+		}
+		var trByCol=new Array();
+		for(var i=0;i<searchCol.length;i++){
+			var headMap=indexHead[i];
+			var containMap=indexContain[i];			
+			trByCol.splice(0,trByCol.length);			
+			if(headMap.containsKey(key)){
+				var trArray=headMap.get(key);
+				$(trArray).each(function(index){
+					var cloneTr=$(this).clone(true);
+					var tdText=cloneTr.children("td:eq("+searchCol[i]+")").text().toUpperCase();
+					if(searchStr==tdText){
+						trByCol.unshift(cloneTr);
+					}
+					else if(tdText.indexOf(searchStr)==0){
+						trByCol.push(cloneTr);
+					}				
+				});
+			}
+			if(containMap.containsKey(key)){
+				var trArray=containMap.get(key);
+				$(trArray).each(function(index){
+					var cloneTr=$(this).clone(true);
+					var tdText=cloneTr.children("td:eq("+searchCol[i]+")").text().toUpperCase();
+					if(tdText.indexOf(searchStr)>0){
+						trByCol.push(cloneTr);
+					}				
+				});
+			}
+			$(trByCol).each(function(index){
+				//如果表中已有相同数据则略过			
+				if(tableSearch.children("tbody>tr[id='"+$(this).attr("id")+"']").size()>0)return;
+				tableSearch.append($(this));
+			});			
+		}	
+		var firstTr=tableSearch.children("tr");
+		if(firstTr!=null&&firstTr.size()>0){
+			currentScrollHeight=0;
+			tableSearch.show();
+			tableBase.hide();
+			$("#"+gridBase).show();
+			//reposition();
+			$("#"+textId).focus();
+			currentTable=tableSearch;
+			selectFirst();
+		}
+		else{
+			changeCurrentTr(null);
+			hideGrid();
+		}
+	};
+	//选中第一条
+	var selectFirst=function(){
+		if(currentTable != null){
+			changeCurrentTr(currentTable.children("tr:first"));
+			locationScrollForCombo("top");
+		}
+	};
+	//选中当前条
+	var selectByCurrentValue=function(){
+		var val=getValue();
+		if(val!=null&&val!=""){
+			var tr=currentTable.children("tr[id='"+val+"']");
+			if(tr.size()>0){
+				changeCurrentTr(tr);
+				locationScrollForCombo("top");
+				return true;
+			}
+		}else{
+			changeCurrentTr(null);
+		}
+		return false;
+	};
+	//选中下一条
+	var selectNext=function(){
+		if(currentTr!=null&&currentTr.size()>0){
+			var next=currentTr.next();
+			if(next.size()>0){
+				changeCurrentTr(next);
+				setDataByCurrentTr();
+				locationScrollForCombo("top");
+			}
+		}				
+	};
+	//选中上一条
+	var selectPrevious=function(){
+		if(currentTr!=null&&currentTr.size()>0){
+			var prev=currentTr.prev();
+			if(prev.size()>0){
+				changeCurrentTr(prev);
+				setDataByCurrentTr();
+				locationScrollForCombo("bottom");
+			}
+		}		
+	};
+	
+	
+	//定义事件
+	var onTextChange=function() {			//文本框内容改变事件
+		if($("#"+textId).val()==" "){
+			setText("");
+			if($("#"+gridBase).is(":hidden")){
+				currentTable=tableBase;
+				tableBase.show();
+				tableSearch.hide();
+				selectFirst();
+				$("#"+gridBase).show();
+			}
+			return;
+		}
+		//如果清空文本框则清空value，清空时触发业务事件
+		if($("#"+textId).val()==""){			
+			clear();
+			hideGrid();
+			inLazy=true;
+			onClear();
+			return;
+		}
+		//延迟半秒进行查询
+		canEnter=false;
+		if(inLazy==true){
+			clearTimeout(timeout);
+			timeout=setTimeout(function(){
+				changeLazy(textId);
+			},500);
+//			canEnter=true;
+			return;
+		}
+		inLazy=true;
+		open();
+		canEnter=true;
+	};	
+	var onComboClear=function(){
+		gridFocus=true;
+		clear();
+		hideGrid();
+		$("#"+textId).focus();
+		onClear();
+	};
+	var onComboClick=function(){			//Combo按钮点击事件
+		gridFocus=true;
+		currentTable=tableBase;
+		tableBase.show();
+		tableSearch.hide();
+		if($("#"+gridBase).is(":hidden")){
+			$("#"+gridBase).show();
+//			reposition();
+			if(!selectByCurrentValue()){
+				selectFirst();
+			};
+			if(!$(document.activeElement).is($("#"+textId))){
+				$("#"+textId).focus();
+			}
+		}
+		else{
+			hideGrid();
+			$("#"+textId).focus();
+			gridFocus=false;
+		}
+		//$("#txtBarCode").val($("#txtBarCode").val()+" C-"+gridFocus);
+	};
+
+	var changeCurrentTr=function(newTr){	
+		if(currentTr!=null&&currentTr.size()>0){
+			currentTr.removeClass("tablelist_now");
+			currentTr.children("td:eq(0)").removeClass("ico_now");
+		}
+		if(newTr!=null&&newTr.size()>0){
+			currentTr=newTr.addClass("tablelist_now");
+			currentTr.children("td:eq(0)").addClass("ico_now");
+		}
+		else{
+			currentTr=null;
+		}
+	};
+	var setDataByCurrentTr=function(){
+		var id="";
+		var name="";
+		if(currentTr!=null&&currentTr.size()>0){
+			id=currentTr.attr("id");
+			name =currentTr.children("td:eq("+columnShow+")").text();
+		}
+		setValue(id,name);
+	};
+	var onTextKeyUp=function(event){			//文本框按键事件
+		var isHide=$("#"+gridBase).is(":hidden"); //下拉框当前是否打开状态
+		//显示按上——选中上一条，如果选中第一条则无操作
+		if(event.keyCode==38&&!isHide){
+			selectPrevious();
+			$("#"+textId).focus();
+			return;
+		}
+		//显示按下——选中下一条，如果选中最后一条则无操作
+		if(event.keyCode==40){
+			if(isHide){
+				open();
+				$("#"+textId).select();
+			}
+			else{
+				selectNext();
+				$("#"+textId).focus();
+			}
+			return;
+		}
+		//显示回车——提交选中
+		if(event.keyCode==13){			
+			if(!isHide){
+				if(currentTr.prev().size()==0){
+					setDataByCurrentTr();
+				}
+				hideGrid();
+				change(currentTr);
+			}
+			if(canEnter){
+				keyEnter();
+			}
+		}
+	};
+	var onTextBlur=function(event){			//文本框失去焦点事件
+		if(textBlur!=null){
+			textBlur();			
+		}
+		//$("#txtBarCode").val("B-"+gridFocus);
+//		onblurEventDelay(event);
+		setTimeout(function(){onblurEventDelay(event);}, 300);
+	};
+	var onblurEventDelay=function(event){
+		//$("#txtBarCode").val($("#txtBarCode").val()+" D-"+gridFocus);
+		if(gridFocus==false){
+			hideGrid();
+		}
+		else{
+			$("#"+textId).focus();
+		}
+		gridFocus=false;
+	};
+	var onRowSelected=function(){	//表格行选中事件
+		changeCurrentTr($(this));
+		var id=currentTr.attr("id");
+		var name =currentTr.children("td:eq("+columnShow+")").text();
+		setValue(id,name);
+		hideGrid();
+		change(currentTr);
+		keyEnter();
+	};
+	var locationScrollForCombo=function(position){
+		var currentDiv=$("#"+gridBase+" .tablelist");
+		if(currentTr!=null&&currentTr.size()>0){	
+			locationScroll(currentDiv,currentTr,position);
+		}		
+	};
+	
+	var loadingStart=function(dataInit){
+		$("#"+btnDivId).hide();
+		$("#"+loadingDivId).show();
+		if(dataInit!=null){
+			dataInit();
+		}
+		else{
+			init();
+		}
+	};
+	var rebind=function(newGridId){
+		$("#warp").after($("#"+gridBase));
+		tableSearch.remove();
+		hideGrid();
+		gridBase=newGridId;
+		init();
+	};
+	var resizeWidth=function(newWidth){
+		var newRealWidth=newWidth-2;
+		$("#"+div).width(newWidth);
+		$("#"+loadingDivId).width(newRealWidth);
+		$("#"+textId).width(clearOff!=null&&clearOff==true?newRealWidth-26:newRealWidth-54);
+	};
+	var getWidth=function(){
+		return $("#"+div).width();
+	};
+	//初始化并建立索引
+	var init=function(){
+		//隐藏原始的数据源（有的定义可能没有display:none）
+		$("#"+gridId).hide();
+		var showGrid = $("#"+gridId).clone(true);
+		gridBase = "show_"+gridId;
+		showGrid.attr("id", gridBase);
+		$("#" + div).append(showGrid);
+		showGrid.css('top','auto');
+		showGrid.css('left','auto');
+		//showGrid.css('display','block');
+		$("#"+gridBase)	
+		.unbind("click")
+		.bind("click",function(){
+			gridFocus=true;
+		});
+		//初始化两个表格以及相关变量	
+		tableBase=$("#"+gridBase+" .tablelist table>tbody");
+		tableBase
+		.children("tr")
+		.unbind("click")
+		.bind("click",onRowSelected);
+		currentTable=tableBase;
+		tableSearch=tableBase.clone().hide().empty();
+		$("#"+gridBase+" .tablelist table").append(tableSearch);
+		$("#"+gridBase+" .tablelist").scroll(function(){
+			gridFocus=true;
+		});
+		indexHead=new Array();
+		indexContain=new Array();
+		//初始化两个数组
+		if(searchCol==null)searchCol=[1];
+		for(var i=0;i<searchCol.length;i++){
+			indexHead.push(new Map());
+			indexContain.push(new Map());
+		}
+		//循环所有行，建立索引
+		tableBase.children("tr").each(function(index){
+			for(var i=0;i<searchCol.length;i++){
+				//获取当前列的内容
+				var tdText= $(this).children("td:eq("+searchCol[i]+")").text().toUpperCase();
+				
+				//获取当前列号对应的两个索引Map
+				var headMap=indexHead[i];
+				var containMap=indexContain[i];				
+				if(tdText.length>0){
+					//以td内容头一个字符为键建立头部索引
+					var key=tdText.substring(0,1);
+					if(!headMap.containsKey(key)){
+						var trArray=new Array();
+						trArray.push($(this));
+						headMap.put(key,trArray);
+					}
+					else{
+						var trArray=headMap.get(key);
+						trArray.push($(this));
+					}
+					//以td内容第二个字符开始每个字符为键建立中部索引
+					for(var j=1;j<tdText.length;j++){
+						key=tdText.substring(j,j+1);
+						if(!containMap.containsKey(key)){
+							var trArray=new Array();
+							trArray.push($(this));
+							containMap.put(key,trArray);
+						}
+						else{
+							var trArray=containMap.get(key);
+							trArray.push($(this));					
+						}
+					}
+					if(tdText.length>1){
+						//以td内容头两个字符为键建立头部索引
+						var key=tdText.substring(0,2);
+						if(!headMap.containsKey(key)){
+							var trArray=new Array();
+							trArray.push($(this));
+							headMap.put(key,trArray);
+						}
+						else{
+							var trArray=headMap.get(key);
+							trArray.push($(this));
+						}
+						//以td内容第二个字符开始每两个连续的字符为键建立中部索引
+						for(var j=1;j<tdText.length-1;j++){
+							key=tdText.substring(j,j+2);
+							if(!containMap.containsKey(key)){
+								var trArray=new Array();
+								trArray.push($(this));
+								containMap.put(key,trArray);
+							}
+							else{
+								var trArray=containMap.get(key);
+								trArray.push($(this));					
+							}
+						}
+					}
+				}
+			}
+		});
+		selectFirst();
+		$("#"+gridBase).addClass("gridDiv");		
+		//reposition();
+		$("#"+gridBase).hide();
+		$("#"+btnDivId).show();
+		$("#"+loadingDivId).hide();
+	};
+	var reposition=function(){
+		
+		var outterLeft = 0;
+		var outterTop = 0;
+		
+		if ($("#"+div).parents(".pop") != undefined && $("#"+div).parents(".pop").length > 0) {
+			outterLeft = $("#"+div).parents(".pop-container").offset().left-37;
+			outterTop = $("#"+div).parents(".pop-container").offset().top-46;
+		}
+		
+		var top=$("#"+div).position().top + outterTop;
+		var left=$("#"+div).position().left + outterLeft;
+		var gridHeight=$("#"+gridBase).height();
+		/*//判断是否固定位置
+		if(lockBy!=null&&lockBy.length==2){
+			top=lockBy[0];
+			left=lockBy[1];			
+		} else {
+			if(top+gridHeight+30<=460){//判断是上拉还是下拉
+				top+=30;
+			} else{			
+				top-=gridHeight;
+			}
+		}*/
+		$("#"+gridBase)
+		.css("top",top + $("#"+div).height())
+		.css("left",left);
+	};
+	var focus=function(){
+		$("#"+textId).focus();
+	};
+	//定义基本方法(外部)	
+	this.setText=setText;					//设置文本内容，不会触发查询
+	this.getValue=getValue;					//获得当前Combo的value，也就是所选行Id
+	this.getText=getText;					//获得文本内容
+	this.setValue=setValue;					//设置Combo的value
+	this.clear=clear;						//清除内容，不会触发查询
+	this.disable=disable;					//禁用
+	this.enable=enable;						//启用
+	this.loadingStart=loadingStart;			//开始加载数据
+	this.loadingOver=init;					//数据加载完毕，初始化索引
+	this.checkValue=checkValue;				//验证value是否和name一致
+	this.focus=focus;						//文本框获得焦点
+	this.rebind=rebind;						//重新绑定另一个数据源Div
+	this.changeByValue=changeByValue;		//根据一个value来设置Combo并触发change事件
+	this.resizeWidth=resizeWidth;			//重新设置宽度
+	this.getWidth=getWidth;				//获取宽度
+	
+	/*NipCombo的初始化和构造*/
+	//1、创建对应页面元素，配置样式和属性	
+	var realWidth=$("#"+div).width()-2;
+	//创建文档框的宽度
+	var inputWidth=clearOff!=null&&clearOff==true?realWidth-26:realWidth-54;
+	$("#"+div)
+	.width(realWidth)
+	.addClass("comboDiv")
+	.append(
+		$("<div></div>")
+		.attr("id",btnDivId)
+		.addClass("textDiv")
+		.append(
+			$("<input/>")
+			.attr("id",textId)
+			.attr("type","text")
+			.width(inputWidth-2)//IE下不会换行
+		)
+		.append(
+			$("<input/>")
+			.attr("type","hidden")
+			.attr("id",hideTextId)
+			.attr("name",name)
+		)
+		.append($("<a></a>").addClass("combobox-btn fa fa-chevron-down"))
+		.append("<p/>")
+	)
+	.append(
+		$("<div></div>")
+		.attr("id",loadingDivId)
+		.addClass("loadDiv")
+		.width(realWidth)
+		.hide()
+	);
+	if(clearOff==null||clearOff==false){
+		$("#"+btnDivId+" a.combobox-btn").after($("<a></a>").addClass("combobox-clear fa fa-close"));
+	}	
+	//3、绑定文本框事件
+	$("#"+textId)
+	.bind("input",onTextChange)	
+	.bind("keyup",onTextKeyUp)
+	.bind("blur",onTextBlur)
+	.bind("click",function(){
+		$(this).select();
+	});
+	/*$("#"+gridBase+" .tablelist").scroll(function(){
+		var prevHeight=currentTr.position().top;
+		$("#txtBarCode").val(prevHeight);
+	});*/
+	//4、绑定Combo下拉按钮点击事件
+	enable();
+	//5、建立索引
+	setTimeout(function(){loadingStart();},100);	
+};
+//根据表格选中行定位滚动条
+function locationScroll(currentTr,currentDiv,position){		
+	var totalHeight=0;
+	currentTr.prevAll().each(function(index){
+		totalHeight+=$(this).height();
+	});
+	var scrollHeight=currentDiv.scrollTop();
+	var divHeight=currentDiv.height();
+	var divTop=scrollHeight;
+	var divBottom=scrollHeight+divHeight-20;
+	var newHeight=totalHeight;
+	if(position!=null&&position=="bottom"){
+		newHeight=totalHeight+currentTr.height()-divHeight;
+	}
+	if(totalHeight<divTop||totalHeight>divBottom){
+		currentDiv.scrollTop(newHeight);
+	}
+};
+//延迟调用文本框内容改变事件
+function changeLazy(textId){
+	inLazy=false;
+	$("#"+textId).trigger("input");
+}
+
+//判断是否是JSON对象
+function isJson(obj){
+	var isjson=typeof(obj)=="object"
+	&& Object.prototype.toString.call(obj).toLowerCase() == "[object object]" 
+	&& !obj.length;    
+	return isjson;
+}
+
+//克隆json对象
+function cloneJson(para) {
+	var rePara = null;
+	var type = Object.prototype.toString.call(para);
+	if (type.indexOf("Object") > -1) {
+		rePara = jQuery.extend(true, {}, para);
+	} else if (type.indexOf("Array") > 0) {
+		rePara = [];
+		jQuery.each(para, function(index, obj) {
+			rePara.push(jQuery.cloneJSON(obj));
+		});
+	} else {
+		rePara = para;
+	}
+	return rePara;
+}
+/**
+ * 滚动条定位
+ * scrollDiv:滚动条对应的div
+ * scrollItem：需要定位的元素
+ * position:元素定位后在scrollDiv中的位置，top顶部，bottom底部，不填就是top
+ */
+
+var locationScroll=function(scrollDiv,scrollItem,position){
+	if(scrollDiv==null||scrollDiv.size()==0)return;
+	if(scrollItem==null||scrollItem.size()==0)return;
+	var itemTop=scrollItem.position().top;			//item的相对顶部位置	
+	var divTop=scrollDiv.position().top;			//div的相对顶部位置
+	var itemHeight=scrollItem.height();				//item的高度
+	var divHeight=scrollDiv.height();				//div的高度
+	var scrollTop=scrollDiv.scrollTop();			//滚动条的相对顶部位置
+	var newScrollTop=itemTop-divTop+scrollTop;		//定位后的滚动条相对顶部位置
+	if(position!=null&&position=="bottom"){
+		newScrollTop-=divHeight-itemHeight;
+	}
+	if(itemTop<divTop||itemTop>divHeight){
+		scrollDiv.scrollTop(newScrollTop);
+	}
+};
+/*
+* MAP对象，实现MAP功能
+*
+* 接口：
+* size()     			获取MAP元素个数
+* isEmpty()    		判断MAP是否为空
+* clear()     			删除MAP所有元素
+* put(key, value)   	向MAP中增加元素（key, value) 
+* remove(key)    		删除指定KEY的元素，成功返回True，失败返回False
+* get(key)    			获取指定KEY的元素值VALUE，失败返回NULL
+* element(index)   	获取指定索引的元素（使用element.key，element.value获取KEY和VALUE），失败返回NULL
+* containsKey(key)  	判断MAP中是否含有指定KEY的元素
+* containsValue(value) 判断MAP中是否含有指定VALUE的元素
+* values()    			获取MAP中所有VALUE的数组（ARRAY）
+* keys()     			获取MAP中所有KEY的数组（ARRAY）
+* load(url,param,key)	通过url初始化Map对象
+* 例子：
+* var map = new Map();
+*
+* map.put("key", "value");
+* var val = map.get("key")
+* ……
+* map.load("aaa.action",{userId:12345},"id");第三个参数key可选，默认为"id",加载后的数据以key为键,其对应的json对象为值
+*/
+function Map() {
+  this.elements = {};
+  this.length=0;
+  //获取MAP元素个数
+  this.size = function() {
+      return this.length;
+  };
+
+  //判断MAP是否为空
+  this.isEmpty = function() {
+      return this.length < 1;
+  };
+
+  //删除MAP所有元素
+  this.clear = function() {
+      this.elements = {};
+      this.length=0;
+  };
+
+  //向MAP中增加元素（key, value) 
+  this.put = function(_key, _value) {
+  	if(this.elements[_key]==null){
+  		this.length+=1;
+      }
+  	this.elements[_key]=_value;
+  };
+
+  //删除指定KEY的元素，成功返回True，失败返回False
+  this.removeByKey = function(_key) {
+  	if(this.elements[_key]!=null){
+  		delete this.elements[_key];
+          this.length-=1;
+      }
+  };
+  
+  //获取指定KEY的元素值VALUE，失败返回NULL
+  this.get = function(_key) {
+      return this.elements[_key];
+  };
+
+  //判断MAP中是否含有指定KEY的元素
+  this.containsKey = function(_key) {
+      if(this.elements[_key]!=null){
+      	return true;
+      }
+      else{
+      	return false;
+      }
+  };
+
+  
+  //获取MAP中所有VALUE的数组（ARRAY）
+  this.values = function() {
+      var arr = new Array();
+      for (var key in this.elements) {
+          arr.push(this.elements[key]);
+      }
+      return arr;
+  };
+  
+
+  //获取MAP中所有KEY的数组（ARRAY）
+  this.keys = function() {
+  	var arr = new Array();
+      for (var key in this.elements) {
+          arr.push(key);
+      }
+      return arr;
+  };    
+  
+  //通过json对象初始化Map对象
+  this.loadByJsonArray=function(jsonArray,key){
+  	if(key==null)key="id";
+  	this.elements={};
+  	this.length=0;
+  	if(jsonArray!=null&&jsonArray.length>0){
+	    	for(var i=0;i<jsonArray.length;i++){
+				var json=jsonArray[i];
+				if(this.elements[json[key]]==null){
+		        	this.length+=1;
+		        }
+				this.elements[json[key]]=json;
+			}
+  	}
+  };
+//通过json对象初始化Map对象
+  this.appendByJsonArray=function(jsonArray,key){
+  	if(key==null)key="id";
+  	if(jsonArray!=null&&jsonArray.length>0){
+	    	for(var i=0;i<jsonArray.length;i++){
+				var json=jsonArray[i];
+				if(this.elements[json[key]]==null){
+		        	this.length+=1;
+		        }
+				this.elements[json[key]]=json;
+			}
+  	}
+  };
+  this.clone=function(){
+  	var newMap=new Map();
+  	for (var key in this.elements) {
+          newMap.put(key,this.elements[key]);
+      }
+  	return newMap;
+  };
+  //调试专用
+  this.alertAll=function(){
+  	var str="";
+  	for (var key in this.elements) {
+          str+=key+",";
+    }
+  	alert("柳明"+str);
+  };
+}
