@@ -5,3 +5,4 @@ dataGrid:共用datagrid设定集合
 gridColumns:Columns of dataGrid 集合
 const:常量宣告集合
 vildateBox:验证集合
+2/20 jacky fix
