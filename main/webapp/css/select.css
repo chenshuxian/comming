@@ -1,0 +1,29 @@
+
+.selectstyle{ float: left; margin-left: 10px;}
+.selectstyle .select_box{width:180px;height:30px;border:1px solid #eee;}
+.selectstyle div.tag_select{display:block;color:#666;width:180px;height:30px;background:transparent url("../images/02.jpg") no-repeat;padding:0 10px;line-height:30px; font-size: 14px;}
+.selectstyle div.tag_select_hover{display:block;color:#666;width:180px;height:30px;background:transparent url("../images/03.jpg") no-repeat;padding:0 10px;line-height:30px; font-size: 14px;}
+.selectstyle div.tag_select_open{display:block;color:#999;width:180px;height:30px;background:transparent url("../images/03.jpg") no-repeat ;padding:0 10px;line-height:30px; font-size: 14px;}
+.selectstyle ul.tag_options{ position:absolute;padding:0;margin:0;list-style:none;width:200px; background: #fff; box-shadow: 0 5px 10px #ddd; font-size: 14px;}
+.selectstyle ul.tag_options li{ margin:4px 0;display:block;width:189px;height:30px; font-size: 14px; padding-left:10px;text-decoration:none;line-height:30px;color:#999; }
+.selectstyle ul.tag_options li.open_hover{background:transparent url("../images/05.png") no-repeat 4px top ;color:#666; font-size: 14px;}
+/*.selectstyle ul.tag_options li.open_selected{background:transparent url("../images/05.png")  no-repeat 5px top;color:#fff}*/
+
+.selectstyle1{ float: left; }
+.selectstyle1 .select_box{width:200px;height:30px; }
+.selectstyle1 div.tag_select{display:block;color:#666;width:180px;height:30px;background:transparent url("../images/02.jpg") no-repeat;padding:0 10px;line-height:30px;}
+.selectstyle1 div.tag_select_hover{display:block;color:#666;width:180px;height:30px;background:transparent url("../images/03.jpg") no-repeat;padding:0 10px;line-height:30px;}
+.selectstyle1 div.tag_select_open{display:block;color:#999;width:180px;height:30px;background:transparent url("../images/03.jpg") no-repeat ;padding:0 10px;line-height:30px;}
+.selectstyle1 ul.tag_options{position:absolute;padding:0;margin:0;list-style:none;width:200px; background: #fff;box-shadow: 0 5px 10px #ddd;}
+.selectstyle1 ul.tag_options li{ margin:4px 0;display:block;width:189px;height:30px; padding-left:10px;text-decoration:none;line-height:30px;color:#999; }
+.selectstyle1 ul.tag_options li.open_hover{background:transparent url("../images/05.png") no-repeat 4px top ;color:#333}
+
+
+.selectstyle2{ float: left; }
+.selectstyle2 .select_box{width:164px;height:30px; }
+.selectstyle2 div.tag_select{display:block;color:#666;width:144px;height:30px;background:transparent url("../images/022.jpg") no-repeat;padding:0 10px;line-height:30px;}
+.selectstyle2 div.tag_select_hover{display:block;color:#666;width:144px;height:30px;background:transparent url("../images/033.jpg") no-repeat;padding:0 10px;line-height:30px;}
+.selectstyle2 div.tag_select_open{display:block;color:#999;width:144px;height:30px;background:transparent url("../images/033.jpg") no-repeat ;padding:0 10px;line-height:30px;}
+.selectstyle2 ul.tag_options{position:absolute;padding:0;margin:0;list-style:none;width:164px; background: #fff;box-shadow: 0 5px 10px #ddd;}
+.selectstyle2 ul.tag_options li{ margin:4px 0;display:block;width:154px;height:30px; padding-left:10px;text-decoration:none;line-height:30px;color:#999; }
+.selectstyle2 ul.tag_options li.open_hover{background:transparent url("../images/055.png") no-repeat 4px top ;color:#333}

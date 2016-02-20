@@ -1,0 +1,22 @@
+@charset "utf-8";
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, form, fieldset, legend, input, textarea, p, th, td {  margin: 0;  padding: 0; }
+h1, h2, h3, h4, h5, h6 {  font-size: 100%;  font-weight: normal;  }
+fieldset, img {  border: 0 none;  }
+li {  list-style: none outside none;  }
+em, th {  font-style: normal;  font-weight: normal;  }
+strong {  font-style: normal;  }
+input, textarea, select {  font-family: inherit;  font-size: inherit;  font-weight: inherit;  }
+body {  color: #666; font: 14px/18px '微软雅黑';  font-size: 12px;  position: relative;  }
+table{border-collapse:collapse; border-spacing:0; }
+dl{border-collapse:collapse; border-spacing:0; }
+.bg{ background: #f3f3f3;}
+.over{ overflow: hidden;}
+/* .clear{ clear: both} */
+.mt20{ margin-top: 15px;}
+
+.fl{ float: left}
+.fr{ float: right}
+
+table{ border:1px solid #ddd !important;}
+table tr{border-bottom:1px solid #ddd !important;}
+table td,table th{border-right:1px solid #ddd!important;}

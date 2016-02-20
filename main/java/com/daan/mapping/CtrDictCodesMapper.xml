@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daan.dao.CtrDictCodesDao">
+	
+	<!-- 搜索查询拼接条件 -->
+	<sql id="queryCondition">
+		WHERE 1 = 1
+		<if test="queryDto.searchStr != null and queryDto.searchStr != ''">
+			 AND (d.code_no LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+                 OR d.name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+                 OR d.en_name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+                 OR d.en_short_name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+                 OR d.fast_code LIKE CONCAT('%',#{queryDto.searchStr},'%'))
+		</if>
+		<if test="queryDto.typeKey != null and queryDto.typeKey != ''">
+			AND d.type_key = #{queryDto.typeKey}
+		</if>
+		<if test="queryDto.status != null and queryDto.status != ''">
+			AND d.status = #{queryDto.status}
+		</if>
+		<if test="queryDto.sort != null and queryDto.sort != ''">
+			<if test="queryDto.sort == 0">
+				ORDER BY d.display_order
+			</if>
+			<if test="queryDto.sort == 1">
+				ORDER BY CONVERT(name USING gbk) COLLATE gbk_chinese_ci
+			</if>
+			<if test="queryDto.sort == 2">
+				ORDER BY d.id desc
+			</if>
+		</if> 
+	</sql>
+	
+	<!-- 分页查询，查出总条数 -->
+	<select id="queryCountByConditions" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM
+			ctr_dict_codes d
+		<include refid="queryCondition"></include>
+	</select>
+	
+	<!-- 分页查询LIST  -->
+	<select id="queryPageListByConditions" parameterType="com.daan.dto.CtrDictCodesDto" resultType="com.daan.domain.CtrDictCodes" >
+		SELECT
+			d.id,
+			d.type_key as typeKey,
+			d.code_no as codeNo,
+			d.name,
+			d.en_short_name as enShortName,
+			d.en_name as enName,
+			d.whonet_code as whonetCode,
+			d.fast_code as fastCode,
+			d.display_order as displayOrder,
+			d.memo,
+			d.status,
+			d.time_version as timeVersion
+		FROM
+			ctr_dict_codes d
+		<include refid="queryCondition"></include>
+		${page.mysqlQueryCondition}
+	</select>
+	
+	<!-- 根据ID查找记录 -->
+	<select id="findById" parameterType="java.lang.String" resultType="com.daan.domain.CtrDictCodes" >
+		SELECT
+			d.id,
+			d.type_key as typeKey,
+			d.code_no as codeNo,
+			d.name,
+			d.en_short_name as enShortName,
+			d.en_name as enName,
+			d.whonet_code as whonetCode,
+			d.fast_code as fastCode,
+			d.display_order as displayOrder,
+			d.memo,
+			d.status,
+			d.time_version as timeVersion
+		FROM
+			ctr_dict_codes d
+		WHERE 1=1
+			AND d.id = #{id}
+	</select>  
+	
+	<!-- 根据名称查找记录 -->
+	<select id="findListByConditions" parameterType="java.lang.String" resultType="com.daan.domain.CtrDictCodes" >
+		SELECT
+			d.id,
+			d.type_key as typeKey,
+			d.code_no as codeNo,
+			d.name,
+			d.en_short_name as enShortName,
+			d.en_name as enName,
+			d.whonet_code as whonetCode,
+			d.fast_code as fastCode,
+			d.display_order as displayOrder,
+			d.memo,
+			d.status,
+			d.time_version as timeVersion
+		FROM
+			ctr_dict_codes d
+		WHERE 1=1
+			<if test="name != null and name != ''">
+				AND d.name = #{name}
+			</if>
+			<if test="typeKey != null and typeKey != ''">
+				AND d.type_key = #{typeKey}
+			</if>
+	</select>  
+	
+	<!-- 添加字典信息  useGeneratedKeys="true" keyProperty="id"-->
+	<insert id="addCtrDictCodes" parameterType="com.daan.domain.CtrDictCodes">
+		INSERT INTO ctr_dict_codes (
+			id,
+			code_no,
+			en_name,
+			display_order,
+			en_short_name,
+			fast_code,
+			memo,
+			name,
+			status,
+			time_version,
+			type_key,
+			whonet_code
+		)
+		VALUES
+			(#{id}, #{codeNo}, #{enName}, #{displayOrder}, #{enShortName}, #{fastCode}, #{memo}, #{name}, #{status}, NOW(), #{typeKey}, #{whonetCode})
+	</insert>
+	
+	<!-- 修改字典信息 -->
+	<update id="modifyCtrDictCodes" parameterType="com.daan.domain.CtrDictCodes">
+		UPDATE ctr_dict_codes
+			SET en_name = #{enName} ,display_order = #{displayOrder} ,en_short_name = #{enShortName} ,fast_code = #{fastCode}, memo = #{memo}, name = #{name}, time_version = NOW(), whonet_code = #{whonetCode}, status = #{status} WHERE id = #{id}
+	</update>
+	
+	<!-- 删除字典 -->
+	<delete id="deleteById" parameterType="java.lang.String">
+		DELETE FROM ctr_dict_codes WHERE id=#{id}
+	</delete>
+</mapper>

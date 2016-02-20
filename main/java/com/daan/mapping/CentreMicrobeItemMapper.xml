@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daan.dao.CentreMicrobeItemDao">
+
+<select id="getCentreMicrobeitemDetailById" parameterType="java.lang.String" resultType="com.daan.domain.CentreMicrobeItem">
+	SELECT
+		cmi.id,
+		cmi.code_no as codeNo,
+		cmi.item_type_id as itemTypeId,
+		cmi.name,
+		cmi.en_short_name as enShortName,
+		cmi.en_name as enName,
+		cmi.whonet_code as whonetCode,
+		cmi.fast_code as fastCode,
+		cmi.display_order as displayOrder,
+		cmi.memo,
+		cmi.status,
+		cmi.time_version as timeVersion
+	FROM
+		ctr_mic_items cmi
+	WHERE
+		1=1
+		AND cmi.id = #{id}
+</select>  
+
+<insert id="addCentreMicrobeItem" parameterType="com.daan.domain.CentreMicrobeItem">
+	INSERT INTO ctr_mic_items (
+		id,
+		code_no,
+		item_type_id,
+		name,
+		en_short_name,
+		en_name,
+		whonet_code,
+		fast_code,
+		display_order,
+		memo,
+		status,
+		time_version
+	)
+	VALUES(
+		#{id}, 
+		#{codeNo}, 
+		#{itemTypeId}, 
+		#{name}, 
+		#{enShortName},
+		#{enName}, 
+		#{whonetCode}, 
+		#{fastCode}, 
+		#{displayOrder}, 
+		#{memo}, 
+		#{status},
+		NOW()
+	)
+</insert>
+
+<!-- 修改字典信息 -->
+<update id="modifyCentreMicrobeItem" parameterType="com.daan.domain.CentreMicrobeItem">
+	UPDATE 
+		ctr_mic_items
+	SET 
+		en_name = #{enName} ,
+		display_order = #{displayOrder} ,
+		en_short_name = #{enShortName} ,
+		fast_code = #{fastCode}, 
+		memo = #{memo},
+		name = #{name}, 
+		time_version = NOW(), 
+		whonet_code = #{whonetCode}, 
+		status = #{status} 
+	WHERE 
+		id = #{id}
+</update>
+
+<!-- 删除字典 -->
+<delete id="deleteCentreMicrobeitem" parameterType="java.lang.String">
+	DELETE FROM 
+		ctr_mic_items 
+	WHERE 
+		id=#{id}
+</delete>
+
+<!-- 分页查询LIST  -->
+<select id="getCentreMicrobeitemsPageListByConditions" parameterType="com.daan.dto.CentreMicrobeItemDto" resultType="com.daan.domain.CentreMicrobeItem" >
+	SELECT
+		cmi.id,
+		cmi.code_no as codeNo,
+		cmi.item_type_id as itemTypeId,
+		cmi.name,
+		cmi.en_short_name as enShortName,
+		cmi.en_name as enName,
+		cmi.whonet_code as whonetCode,
+		cmi.fast_code as fastCode,
+		cmi.display_order as displayOrder,
+		cmi.memo,
+		cmi.status,
+		cmi.time_version as timeVersion
+	FROM
+		ctr_mic_items cmi
+		<include refid="queryCondition"></include>
+		${page.mysqlQueryCondition}
+</select>
+
+<select id="countCentreMicrobeItemByConditions" resultType="java.lang.Integer">
+	SELECT
+		count(1)
+	FROM
+		ctr_mic_items cmi
+	<include refid="queryCondition"></include>
+</select>
+
+	<!-- 搜索查询拼接条件 -->
+<sql id="queryCondition">
+	WHERE 
+		1 = 1
+		<if test="queryDto.searchStr != null and queryDto.searchStr != ''">
+		AND (cmi.code_no LIKE CONCAT('%',#{queryDto.searchStr},'%')
+		OR cmi.name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+		OR cmi.en_name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+		OR cmi.en_short_name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+		OR cmi.fast_code LIKE CONCAT('%',#{queryDto.searchStr},'%'))
+		</if>
+		<if test="queryDto.itemTypeId != null and queryDto.itemTypeId != ''">
+		AND cmi.item_type_id = #{queryDto.itemTypeId}
+		</if>
+		<if test="queryDto.status != null and queryDto.status != ''">
+		AND cmi.status = #{queryDto.status}
+		</if>
+		<if test="queryDto.sort != null and queryDto.sort != ''">
+			<if test="queryDto.sort == 0">
+				ORDER BY cmi.display_order
+			</if>
+			<if test="queryDto.sort == 1">
+				ORDER BY CONVERT(name USING gbk) COLLATE gbk_chinese_ci
+			</if>
+			<if test="queryDto.sort == 2">
+				ORDER BY cmi.id desc
+			</if>
+		</if>
+</sql>
+	
+<!-- 根据名称查找记录 -->
+<select id="getCentreMicrobeItemsByName" parameterType="java.lang.String" resultType="com.daan.domain.CentreMicrobeItem" >
+	SELECT
+		cmi.id,
+		cmi.item_type_id as itemTypeId,
+		cmi.code_no as codeNo,
+		cmi.name,
+		cmi.en_short_name as enShortName,
+		cmi.en_name as enName,
+		cmi.whonet_code as whonetCode,
+		cmi.fast_code as fastCode,
+		cmi.display_order as displayOrder,
+		cmi.memo,
+		cmi.status,
+		cmi.time_version as timeVersion
+	FROM
+		ctr_mic_items cmi
+	WHERE 1=1
+		<if test="name != null and name != ''">
+		AND cmi.name = #{name}
+		</if>
+		<if test="itemTypeId != null and itemTypeId != ''">
+		AND cmi.item_type_id = #{itemTypeId}
+		</if>
+</select> 
+	
+</mapper>

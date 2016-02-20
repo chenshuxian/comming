@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daan.dao.CtrInstrumentsItemDao">
+
+	<!-- 根据条件查询，项目对照LIST  -->
+	<select id="queryListByConditions" parameterType="com.daan.dto.CtrInstrumentsItemQueryDto" resultType="com.daan.dto.CtrInstrumentsItemDto" >
+		SELECT
+			t.id		      AS testItemId,
+			t.code_no         AS codeNo,
+			t.name            AS NAME,
+			t.en_short_name   AS enShortName,
+			cii.id            AS id,
+			cii.instrument_id AS instrumentId,
+			cii.channel_code  AS channelCode,
+			cii.factor        AS factor,
+			cii.print_order   AS printOrder,
+			cii.unit          AS unit,
+			cdc.name          AS sampleTypeName
+		FROM
+			ctr_test_items t
+		INNER JOIN ctr_instr_items cii ON cii.test_item_id = t.id
+		LEFT JOIN ctr_dict_codes cdc ON cdc.id=t.sample_type_id
+		WHERE 1 = 1
+		<if test="queryDto.instrumentId != null and queryDto.instrumentId != ''">
+			AND cii.instrument_id=#{queryDto.instrumentId}
+		</if>
+		<if test="queryDto.testItemId != null and queryDto.testItemId != ''">
+			AND cii.test_item_id=#{queryDto.testItemId}
+		</if>
+		<if test="queryDto.itemSearchStr != null and queryDto.itemSearchStr != ''">
+			AND (t.code_no LIKE CONCAT('%',#{queryDto.itemSearchStr},'%') 
+				OR t.name LIKE CONCAT('%',#{queryDto.itemSearchStr},'%') 
+				OR t.en_short_name LIKE CONCAT('%',#{queryDto.itemSearchStr},'%') 
+				OR cii.channel_code LIKE CONCAT('%',#{queryDto.itemSearchStr},'%') )
+		</if>
+		ORDER BY cii.print_order
+	</select>
+
+	<!-- 根据条件查询，参考值LIST  -->
+	<select id="queryRefListByConditions" parameterType="com.daan.dto.CtrInstrumentsItemQueryDto" resultType="com.daan.domain.CtrInstrumentsRefranges" >
+		SELECT
+			t.sample_type_id 	AS sampleTypeId,
+			cdc.name      		AS sampleTypeName,
+			t.id          		AS id,
+			t.sex_id      		AS sexId,
+			t.age_unit_id 		AS ageUnitId,
+			t.age_min     		AS ageMin,
+			t.age_max     		AS ageMax,
+			t.ref_low     		AS refLow,
+			t.ref_high    		AS refHigh,
+			t.panic_low   		AS panicLow,
+			t.panic_high  		AS panicHigh,
+			t.alarm_low   		AS alarmLow,
+			t.alarm_high  		AS alarmHigh
+		FROM
+			ctr_instr_refranges t
+		LEFT JOIN ctr_dict_codes cdc ON cdc.id=t.sample_type_id
+		WHERE 1 = 1
+		<if test="queryDto.instrumentId != null and queryDto.instrumentId != ''">
+			AND t.instrument_id=#{queryDto.instrumentId}
+		</if>
+		<if test="queryDto.testItemId != null and queryDto.testItemId != ''">
+			AND t.test_item_id=#{queryDto.testItemId}
+		</if>
+		<if test="queryDto.sampleTypeId != null and queryDto.sampleTypeId != ''">
+			AND t.sample_type_id=#{queryDto.sampleTypeId}
+		</if>
+		<if test="queryDto.sexId != null and queryDto.sexId != ''">
+			AND t.sex_id=#{queryDto.sexId}
+		</if>
+		<if test="queryDto.ageUnitId != null and queryDto.ageUnitId != ''">
+			AND t.age_unit_id=#{queryDto.ageUnitId}
+		</if>
+		ORDER BY convert(cdc.name USING gbk) COLLATE gbk_chinese_ci,t.sex_id,t.age_unit_id
+	</select>
+	
+	<!-- 根据id集合查询列表  -->
+	<select id="findByIds" resultType="com.daan.domain.CtrInstrumentsItems" >
+		SELECT
+			t.id            AS id,
+			t.instrument_id AS instrumentId,
+			t.channel_code  AS channelCode,
+			t.factor        AS factor,
+			t.print_order   AS printOrder,
+			t.unit          AS unit,
+			t.test_item_id  AS testItemId
+		FROM
+			ctr_instr_items t
+		WHERE 1 = 1 AND t.id IN 
+		<foreach item="id" index="index" collection="list" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+	
+	<!-- 根据id集合查询项目对照表  -->
+	<select id="findById" resultType="com.daan.domain.CtrInstrumentsItems" >
+		SELECT
+			t.id            AS id,
+			t.instrument_id AS instrumentId,
+			t.channel_code  AS channelCode,
+			t.factor        AS factor,
+			t.print_order   AS printOrder,
+			t.unit          AS unit,
+			t.test_item_id  AS testItemId
+		FROM
+			ctr_instr_items t
+		WHERE 1 = 1
+			AND t.id = #{id}
+	</select>
+
+	<!-- 新增项目对照表  -->
+	<insert id="insertCtrInstrumentsItem" parameterType="com.daan.domain.CtrInstrumentsItems" keyProperty="id">
+		INSERT INTO ctr_instr_items (
+			id,
+			instrument_id,
+			test_item_id,
+			time_version
+		)
+		VALUES
+		(
+			#{id},              
+			#{instrumentId},
+			#{testItemId},
+			NOW()     
+		)
+	</insert>
+	
+	<!-- 删除项目对照表  -->
+	<delete id="deleteById" parameterType="java.lang.String" >
+		DELETE FROM
+			ctr_instr_items
+		WHERE 1=1 
+			AND id=#{id}
+	</delete>
+	
+	<!-- 修改项目对照表  -->
+	<update id="updateCtrInstrumentsItem" parameterType="com.daan.domain.CtrInstrumentsItems">
+		UPDATE ctr_instr_items
+		SET channel_code = #{channelCode},      		
+			factor = #{factor},
+			unit = #{unit},
+			print_order = #{printOrder},
+			time_version = NOW()
+		WHERE 1=1 
+			AND id = #{id}
+	</update>
+	
+	<!-- 根据id查询Object  -->
+	<select id="findRefrangesById" parameterType="java.lang.String" resultType="com.daan.domain.CtrInstrumentsRefranges" >
+		SELECT
+			t.id          		AS id,
+			t.instrument_id 	AS instrumentId,
+			t.test_item_id 		AS testItemId,
+			t.sample_type_id 	AS sampleTypeId,
+			cdc.name      		AS sampleTypeName,
+			t.sex_id      		AS sexId,
+			t.age_unit_id 		AS ageUnitId,
+			t.age_min     		AS ageMin,
+			t.age_max     		AS ageMax,
+			t.ref_low     		AS refLow,
+			t.ref_high    		AS refHigh,
+			t.panic_low   		AS panicLow,
+			t.panic_high  		AS panicHigh,
+			t.alarm_low   		AS alarmLow,
+			t.alarm_high  		AS alarmHigh,
+			t.ref_text			AS refText,
+			t.ref_remark		AS refRemark
+		FROM
+			ctr_instr_refranges t
+		LEFT JOIN ctr_dict_codes cdc ON cdc.id=t.sample_type_id
+		WHERE 1=1 
+			AND t.id=#{id}
+	</select>
+	
+	<!-- 新增参考值  -->
+	<insert id="insertCtrInstrumentsRefranges" parameterType="com.daan.domain.CtrInstrumentsRefranges" keyProperty="id">
+		INSERT INTO ctr_instr_refranges (
+			id,
+			instrument_id,
+			test_item_id,
+			sample_type_id,
+			sex_id,
+			age_unit_id,
+			age_min,
+			age_max,
+			calc_age_min,
+			calc_age_max,
+			ref_low,
+			ref_high,
+			panic_low,
+			panic_high,
+			alarm_low,
+			alarm_high,
+			ref_text,
+			ref_remark,
+			en_ref_remark,
+			en_ref_text,
+			time_version
+		)
+		VALUES
+		(
+			#{id},              
+			#{instrumentId},
+			#{testItemId},
+			#{sampleTypeId},
+			#{sexId},
+			#{ageUnitId},
+			#{ageMin},
+			#{ageMax},
+			#{calcAgeMin},
+			#{calcAgeMax},
+			#{refLow},
+			#{refHigh},
+			#{panicLow},
+			#{panicHigh},
+			#{alarmLow},
+			#{alarmHigh},
+			#{refText},
+			#{refRemark},
+			#{enRefRemark},
+			#{enRefText},          
+			NOW()     
+		)
+	</insert>
+
+	<!-- 修改参考值  -->
+	<update id="updateCtrInstrumentsRefranges" parameterType="com.daan.domain.CtrInstrumentsRefranges">
+		UPDATE ctr_instr_refranges
+		SET sample_type_id = #{sampleTypeId},      		
+			sex_id = #{sexId},
+			age_unit_id = #{ageUnitId},
+			age_min = #{ageMin},
+			age_max = #{ageMax},
+			calc_age_min = #{calcAgeMin},
+			calc_age_max = #{calcAgeMax},
+			ref_low = #{refLow},	
+			ref_high = #{refHigh},
+			panic_low = #{panicLow},
+			panic_high = #{panicHigh},
+			alarm_low = #{alarmLow},
+			alarm_high = #{alarmHigh},
+			ref_text = #{refText},
+			ref_remark = #{refRemark},
+			time_version = NOW()
+		WHERE 1=1 
+			AND id = #{id}
+	</update>
+	
+	<!-- 删除参考值  -->
+	<delete id="deleteRefrangesById" parameterType="java.lang.String" >
+		DELETE FROM
+			ctr_instr_refranges
+		WHERE 1=1 
+			AND id=#{id}
+	</delete>
+	
+	<!-- 根据仪器id，查询已包含项目列表  -->
+	<select id="queryContainItemByInstrumentId" parameterType="java.lang.String" resultType="com.daan.domain.CtrTestItems" >
+		SELECT DISTINCT
+			t.id		      AS id,
+			t.code_no         AS codeNo,
+			t.name            AS NAME,
+			t.en_short_name   AS enShortName,
+			t.test_method_id  AS testMethodId,
+			cdc.name      	  AS testMethodName
+		FROM
+			ctr_test_items t
+		INNER JOIN ctr_instr_items cii ON t.id = cii.test_item_id
+		LEFT JOIN ctr_dict_codes cdc ON cdc.id=t.test_method_id
+		WHERE 1=1 
+		    AND cii.instrument_id=#{instrument_id}
+		ORDER BY cii.print_order
+	</select>
+	
+	<!-- 根据仪器id，查询未包含项目列表  -->
+	<select id="queryUnContainItemByConditions" parameterType="com.daan.dto.CtrInstrumentsItemQueryDto" resultType="com.daan.domain.CtrTestItems" >
+		SELECT
+			t.id		      AS id,
+			t.code_no         AS codeNo,
+			t.name            AS NAME,
+			t.en_short_name   AS enShortName,
+			t.test_method_id  AS testMethodId,
+			cdc.name      	  AS testMethodName
+		FROM
+			ctr_test_items t
+		LEFT JOIN ctr_dict_codes cdc ON cdc.id=t.test_method_id
+		WHERE 1=1 
+			AND t.status=1 
+			AND t.item_type_id=1 
+		    AND NOT EXISTS(SELECT
+			                 1
+			               FROM ctr_instr_items cii
+			               WHERE t.id = cii.test_item_id
+			               		AND cii.instrument_id=#{queryDto.instrumentId})
+		<if test="queryDto.testMethodId != null and queryDto.testMethodId != ''">
+			AND t.test_method_id=#{queryDto.testMethodId}
+		</if>
+		<if test="queryDto.addItemSearchStr != null and queryDto.addItemSearchStr != ''">
+			AND (cdc.name LIKE CONCAT('%',#{queryDto.addItemSearchStr},'%') 
+				OR t.name LIKE CONCAT('%',#{queryDto.addItemSearchStr},'%') 
+				OR t.en_short_name LIKE CONCAT('%',#{queryDto.addItemSearchStr},'%') )
+		</if>
+		ORDER BY t.display_order
+	</select>
+</mapper>

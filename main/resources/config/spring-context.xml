@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd  
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd  
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd              
+            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+    
+    
+    <!-- 激活@Controller模式 -->
+<!--     <mvc:annotation-driven/> -->
+  <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">        
+<!--         <property name="interceptors"> -->
+<!--             <list>   -->
+<!--                 <ref bean="logNDCInteceptor"/>   日志拦截器，这是你自定义的拦截器 -->
+<!--             </list>         -->
+<!--         </property>         -->
+    </bean>      
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">  
+            <list>  
+	          <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />  
+	          <bean class="org.springframework.http.converter.StringHttpMessageConverter">  
+	          		<constructor-arg value="UTF-8" index="0">  
+    				</constructor-arg>  
+	                <property name="supportedMediaTypes">  
+	                    <list>  
+	                        <value>text/plain;charset=UTF-8</value>  
+	                    </list>  
+	                </property>  
+	            </bean>  
+            </list>  
+        </property>  
+    </bean> 
+        
+    <context:annotation-config/>  
+    
+    <!-- 对包中的所有类进行扫描，以完成Bean创建和自动依赖注入的功能 -->
+    <context:component-scan base-package="com.daan.dao"/>
+    <context:component-scan base-package="com.daan.dao.auth"/>
+    <context:component-scan base-package="com.daan.dao.inst"/>
+	<context:component-scan base-package="com.daan.service"/>
+    <context:component-scan base-package="com.daan.controller"/>
+    <context:component-scan base-package="com.daan.util" resource-pattern="XmlUtils.class"/>
+    
+    
+    <!-- 引入mybatis属性配置文件-->
+    <import resource="mybatis-context.xml"/>
+    
+    <!-- 引入redis属性文件 -->
+	<import resource="redis-config.xml"/>
+    
+    <!-- redis template definition -->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+        </property>
+    </bean>
+    
+    <!--<import resource="memcache-context.xml"/>-->
+
+    <!-- 拦截器 -->
+    <mvc:interceptors>  
+<!--         多个拦截器,顺序执行   -->
+        <mvc:interceptor>
+        	<mvc:mapping path="/*"/>
+        	<mvc:exclude-mapping path="/service/*" />
+           <bean class="com.daan.controller.interceptor.LoginInterceptor"></bean>  
+        </mvc:interceptor>
+    </mvc:interceptors>
+    
+	<!-- 上传文件拦截，设置最大上传文件大小   10M=10*1024*1024(B)=10485760 bytes -->  
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+	    <property name="maxUploadSize" value="10485760" />  
+	</bean>
+	
+	<!-- 配置fkTableConfigLoader，程序启动时调用执行类中initialized方法 -->
+	<bean id="fkTableConfigLoader" class="com.daan.listener.FkTableConfigLoader"/>
+</beans>

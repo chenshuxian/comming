@@ -1,0 +1,51 @@
+--2015-12-09
+INSERT INTO ctr_regions (
+	id,
+	code_no,
+	name,
+	en_short_name,
+	en_name,
+	fast_code,
+	left_value,
+	right_value,
+	status,
+	time_version,
+	tier
+)
+VALUES
+	(
+		111111111111111111,
+		1911111111,
+		'中国',
+		'CN',
+		'CHINA',
+		'CN',
+		1,
+		2,
+		1,
+		now(),
+		1
+	);
+
+
+INSERT INTO users (
+	id,
+	user_no,
+	user_name,
+	mobile,
+	email,
+	PASSWORD,
+	STATUS,
+	time_version
+)
+VALUES
+	(
+		110000000000000000,
+		1100000000,
+		'Admin',
+		'',
+		'',
+		'96E79218965EB72C92A549DD5A330112',
+		1,
+		now()
+	);

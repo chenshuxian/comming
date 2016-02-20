@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+    version="2.0">
+
+  <description>Authorize core library</description>
+  <display-name>Authorize core</display-name>
+  <tlib-version>1.1</tlib-version>
+  <short-name>auth</short-name>
+  <uri>http://acegisecurity.org/auth</uri>
+
+  <validator>
+    <description>
+        Provides core validation features for JSTL tags.
+    </description>
+    <validator-class>
+        org.apache.taglibs.standard.tlv.JstlCoreTLV
+    </validator-class>
+  </validator>
+
+  <tag>
+    <description>
+    </description>
+    <name>ifAuthrized</name>
+    <tag-class>com.daan.util.AuthorizedTag</tag-class>
+    <body-content>JSP</body-content>
+    <attribute>
+        <description>
+			The url to check if the current user has permission.
+        </description>
+        <name>value</name>
+        <required>true</required>
+        <rtexprvalue>true</rtexprvalue>
+		<type>boolean</type>
+    </attribute>    
+  </tag>
+
+</taglib>

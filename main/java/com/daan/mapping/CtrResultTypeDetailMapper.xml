@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daan.dao.CtrResultTypeDetailDao">
+	<!-- 搜索查询拼接条件 -->
+	<sql id="queryCondition">
+		WHERE 1 = 1
+		<if test="queryDto.typeId != null and queryDto.typeId != ''">
+				AND d.type_id = #{queryDto.typeId}
+			</if>
+		<if test="queryDto.sort != null and queryDto.sort != ''">
+			<if test="queryDto.sort == 0">
+				ORDER BY d.display_order
+			</if>
+			<if test="queryDto.sort == 1">
+				ORDER BY CONVERT(result_value USING gbk) COLLATE gbk_chinese_ci
+			</if>
+			<if test="queryDto.sort == 2">
+				ORDER BY d.id desc
+			</if>
+		</if> 
+	</sql>
+	
+	<!-- 分页查询，查出总条数 -->
+	<select id="queryCountByConditions" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM
+			ctr_result_type_details d
+		<include refid="queryCondition"></include>
+	</select>
+	
+	<!-- 分页查询LIST  -->
+	<select id="queryPageListByConditions" parameterType="com.daan.dto.CtrResultTypeDetailDto" resultType="com.daan.domain.CtrResultTypeDetail" >
+		SELECT
+			id,
+			type_id as typeId,
+			result_value as resultValue,
+			display_order as displayOrder,
+			fast_code as fastCode,
+			time_version as timeVersion
+		FROM
+			ctr_result_type_details d
+		<include refid="queryCondition"></include>
+		<!-- ${page.mysqlQueryCondition} -->
+	</select>
+	
+	<!-- 根据ID查找记录 -->
+	<select id="findById" parameterType="java.lang.String" resultType="com.daan.domain.CtrResultTypeDetail" >
+		SELECT
+			id,
+			type_id as typeId,
+			result_value as resultValue,
+			display_order as displayOrder,
+			fast_code as fastCode,
+			time_version as timeVersion
+		FROM
+			ctr_result_type_details d
+		WHERE 1=1
+			AND d.id = #{id}
+	</select>  
+	
+	<!-- 根据名称查找记录 -->
+	<select id="findListByConditions" parameterType="java.lang.String" resultType="com.daan.domain.CtrResultTypeDetail" >
+		SELECT
+			id,
+			type_id as typeId,
+			result_value as resultValue,
+			display_order as displayOrder,
+			fast_code as fastCode,
+			time_version as timeVersion
+		FROM
+			ctr_result_type_details d
+		WHERE 1=1
+			<if test="name != null and name != ''">
+				AND d.result_value = #{name}
+			</if>
+			<if test="typeId != null and typeId != ''">
+				AND d.type_id = #{typeId}
+			</if>
+	</select>  
+	
+	<!-- 添加信息  useGeneratedKeys="true" keyProperty="id"-->
+	<insert id="addCtrResultTypeDetail" parameterType="com.daan.domain.CtrResultTypeDetail">
+		INSERT INTO ctr_result_type_details (
+			id,
+			type_id,
+			result_value,
+			display_order,
+			fast_code,
+			time_version
+		)
+		VALUES
+			(
+				#{id},
+				#{typeId},
+				#{resultValue},
+				#{displayOrder},
+				#{fastCode},
+				#{timeVersion}
+			)
+	</insert>
+	
+	<!-- 修改信息 -->
+	<update id="modifyCtrResultTypeDetail" parameterType="com.daan.domain.CtrResultTypeDetail">
+		UPDATE ctr_result_type_details SET result_value = #{resultValue}, fast_code = #{fastCode}, display_order = #{displayOrder}, time_version = NOW() WHERE id = #{id}
+	</update>
+	
+	<!-- 根据ID删除 -->
+	<delete id="deleteById" parameterType="java.lang.String">
+		DELETE FROM ctr_result_type_details WHERE id=#{id}
+	</delete>
+	
+	<!-- 根据结果类型ID删除 -->
+	<delete id="deleteByTypeId" parameterType="java.lang.String">
+		DELETE FROM ctr_result_type_details WHERE type_id=#{typeId}
+	</delete>
+</mapper>

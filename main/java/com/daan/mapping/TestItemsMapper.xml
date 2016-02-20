@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daan.dao.TestItemsDao">
+	<!-- 搜索查询拼接条件  start -->
+	<sql id="pageQueryCondition" >
+		where 1 = 1
+		    and t.item_type_id = 1
+		    <if test="queryDto.searchStr != null and queryDto.searchStr != ''">
+		    	and CONCAT_WS(t.code_no,t.`name`,t.en_name,t.en_short_name,t.fast_code) like CONCAT('%',#{queryDto.searchStr},'%')
+		    </if>
+		    <if test="queryDto.status != null and queryDto.status != '' and queryDto.status != '2'.toString()">
+		    	and t.`status` = #{queryDto.status}
+		    </if>
+		    <if test="queryDto.disciplineId != null and queryDto.disciplineId != 0">
+		   		and p.discipline_id = #{queryDto.disciplineId}
+		    </if>
+		    <if test="queryDto.orderType != null and queryDto.orderType != ''">
+		     order by
+		    	<if test="queryDto.orderType == '0'.toString()">
+		    		t.display_order -- 按顺序号升序
+		    	</if>
+		    	<if test="queryDto.orderType == '1'.toString()">
+		    		convert(t.name  USING gbk) COLLATE gbk_chinese_ci  -- 按名称升序
+		    	</if>
+		    	<if test="queryDto.orderType == '2'.toString()">
+		    		t.time_version desc -- 按录入顺序降序
+		    	</if>
+		    </if>
+	</sql>
+	<!-- 搜索查询拼接条件  end -->
+	
+	<!-- 查询总数 start -->
+	<select id="queryTestItemsCountForPage" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM
+			test_items t
+		LEFT JOIN item_properties p ON t.id = p.test_item_id
+		LEFT JOIN dict_codes cdc1 ON cdc1.id = t.test_method_id
+		LEFT JOIN dict_codes cdc2 ON cdc2.id = t.sample_type_id
+		LEFT JOIN dict_codes cdc3 ON cdc3.id = p.discipline_id
+		<include refid="pageQueryCondition"></include>
+	</select>
+	<!-- 查询总数 end -->
+	
+		<!-- 分页查询List start -->
+	<select id="pageQueryTestItems" parameterType="com.daan.dto.TestItemsDto" resultType="com.daan.dto.TestItemsDto">
+		SELECT
+			t.id as idString,
+			t.code_no as codeNO, -- 达安标准码
+			t.`name` as name, -- 项目名称
+			t.en_name as enName,-- 英文名称
+			t.en_short_name as enShortName,-- 英文简称
+			t.report_name as reportName,-- 报告名称
+			t.sex_id as sexId,-- 性别id
+			t.item_type_id as itemTypeId,-- 项目类型
+			t.test_method_id as testMethodId,-- 检验方法id
+			p.discipline_id as disciplineId,-- 医学专业组id
+			t.sample_type_id as sampleTypeId,-- 默认标本类型id
+			p.ref_method as refMethod,-- 参考值显示方法
+			t.is_Individual_stat as isIndividualStat,-- 是否按单项统计检测工作量
+			p.unit as unit,-- 单位
+			t.price as price,-- 价格
+			p.result_type_id as resultTypeId,-- 结果类型id
+			p.result_precision as resultPrecision ,-- 精度
+			t.fast_code as fastCode,-- 助记符
+			p.std_code as stdCode,-- 国家标准码
+			t.display_order as displayOrder,-- 顺序号
+			t.memo as memo,-- 备注
+			t.`status` as status,-- 是否停用
+			cdc1.`name` AS testMethodName,-- 检验方法
+			cdc2.`name` AS sampleTypeName,-- 默认样本类型
+			cdc3.`name` AS disciplineName,-- 医学专业组
+		    p.ref_method as refMethod,-- 参考值方式
+            p.default_result as defaultResult,-- 默认结果
+		    p.formula_describe as formulaDescribe
+		FROM
+			test_items t
+		LEFT JOIN item_properties p ON t.id = p.test_item_id
+		LEFT JOIN dict_codes cdc1 ON cdc1.id = t.test_method_id
+		LEFT JOIN dict_codes cdc2 ON cdc2.id = t.sample_type_id
+		LEFT JOIN dict_codes cdc3 ON cdc3.id = p.discipline_id
+		<include refid="pageQueryCondition"></include>
+		${page.mysqlQueryCondition}
+	</select>
+	<!-- 分页查询List end -->
+	
+	<!-- 根据ID查询检验项目信息 start -->
+	<select id="queryTestItemByID" resultType="com.daan.dto.TestItemsDto">
+		SELECT
+			t.id as idString,
+			t.code_no as codeNO, -- 达安标准码
+			t.`name` as name, -- 项目名称
+			t.en_name as enName,-- 英文名称
+			t.en_short_name as enShortName,-- 英文简称
+			t.report_name as reportName,-- 报告名称
+			t.sex_id as sexId,-- 性别id
+			t.item_type_id as itemTypeId,-- 项目类型
+			t.test_method_id as testMethodId,-- 检验方法id
+			p.discipline_id as disciplineId,-- 医学专业组id
+			t.sample_type_id as sampleTypeId,-- 默认标本类型id
+			p.ref_method as refMethod,-- 参考值显示方法
+			t.is_Individual_stat as isIndividualStat,-- 是否按单项统计检测工作量
+			t.is_useful as isUseful,-- 是否可以开单
+			p.unit as unit,-- 单位
+			t.price as price,-- 价格
+			p.result_type_id as resultTypeId,-- 结果类型id
+			p.result_precision as resultPrecision ,-- 精度
+			t.fast_code as fastCode,-- 助记符
+			p.std_code as stdCode,-- 国家标准码
+			t.display_order as displayOrder,-- 顺序号
+			t.memo as memo,-- 备注
+			t.`status` as status,-- 是否停用
+			cdc1.`name` AS testMethodName,-- 检验方法
+			cdc2.`name` AS sampleTypeName,-- 默认样本类型
+			cdc3.`name` AS disciplineName,-- 医学专业组
+		    p.ref_method as refMethod,-- 参考值方式
+            p.default_result as defaultResult,-- 默认结果
+		    cdc4.`name` as resultTypeName, -- 结果类型
+		    t.test_method_id  as testMethodIdString,
+			p.discipline_id as disciplineIdString,
+			t.sample_type_id as sampleTypeIdString,
+			p.result_type_id  as resultTypeIdString
+		FROM
+			test_items t
+		LEFT JOIN item_properties p ON t.id = p.test_item_id
+		LEFT JOIN dict_codes cdc1 ON cdc1.id = t.test_method_id
+		LEFT JOIN dict_codes cdc2 ON cdc2.id = t.sample_type_id
+		LEFT JOIN dict_codes cdc3 ON cdc3.id = p.discipline_id
+		LEFT JOIN result_types cdc4 ON cdc4.id = p.result_type_id
+		WHERE
+			t.id = #{id}
+	</select>
+	<!-- 根据ID查询检验项目信息 end -->
+	
+	<!-- 查询中心字典库的项目信息 start -->
+	<select id="queryCtrTestItems" resultType="com.daan.dto.TestItemsDto">
+		 SELECT
+			t.id AS idString,
+			t.item_type_id AS itemTypeId,
+			t.test_method_id AS testMethodId,-- 检验方法id
+			p.discipline_id as disciplineId,-- 医学专业组id
+			t.sample_type_id as sampleTypeId,-- 默认标本类型id
+			p.result_type_id as resultTypeId,-- 结果类型id
+			t.code_no AS codeNo,
+			t.`name` AS NAME,
+			t.en_name AS enName,
+			t.en_short_name AS enShortName,
+			t.sex_id AS sexId,
+			t. STATUS AS STATUS,
+			cdc1.`name` AS testMethodName,
+			cdc2.`name` AS sampleTypeName,
+			cdc3.`name` AS disciplineName,
+			p.fast_code AS fastCode,
+			t.display_order AS displayOrder, 
+		    t.memo as memo,
+		    p.ref_method as refMethod,
+		    p.unit as unit,
+		    p.std_code as stdCode,
+		    p.result_precision as resultPrecision,
+            cdc1.code_no  AS testMethodCodeNo ,
+            cdc2.code_no  AS sampleTypeCodeNo,
+            cdc3.code_no  AS disciplineCodeNo
+		FROM
+			ctr_test_items t
+		LEFT JOIN ctr_item_properties p ON t.id = p.test_item_id
+		LEFT JOIN ctr_dict_codes cdc1 ON cdc1.id = t.test_method_id
+		LEFT JOIN ctr_dict_codes cdc2 ON cdc2.id = t.sample_type_id
+		LEFT JOIN ctr_dict_codes cdc3 ON cdc3.id = p.discipline_id
+		where 1 = 1
+		    and t.item_type_id = #{itemTypeId}
+		<if test="searchStr != null and searchStr != ''">
+		    	and CONCAT_WS(t.code_no,t.`name`,t.en_name,t.en_short_name,p.fast_code) like CONCAT('%',#{searchStr},'%')
+		</if>
+		<if test="id != null and id != ''">
+		    	and t.id = #{id}
+		</if>
+		<if test="idList != null and idList != ''">
+		    	and t.id in
+		    	<foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
+                        #{id}
+                </foreach>
+		</if>
+	</select>
+	<!-- 查询中心字典库的项目信息 end -->
+	
+	<!-- 根据ID查询查询关联仪器 start -->
+	<select id="queryRelatedInstruments" resultType="com.daan.dto.TestItemsDto">
+	SELECT
+			t.id AS idString,
+			t.code_no AS codeNo,
+			t.`name` AS NAME,
+			t.en_name AS enName,
+			t.en_short_name AS enShortName,
+			t.sex_id AS sexId,
+			t. STATUS AS STATUS,
+			cdc1.`name` AS testMethodName,
+			cdc2.`name` AS sampleTypeName,
+			cdc3.`name` AS disciplineName,
+			t.display_order AS displayOrder, 
+		    t.memo as memo,
+		    p.ref_method as refMethod,
+		    p.unit as unit,
+		    p.std_code as stdCode,
+		    p.result_precision as resultPrecision,
+		    ins.id as instrumentId,
+		    ins.`name` as instrumentName,
+            ins.code_no as instrumentCodeNo,
+		    p.formula_describe as formulaDescribe
+		FROM
+			test_items t
+		LEFT JOIN item_properties p ON t.id = p.test_item_id
+		LEFT JOIN dict_codes cdc1 ON cdc1.id = t.test_method_id
+		LEFT JOIN dict_codes cdc2 ON cdc2.id = t.sample_type_id
+		LEFT JOIN dict_codes cdc3 ON cdc3.id = p.discipline_id
+		INNER JOIN instr_items ii ON ii.test_item_id = t.id
+        LEFT JOIN instruments ins ON ii.instrument_id = ins.id
+        WHERE
+			t.id = #{id}
+	</select>
+	<!-- 根据ID查询查询关联仪器 end -->
+	
+	<!-- 判断是否有相同的本地项目数据 start -->
+	<select id="queryTestItemsIfExist" resultType="com.daan.domain.TestItems">
+	   SELECT
+			t.`name` as name -- 项目名称
+		FROM
+			test_items t
+		WHERE
+		   t.item_type_id = #{itemTypeId}
+		   and (
+		   t.code_no in
+		        <foreach item="codeNo" index="index" collection="codeNoList" open="(" separator="," close=")">
+                        #{codeNo}
+                </foreach>
+		   or
+		   t.name in 
+		        <foreach item="name" index="index" collection="nameList" open="(" separator="," close=")">
+                        #{name}
+                </foreach>
+		   )
+		   GROUP BY t.`name`
+	</select>
+	<!-- 判断是否有相同的本地项目数据 end -->
+	
+	<!-- 查询可用的项目start -->
+	<select id="queryTestItemsByStatus" resultType="com.daan.dto.TestItemsDto">
+	  SELECT 
+	     t.id AS idString,
+	     t.code_no AS codeNo,
+	     t.en_short_name AS enShortName,
+	     t.`name` AS name
+     FROM
+	     test_items AS t
+     WHERE
+	    t.`status` = #{status}
+	</select>
+	<!-- 查询可用的项目end -->
+	
+	<!-- 插入检验项目信息 start-->
+	<insert id="insertTestItems" parameterType="com.daan.domain.TestItems" keyProperty="id">
+		INSERT INTO test_items (
+			id,
+            item_type_id,
+            org_id,
+            code_no,
+            name,
+            report_name,
+            en_name,
+            en_short_name,
+            sex_id,
+            test_method_id,
+            sample_type_id,
+            fast_code,
+            display_order,
+            memo,
+            status,
+            is_useful,
+            is_Individual_stat,
+            price,
+            receipt_desc,
+            collect_desc,
+            combine_key,
+            volume_ml,
+            collect_sample_type_id,
+            tube_type_id,
+            relation_count,
+            time_version
+		)
+		VALUES
+			(
+			    #{id},
+                #{itemTypeId},
+                #{orgId},
+                #{codeNo},
+                #{name},
+                #{reportName},
+                #{enName},
+                #{enShortName},
+                #{sexId},
+                #{testMethodId},
+                #{sampleTypeId},
+                #{fastCode},
+                #{displayOrder},
+                #{memo},
+                #{status},
+                #{isUseful}, 
+                #{isIndividualStat},
+                #{price},
+                #{receiptDesc},
+                #{collectDesc},
+                #{combineKey},
+                #{volumeMl},
+                #{collectSampleTypeId},
+                #{tubeTypeId},
+                #{relationCount},        
+				NOW()     
+			)
+		</insert>
+		<insert id="insertItemProperties" parameterType="com.daan.domain.ItemProperties">
+		INSERT INTO item_properties (
+			app_id,
+            org_id,
+            test_item_id,
+            discipline_id,
+            ref_method,
+            result_type_id,
+            unit,
+            result_precision,
+            formula_describe,
+            std_code,
+            default_result,
+            time_version
+		)
+		VALUES
+			(
+                #{appId},
+                #{orgId},
+                #{testItemId},
+                #{disciplineId},
+                #{refMethod},
+                #{resultTypeId},
+                #{unit},
+                #{resultPrecision},
+                #{formulaDescribe},
+                #{stdCode},
+                #{defaultResult},       
+				NOW()   
+			)
+	</insert>
+	<!-- 插入检验项目其他信息 end -->
+	
+		
+	<!-- 删除项目 start -->
+	<delete id="deleteTestItem" parameterType="java.lang.Integer">
+		delete from test_items where id=#{id}
+	</delete>
+	<delete id="deleteItemProperties" parameterType="java.lang.Integer">
+		delete from item_properties where test_item_id=#{id}
+	</delete>
+	<!-- 删除项目 end -->
+	
+	<!-- 启用或者停用状态 -->
+	<update id="updateTestItemsStatus" parameterType="Map">
+		UPDATE test_items
+		SET 
+		<if test="status == 0">
+			status = 1,  
+		</if>
+		<if test="status == 1">
+			status = 0,  
+		</if>        		
+			time_version = NOW()      
+		WHERE 1=1 
+			AND id = #{id}
+	</update>
+	
+	<!-- 修改检验项目 start -->
+	<update id="updateTestItem"  parameterType="com.daan.domain.TestItems">
+		UPDATE test_items
+			SET 
+			<if test="codeNo != null">
+			code_no = #{codeNo},
+			</if>
+			<if test="name != null">
+			 name = #{name},
+			</if>
+			<if test="reportName != null">
+			 report_name = #{reportName},
+			</if>
+			<if test="enName != null">
+			 en_name = #{enName},
+			</if>
+			<if test="enShortName != null">
+			en_short_name = #{enShortName},
+			</if>
+			<if test="sexId != null">
+			
+			 sex_id = #{sexId}, 
+			</if>
+			<if test="testMethodId != null">
+			test_method_id = #{testMethodId},
+			</if>
+			<if test="sampleTypeId != null">
+			sample_type_id = #{sampleTypeId},
+			</if>
+			<if test="fastCode != null">
+			fast_code = #{fastCode},
+			</if>
+			<if test="displayOrder != null">
+			 display_order = #{displayOrder},
+			</if>
+			<if test="memo != null">
+			 memo = #{memo}, 
+			</if>
+			<if test="status != null">
+			status= #{status},
+			</if>
+			<if test="isUseful != null">
+			 is_useful =  #{isUseful},
+			</if>
+			<if test="price != null">
+			price= #{price},
+			</if>
+			<if test="isIndividualStat != null">
+			is_Individual_stat = #{isIndividualStat},
+			</if>
+			
+				time_version = NOW()     
+		WHERE
+			id = #{id}
+	</update>
+	<!-- 修改检验项目 end -->
+	<!-- 修改检验项目其他信息 start -->
+	<update id = "updateItemProperties" parameterType="com.daan.domain.ItemProperties">
+		UPDATE item_properties
+			SET 
+            <if test="disciplineId != null">
+            discipline_id = #{disciplineId},
+			</if>
+			<if test="refMethod != null">
+			 ref_method = #{refMethod},
+			</if>
+			<if test="resultTypeId != null">
+			 result_type_id = #{resultTypeId},
+			</if>
+			<if test="unit != null">
+			unit = #{unit},
+			</if>
+			<if test="resultPrecision != null">
+			result_precision = #{resultPrecision},
+			</if>
+			<if test="stdCode != null">
+			std_code = #{stdCode}, 
+			</if>
+			<if test="defaultResult != null">
+			default_result=#{defaultResult},
+			</if>
+			time_version = NOW()
+		WHERE
+			test_item_id = #{testItemId}
+	</update>
+	<!-- 修改检验项目其他信息 end -->
+	
+	
+	
+	
+	
+
+
+	<!-- app_id, org_id 拼接条件 -->
+	<sql id="appId_OrgId_Conditions">
+		<if test="orgId != null and orgId != ''">
+			AND t.org_id = #{orgId}
+		</if>
+	</sql>
+	<!-- 查询本地检验项目列表  -->
+	<select id="queryTestItemsList" parameterType="java.lang.String" resultType="com.daan.domain.TestItems">
+		 SELECT
+			t.id AS id,
+			t.code_no AS codeNo
+		FROM
+			test_items t
+		where 1 = 1
+		<include refid="appId_OrgId_Conditions"></include>
+	</select>
+	<!-- 查询中心字典库的项目信息分页 -->
+	<select id="queryCtrTestItemsPage" resultType="com.daan.dto.TestItemsDto">
+		 SELECT
+			t.id AS idString,
+			t.item_type_id AS itemTypeId,
+			t.test_method_id AS testMethodId,-- 检验方法id
+			p.discipline_id as disciplineId,-- 医学专业组id
+			t.sample_type_id as sampleTypeId,-- 默认标本类型id
+			p.result_type_id as resultTypeId,-- 结果类型id
+			t.code_no AS codeNo,
+			t.`name` AS NAME,
+			t.en_name AS enName,
+			t.en_short_name AS enShortName,
+			t.sex_id AS sexId,
+			t. STATUS AS STATUS,
+			cdc1.`name` AS testMethodName,
+			cdc2.`name` AS sampleTypeName,
+			cdc3.`name` AS disciplineName,
+			p.fast_code AS fastCode,
+			t.display_order AS displayOrder, 
+		    t.memo as memo,
+		    p.ref_method as refMethod,
+		    p.unit as unit,
+		    p.std_code as stdCode,
+		    p.result_precision as resultPrecision,
+            cdc1.code_no  AS testMethodCodeNo ,
+            cdc2.code_no  AS sampleTypeCodeNo,
+            cdc3.code_no  AS disciplineCodeNo
+		FROM
+			ctr_test_items t
+		LEFT JOIN ctr_item_properties p ON t.id = p.test_item_id
+		LEFT JOIN ctr_dict_codes cdc1 ON cdc1.id = t.test_method_id
+		LEFT JOIN ctr_dict_codes cdc2 ON cdc2.id = t.sample_type_id
+		LEFT JOIN ctr_dict_codes cdc3 ON cdc3.id = p.discipline_id
+		where 1 = 1
+		    and t.item_type_id = #{queryDto.itemType} and t.status=1
+		<if test="queryDto.searchStr != null and queryDto.searchStr != ''">
+		    	and CONCAT_WS(t.code_no,t.`name`,t.en_name,t.en_short_name,p.fast_code) like CONCAT('%',#{queryDto.searchStr},'%')
+		</if>
+		${page.mysqlQueryCondition}
+	</select>
+	<!-- 查询中心字典库的项目信息分页 -->
+	<select id="queryCtrTestItemsPageCount" resultType="java.lang.Integer">
+		 SELECT
+			count(1)
+		FROM
+			ctr_test_items t
+		LEFT JOIN ctr_item_properties p ON t.id = p.test_item_id
+		LEFT JOIN ctr_dict_codes cdc1 ON cdc1.id = t.test_method_id
+		LEFT JOIN ctr_dict_codes cdc2 ON cdc2.id = t.sample_type_id
+		LEFT JOIN ctr_dict_codes cdc3 ON cdc3.id = p.discipline_id
+		where 1 = 1
+		    and t.item_type_id = #{queryDto.itemType} and t.status=1
+		<if test="queryDto.searchStr != null and queryDto.searchStr != ''">
+		    	and CONCAT_WS(t.code_no,t.`name`,t.en_name,t.en_short_name,p.fast_code) like CONCAT('%',#{queryDto.searchStr},'%')
+		</if>
+	</select>
+	
+	<!-- 更新项目的计算公式 -->
+	<update id = "updateFormulaDescribe" parameterType="com.daan.domain.ItemProperties">
+    	UPDATE item_properties 
+                SET  
+             formula_describe = #{formulaDescribe}
+             where 
+             test_item_id = #{testItemId}
+	</update>
+</mapper>

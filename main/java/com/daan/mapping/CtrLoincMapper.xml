@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daan.dao.CtrLoincDao">
+
+	<!-- 搜索查询拼接条件 -->
+	<sql id="queryCondition">
+		WHERE 1 = 1
+		<if test="queryDto.searchStr != null and queryDto.searchStr != ''">
+			AND (
+				cl.code_no LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+				OR cdcc.name LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+				OR cdcp.name LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+				OR cdcm.name LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+				OR cdcs.name LIKE CONCAT('%',#{queryDto.searchStr},'%')  
+				OR cdca.name LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+				OR cdct.name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+				OR cl.fast_code LIKE CONCAT('%',#{queryDto.searchStr},'%')  
+				)
+		</if>
+		<if test="queryDto.status != null and queryDto.status != ''">
+			AND cl.status = #{queryDto.status}
+		</if>
+		<if test="queryDto.sort != null and queryDto.sort != ''">
+			<if test="queryDto.sort == 0">
+				ORDER BY cl.display_order
+			</if>
+			<if test="queryDto.sort == 2">
+				ORDER BY cl.id desc
+			</if>
+		</if>
+	</sql>
+		
+	<!-- 分页查询LIST  -->
+	<select id="queryPageListByConditions" parameterType="com.daan.dto.CtrLoincDto" resultType="com.daan.domain.CtrLoinc" >
+		SELECT
+		cl.id AS id,
+		cl.code_no AS codeNo,
+		cl.component_id AS componentId,
+		cl.test_property_id AS testPropertyId,
+		cl.test_method_id AS testMethodId,
+		cl.type_of_scale_id AS typeOfScaleId,
+		cl.time_aspect_id AS timeAspectId,
+		cl.sample_type_id AS sampleTypeId,
+		cdcc.name  AS componentName,
+		cdcp.name	 AS testPropertyName,
+		cdcm.name	 AS testMethodName,
+		cdcs.name  AS typeOfScaleName,
+		cdca.name  AS timeAspectName,
+		cdct.name  AS sampleTypeName,
+		cl.fast_code AS fastCode,
+		cl.display_order AS displayOrder,
+		cl.memo AS memo,
+		cl.status AS status
+		FROM ctr_loinc cl
+		LEFT JOIN ctr_dict_codes cdcc on cl.component_id = cdcc.id
+		LEFT JOIN ctr_dict_codes cdcp on cl.test_property_id = cdcp.id
+		LEFT JOIN ctr_dict_codes cdcm on cl.test_method_id = cdcm.id
+		LEFT JOIN ctr_dict_codes cdcs on cl.type_of_scale_id = cdcs.id
+		LEFT JOIN ctr_dict_codes cdca on cl.time_aspect_id = cdca.id
+		LEFT JOIN ctr_dict_codes cdct on cl.sample_type_id = cdct.id
+		<include refid="queryCondition"></include>
+		${page.mysqlQueryCondition}
+	</select>
+
+	<!-- 分页查询，查出总条数 -->
+	<select id="queryCountByCtrLoinc" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM
+			ctr_loinc cl
+		LEFT JOIN ctr_dict_codes cdcc on cl.component_id = cdcc.id
+		LEFT JOIN ctr_dict_codes cdcp on cl.test_property_id = cdcp.id
+		LEFT JOIN ctr_dict_codes cdcm on cl.test_method_id = cdcm.id
+		LEFT JOIN ctr_dict_codes cdcs on cl.type_of_scale_id = cdcs.id
+		LEFT JOIN ctr_dict_codes cdca on cl.time_aspect_id = cdca.id
+		LEFT JOIN ctr_dict_codes cdct on cl.sample_type_id = cdct.id
+		<include refid="queryCondition"></include>
+	</select>
+	
+	<!-- 根据id查询Object  -->
+	<select id="findById" parameterType="java.lang.String" resultType="com.daan.domain.CtrLoinc" >
+		SELECT
+		cl.id AS id,
+		cl.code_no AS codeNo, 
+		cdcc.name  AS componentName,
+		cdcp.name	 AS testPropertyName,
+		cdcm.name	 AS testMethodName,
+		cdcs.name  AS typeOfScaleName,
+		cdca.name  AS timeAspectName,
+		cdct.name  AS sampleTypeName,
+		cdcc.id  AS componentId,
+		cdcp.id	 AS testPropertyId,
+		cdcm.id	 AS testMethodId,
+		cdcs.id  AS typeOfScaleId,
+		cdca.id  AS timeAspectId,
+		cdct.id  AS sampleTypeId,
+		cl.fast_code AS fastCode,
+		cl.display_order AS displayOrder,
+		cl.memo AS memo,
+		cl.status AS status
+		FROM ctr_loinc cl
+		LEFT JOIN ctr_dict_codes cdcc on cl.component_id = cdcc.id
+		LEFT JOIN ctr_dict_codes cdcp on cl.test_property_id = cdcp.id
+		LEFT JOIN ctr_dict_codes cdcm on cl.test_method_id = cdcm.id
+		LEFT JOIN ctr_dict_codes cdcs on cl.type_of_scale_id = cdcs.id
+		LEFT JOIN ctr_dict_codes cdca on cl.time_aspect_id = cdca.id
+		LEFT JOIN ctr_dict_codes cdct on cl.sample_type_id = cdct.id
+		WHERE 1=1 
+			AND cl.id=#{id}
+	</select>
+	
+	<!-- 根据名称查询Object  -->
+	<select id="findByName" parameterType="java.lang.String" resultType="com.daan.domain.CtrLoinc" >
+		SELECT
+		cl.id AS id,
+		cl.code_no AS codeNo, 
+		cdcc.name  AS componentName,
+		cdcp.name	 AS testPropertyName,
+		cdcm.name	 AS testMethodName,
+		cdcs.name  AS typeOfScaleName,
+		cdca.name  AS timeAspectName,
+		cdct.name  AS sampleTypeName,
+		cl.fast_code AS fastCode,
+		cl.display_order AS displayOrder,
+		cl.memo AS memo,
+		cl.status AS status
+		FROM ctr_loinc cl
+		LEFT JOIN ctr_dict_codes cdcc on cl.component_id = cdcc.id
+		LEFT JOIN ctr_dict_codes cdcp on cl.test_property_id = cdcp.id
+		LEFT JOIN ctr_dict_codes cdcm on cl.test_method_id = cdcm.id
+		LEFT JOIN ctr_dict_codes cdcs on cl.type_of_scale_id = cdcs.id
+		LEFT JOIN ctr_dict_codes cdca on cl.time_aspect_id = cdca.id
+		LEFT JOIN ctr_dict_codes cdct on cl.sample_type_id = cdct.id
+		WHERE 1=1 
+			AND cl.name=#{name}
+	</select>
+	
+	<!-- 查询所有分类代码LIST  -->
+	<select id="getAllSampleTypeList" parameterType="java.lang.String" resultType="com.daan.domain.CtrDictCodes" >
+		SELECT
+			t.id AS id,
+			t.name AS name
+		FROM
+			ctr_dict_codes t
+		WHERE 1=1 
+			AND t.status = 1
+			AND t.type_key = #{typeKey}
+	</select>
+	
+	<!-- 新增LOINC编码  -->
+	<insert id="insertCtrLoinc" parameterType="com.daan.domain.CtrLoinc" keyProperty="id">
+		INSERT INTO ctr_loinc (
+			id,
+			code_no,
+			component_id,
+			test_property_id,
+			test_method_id,
+			type_of_scale_id,
+			time_aspect_id,
+			sample_type_id,
+			fast_code,
+			display_order,
+			memo,
+			status,
+			time_version
+		)
+		VALUES
+			(
+				#{id},              
+				#{codeNo},          
+				#{componentId},            
+				#{testPropertyId},     
+				#{testMethodId},           
+				#{typeOfScaleId},    
+				#{timeAspectId},    
+				#{sampleTypeId},    
+				#{fastCode},    
+				#{displayOrder},   
+				#{memo},  
+				#{status},          
+				NOW()     
+			)
+	</insert>
+	
+	<!-- 修改LOINC编码  -->
+	<update id="updateCtrLoinc" parameterType="com.daan.domain.CtrLoinc">	
+		UPDATE ctr_loinc
+		SET component_id = #{componentId},
+			test_property_id = #{testPropertyId},
+			test_method_id = #{testMethodId},
+			type_of_scale_id = #{typeOfScaleId},
+			time_aspect_id = #{timeAspectId},
+			sample_type_id = #{sampleTypeId},
+			fast_code = #{fastCode},
+			display_order = #{displayOrder},
+			memo = #{memo},			
+			time_version = NOW()
+		WHERE 1=1 
+			AND id = #{id}
+	</update>
+	
+	<!-- 启用LOINC编码  -->
+	<update id="enableById" parameterType="java.lang.String" >
+		UPDATE ctr_loinc
+		SET status = 1,          		
+			time_version = NOW()      
+		WHERE 1=1 
+			AND id = #{id}
+	</update>
+
+	<!-- 停用LOINC编码  -->
+	<update id="disableById" parameterType="java.lang.String" >
+		UPDATE ctr_loinc
+		SET status = 0,          		
+			time_version = NOW()      
+		WHERE 1=1 
+			AND id = #{id}
+	</update>
+	
+	<!-- 删除LOINC编码  -->
+	<delete id="deleteById" parameterType="java.lang.String" >
+		DELETE FROM
+			ctr_loinc
+		WHERE 1=1 
+			AND id=#{id}
+	</delete>
+
+	<update id="modifyLoinc" parameterType="com.daan.domain.CtrLoinc">
+		UPDATE ctr_loinc
+		SET status = #{status},
+		time_version = NOW()
+		WHERE 1=1
+		AND id = #{id}
+	</update>
+
+</mapper>

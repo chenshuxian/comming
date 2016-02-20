@@ -1,0 +1,18 @@
+#leftDiv{
+	float: left;
+	width:30%;
+	height:600px;
+	border:#BDBDBD 1px solid;
+}
+#rightDiv{
+	float: left;
+	width:68%;
+	height:600px;
+	border:#BDBDBD 1px solid;
+	padding-left: 20px;
+}
+#center{
+	float: left;
+	width:2%;
+	height:600px;
+}

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daan.dao.CtrTubeTypesDao">
+	
+	<!-- 搜索查询拼接条件 -->
+	<sql id="queryCondition">
+		WHERE 1 = 1
+		<if test="queryDto.searchStr != null and queryDto.searchStr != ''">
+			 AND (d.code_no LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+                 OR d.name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+                 OR d.en_name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+                 OR d.en_short_name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+                 OR d.fast_code LIKE CONCAT('%',#{queryDto.searchStr},'%'))
+		</if>
+		<if test="queryDto.status != null and queryDto.status != ''">
+			AND d.status = #{queryDto.status}
+		</if>
+		<if test="queryDto.sort != null and queryDto.sort != ''">
+			<if test="queryDto.sort == 0">
+				ORDER BY d.display_order
+			</if>
+			<if test="queryDto.sort == 1">
+				ORDER BY CONVERT(name USING gbk) COLLATE gbk_chinese_ci
+			</if>
+			<if test="queryDto.sort == 2">
+				ORDER BY d.id desc
+			</if>
+		</if> 
+	</sql>
+	
+	<!-- 分页查询，查出总条数 -->
+	<select id="queryCountByConditions" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM
+			ctr_tube_types d
+		<include refid="queryCondition"></include>
+	</select>
+	
+	<!-- 分页查询LIST  -->
+	<select id="queryPageListByConditions" parameterType="com.daan.dto.CtrTubeTypesDto" resultType="com.daan.domain.CtrTubeTypes" >
+		SELECT
+			d.id,
+			d.code_no as codeNo,
+			d.name,
+			d.en_short_name as enShortName,
+			d.en_name as enName,
+			d.fast_code as fastCode,
+			d.display_order as displayOrder,
+			d.memo,
+			d.status,
+			d.barcode_prefix as barcodePrefix,
+			d.color_hex as colorHex,
+			d.barcode_len as barcodeLen,
+			d.time_version as timeVersion
+		FROM
+			ctr_tube_types d
+		<include refid="queryCondition"></include>
+		${page.mysqlQueryCondition}
+	</select>
+	
+	<!-- 根据ID查找记录 -->
+	<select id="findById" parameterType="java.lang.String" resultType="com.daan.domain.CtrTubeTypes" >
+		SELECT
+			d.id,
+			d.code_no as codeNo,
+			d.name,
+			d.en_short_name as enShortName,
+			d.en_name as enName,
+			d.fast_code as fastCode,
+			d.display_order as displayOrder,
+			d.memo,
+			d.status,
+			d.barcode_prefix as barcodePrefix,
+			d.color_hex as colorHex,
+			d.barcode_len as barcodeLen,
+			d.time_version as timeVersion
+		FROM
+			ctr_tube_types d
+		WHERE 1=1
+			AND d.id = #{id}
+	</select>  
+	
+	<!-- 根据名称查找记录 -->
+	<select id="findListByConditions" parameterType="java.lang.String" resultType="com.daan.domain.CtrTubeTypes" >
+		SELECT
+			d.id,
+			d.code_no as codeNo,
+			d.name,
+			d.en_short_name as enShortName,
+			d.en_name as enName,
+			d.fast_code as fastCode,
+			d.display_order as displayOrder,
+			d.memo,
+			d.status,
+			d.barcode_prefix as barcodePrefix,
+			d.color_hex as colorHex,
+			d.barcode_len as barcodeLen,
+			d.time_version as timeVersion
+		FROM
+			ctr_tube_types d
+		WHERE 1=1
+			<if test="name != null and name != ''">
+				AND d.name = #{name}
+			</if>
+	</select>  
+	
+	<!-- 添加字典信息  useGeneratedKeys="true" keyProperty="id"-->
+	<insert id="addCtrTubeTypes" parameterType="com.daan.domain.CtrTubeTypes">
+		INSERT INTO ctr_tube_types (
+			id,
+			code_no,
+			en_name,
+			display_order,
+			en_short_name,
+			fast_code,
+			memo,
+			name,
+			status,
+			time_version,
+			color_hex,
+			barcode_prefix,
+			barcode_len
+		)
+		VALUES
+			(#{id}, #{codeNo}, #{enName}, #{displayOrder}, #{enShortName}, #{fastCode}, #{memo}, #{name}, #{status}, NOW(), #{colorHex},  #{barcodePrefix}, #{barcodeLen})
+	</insert>
+	
+	<!-- 修改信息 -->
+	<update id="modifyCtrTubeTypes" parameterType="com.daan.domain.CtrTubeTypes">
+		UPDATE ctr_tube_types
+			SET en_name = #{enName} ,display_order = #{displayOrder} ,en_short_name = #{enShortName} ,fast_code = #{fastCode}, memo = #{memo}, name = #{name},
+			    time_version = NOW(), status = #{status}, barcode_prefix = #{barcodePrefix}, barcode_len = #{barcodeLen}
+			WHERE id = #{id}
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="deleteById" parameterType="java.lang.String">
+		DELETE FROM ctr_tube_types WHERE id=#{id}
+	</delete>
+	
+</mapper>

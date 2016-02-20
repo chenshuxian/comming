@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daan.dao.CenterOrgRelationsDao">
+    <!-- 搜索查询拼接条件 -->
+	<sql id="queryCondition">
+		WHERE 1 = 1
+		<if test="queryDto.searchStr != null and queryDto.searchStr != ''">
+			AND (o.code_no LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+				OR o.name LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+				OR o.address LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+				OR o.contacts LIKE CONCAT('%',#{queryDto.searchStr},'%')
+				OR o.telephone LIKE CONCAT('%',#{queryDto.searchStr},'%') )
+		</if>
+		<if test="queryDto.orgType != null and queryDto.orgType != ''">
+			AND o.org_type_id = #{queryDto.orgType}
+		</if>
+		<if test="queryDto.status != null and queryDto.status != ''">
+			AND o.status = #{queryDto.status}
+		</if>
+		<if test="queryDto.sort != null and queryDto.sort != ''">
+			<if test="queryDto.sort == 0">
+				ORDER BY o.display_order
+			</if>
+			<if test="queryDto.sort == 1">
+				ORDER BY convert(o.name  USING gbk) COLLATE gbk_chinese_ci
+			</if>
+			<if test="queryDto.sort == 2">
+				ORDER BY o.id desc
+			</if>
+		</if>
+	</sql>
+	
+	<!-- 分页查询LIST  -->
+	<select id="queryPageListByConditions" parameterType="com.daan.dto.CenterOrgQueryDto" resultType="com.daan.domain.CenterOrg" >
+		SELECT
+	       o.id AS id,
+	       o.org_type_id AS orgTypeId,
+	       o.code_no AS codeNo,
+	       o.name AS name,
+	       o.short_name AS shortName,
+	       o.address AS address,
+	       o.en_name AS enName,
+	       o.en_short_name AS enShortName,
+	       o.en_address AS enAddress,
+	       o.contacts AS contacts,
+	       o.telephone AS telephone,
+	       o.fax AS fax,
+	       o.fast_code AS fastCode,
+	       o.display_order AS displayOrder,
+	       o.memo AS memo,
+	       o.status AS status,
+	       o.time_version AS timeVersion
+        FROM
+	       ctr_orgs o
+		<include refid="queryCondition"></include>
+		${page.mysqlQueryCondition}
+	</select>
+	
+    <!-- 分页查询，查出总条数 -->
+	<select id="queryCountByConditions" resultType="java.lang.Integer">
+		SELECT
+			count(1)
+		FROM
+			ctr_orgs o
+		<include refid="queryCondition"></include>
+	</select>
+	
+		<!-- 根据parentId查询关联的机构的详细信息  -->
+	<select id="findByParentId" parameterType="java.lang.String" resultType="com.daan.domain.CenterOrg" >
+		SELECT
+	       o.id AS id,
+	       o.org_type_id AS orgTypeId,
+	       o.code_no AS codeNo,
+	       o.nacao_id AS nacaoId,
+	       o.region_id AS regionId,
+	       r.name AS regionName,
+	       o.name AS name,
+	       o.short_name AS shortName,
+	       o.address AS address,
+	       o.en_name AS enName,
+	       o.en_short_name AS enShortName,
+	       o.en_address AS enAddress,
+	       o.contacts AS contacts,
+	       o.telephone AS telephone,
+	       o.fax AS fax,
+	       o.fast_code AS fastCode,
+	       o.display_order AS displayOrder,
+	       o.memo AS memo,
+	       o.status AS status
+        FROM
+	       ctr_orgs o
+	    LEFT JOIN ctr_regions r ON r.id = o.region_id
+		WHERE 1=1 
+		AND	o.id IN (
+		SELECT
+			cor.child_id
+		FROM
+			ctr_org_relations AS cor
+		WHERE
+			cor.parent_id = #{parentId}
+	)
+	</select>
+	
+	<!-- 根据id查询Object  -->
+	<select id="findById" parameterType="java.lang.String" resultType="com.daan.domain.CenterOrg" >
+		SELECT
+	       o.id AS id,
+	       o.org_type_id AS orgTypeId,
+	       o.code_no AS codeNo,
+	       o.nacao_id AS nacaoId,
+	       o.region_id AS regionId,
+	       o.name AS name,
+	       o.short_name AS shortName,
+	       o.address AS address,
+	       o.en_name AS enName,
+	       o.en_short_name AS enShortName,
+	       o.en_address AS enAddress,
+	       o.web_url AS webUrl,
+	       o.contacts AS contacts,
+	       o.telephone AS telephone,
+	       o.fax AS fax,
+	       o.fast_code AS fastCode,
+	       o.display_order AS displayOrder,
+	       o.memo AS memo,
+	       o.status AS status
+        FROM
+	       ctr_orgs o
+		WHERE 1=1 
+			AND o.id = #{id}
+	</select>
+	
+	<!-- 查询机构未包含项目 -->
+	<select id="queryNoContainRegionalList" parameterType="com.daan.dto.CenterOrgQueryDto" resultType="com.daan.domain.CenterOrg">
+	SELECT
+	       o.id AS id,
+	       o.org_type_id AS orgTypeId,
+	       o.code_no AS codeNo,
+	       o.region_id AS regionId,
+	       r.name AS regionName,
+	       o.name AS name,
+	       o.short_name AS shortName,
+	       o.address AS address,
+	       o.en_name AS enName,
+	       o.en_short_name AS enShortName,
+	       o.en_address AS enAddress,
+	       o.web_url AS webUrl,
+	       o.contacts AS contacts,
+	       o.telephone AS telephone,
+	       o.fax AS fax,
+	       o.fast_code AS fastCode,
+	       o.display_order AS displayOrder,
+	       o.memo AS memo,
+	       o.status AS status,
+	       o.time_version AS timeVersion
+        FROM
+	       ctr_orgs o
+        LEFT JOIN ctr_regions r ON r.id = o.region_id
+        WHERE
+         o.org_type_id != 3
+        AND o.`status`=0
+        AND o.id NOT IN (
+	       SELECT
+		       cor.child_id
+	       FROM
+		      ctr_org_relations AS cor
+          WHERE
+		  cor.parent_id =  #{queryDto.parentId}
+         )
+         <if test="queryDto.searchStr != null and queryDto.searchStr != ''">
+          AND CONCAT_WS(o.code_no,o.name) LIKE CONCAT('%',#{queryDto.searchStr},'%')
+         </if>
+          <if test="queryDto.regionId != null and queryDto.regionId != ''">
+           AND r.id = #{queryDto.regionId}
+          </if>
+	</select>
+	
+	<!-- 根据条件查询Object  -->
+	<select id="findListByConditions" parameterType="java.lang.String" resultType="com.daan.domain.CenterOrg" >
+		SELECT
+	       o.id AS id,
+	       o.org_type_id AS orgTypeId,
+	       o.code_no AS codeNo,
+	       o.nacao_id AS nacaoId,
+	       o.region_id AS regionId,
+	       r.name AS regionName,
+	       o.name AS name,
+	       o.short_name AS shortName,
+	       o.address AS address,
+	       o.en_name AS enName,
+	       o.en_short_name AS enShortName,
+	       o.en_address AS enAddress,
+	       o.web_url AS webUrl,
+	       o.contacts AS contacts,
+	       o.telephone AS telephone,
+	       o.fax AS fax,
+	       o.fast_code AS fastCode,
+	       o.display_order AS displayOrder,
+	       o.memo AS memo,
+	       o.status AS status
+        FROM
+	       ctr_orgs o
+        LEFT JOIN ctr_regions r ON r.id = o.region_id
+		WHERE 1=1 
+			<if test="name != null and name != ''">
+				AND o.name = #{name}
+			</if>
+			<if test="orgType != null and orgType != ''">
+				AND o.org_type_id = #{orgType}
+			</if>
+	</select>
+	
+	<!-- 修改机构单位 -->
+	<update id="updateCenterOrg" parameterType="com.daan.domain.CenterOrg">
+		UPDATE ctr_orgs
+		SET 
+		   nacao_id = #{nacaoId},
+	       region_id = #{regionId},
+	       name = #{name},
+	       short_name = #{shortName},
+	       address = #{address},
+	       en_name = #{enName},
+	       en_short_name = #{enShortName},
+	       en_address = #{enAddress},
+	       web_url = #{webUrl},
+	       contacts = #{contacts},
+	       telephone = #{telephone},
+	       fax = #{fax},
+	       fast_code = #{fastCode},
+	       display_order = #{displayOrder},
+	       memo = #{memo},
+	       status=#{status}
+		WHERE 
+			 id = #{id}
+	</update>
+	
+	<!-- 新增中心机构单位  -->
+	<insert id="insertCenterOrg" parameterType="com.daan.domain.CenterOrg" keyProperty="id">
+		INSERT INTO ctr_orgs (
+		   id,
+	       org_type_id,
+	       code_no,
+	       nacao_id,
+	       region_id,
+	       name,
+	       short_name,
+	       address,
+	       en_name,
+	       en_short_name,
+	       en_address,
+	       web_url,
+	       contacts,
+	       telephone,
+	       fax,
+	       fast_code,
+	       display_order,
+	       memo,
+	       status,
+	       time_version
+		)
+		VALUES
+		(
+			#{id},              
+			#{orgTypeId},          
+			#{codeNo},            
+			#{nacaoId},     
+			#{regionId},           
+			#{name},    
+			#{shortName},    
+			#{address},    
+			#{enName},      
+			#{enShortName},   
+			#{enAddress},   
+			#{webUrl},   
+			#{contacts},   
+			#{telephone},   
+			#{fax},   
+			#{fastCode},
+			#{displayOrder},
+			#{memo},
+			#{status},          
+			NOW()     
+		)
+	</insert>
+	
+	<!-- 删除中心机构单位  -->
+	<delete id="deleteById" parameterType="java.lang.String" >
+		DELETE FROM
+			ctr_orgs
+		WHERE 1=1 
+			AND id=#{id}
+	</delete>
+	
+	<!-- 根据父ID删除行政机构关系关联表记录  -->
+	<delete id="deleteByParentId" parameterType="java.lang.String" >
+		DELETE FROM
+			 ctr_org_relations
+		WHERE 1=1 
+			AND parent_id=#{id}
+	</delete>
+	
+	<!-- 根据父ID以及子节点ID删除行政机构关系关联表记录  -->
+	<delete id="deleteByRelatedId" parameterType="com.daan.dto.CenterOrgQueryDto">
+		DELETE
+        FROM
+	       ctr_org_relations 
+        WHERE
+	        child_id = #{queryDto.childId}
+        AND 
+           parent_id = #{queryDto.parentId}
+	</delete>
+	
+	<!-- 新增项目对照表  -->
+	<insert id="insertCenterOrgRelations" parameterType="com.daan.domain.CenterOrgRelations" keyProperty="id">
+		INSERT INTO ctr_org_relations (
+	                      id,
+	                      parent_id,
+	                      child_id,
+	                      time_version
+        )
+        VALUES(
+              #{id},
+              #{parentId},
+              #{childId},
+              NOW()
+        )
+	</insert>
+	
+</mapper>

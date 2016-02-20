@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<fkTables>
+	<fkTable>
+        <tableName>ctr_orgs</tableName>
+        <field>region_id</field>
+        <refTableName>ctr_regions</refTableName>
+        <refField>id</refField>
+    </fkTable>
+    <fkTable>
+        <tableName>test_tbl_name</tableName>
+        <field>test_field</field>
+        <refTableName>test_ref_tbl_name</refTableName>
+        <refField>test_field</refField>
+    </fkTable>
+    <fkTable>
+        <tableName>test_tbl_name1</tableName>
+        <field>test_field1</field>
+        <refTableName>test_ref_tbl_name1</refTableName>
+        <refField>test_field1</refField>
+    </fkTable>
+    <fkTable>
+        <tableName>ctr_test_items</tableName>
+        <field>sample_type_id</field>
+        <refTableName>ctr_dict_codes</refTableName>
+        <refField>id</refField>
+    </fkTable>
+    <fkTable>
+        <tableName>ctr_instr_refranges</tableName>
+        <field>sample_type_id</field>
+        <refTableName>ctr_dict_codes</refTableName>
+        <refField>id</refField>
+    </fkTable>
+    <fkTable>
+        <tableName>dc_user_role</tableName>
+        <field>user_id</field>
+        <refTableName>dc_user</refTableName>
+        <refField>id</refField>
+    </fkTable>
+    <!--<fkTable>-->
+        <!--<tableName>auth_users</tableName>-->
+        <!--<field>id</field>-->
+        <!--<refTableName>auth_user_group</refTableName>-->
+        <!--<refField>user_id</refField>-->
+    <!--</fkTable>-->
+</fkTables>

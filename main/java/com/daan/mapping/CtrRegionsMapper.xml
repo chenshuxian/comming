@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daan.dao.CtrRegionsDao">
+<!-- 	 <cache type="org.mybatis.caches.memcached.MemcachedCache" />           -->
+     <insert id="insertCtrRegions" parameterType="com.daan.domain.CtrRegions" >
+         insert into ctr_regions(id,code_no,name,en_short_name,en_name,fast_code,left_value,right_value,status,time_version,tier)
+         values
+         (#{id},#{codeNo},#{name},#{enShortName},#{enName},#{fastCode},#{leftValue},#{rightValue},#{status},now(),#{tier})
+     </insert>
+     <update id="updateCtrRegionsLeft" parameterType="Map">
+		update ctr_regions set
+		<if test="type == 1">
+			left_value=left_value-#{add}
+		</if>
+		<if test="type == 2">
+			left_value=left_value+#{add}
+		</if>
+		where left_value>=#{left}
+	</update>
+	<update id="updateCtrRegionsRight" parameterType="Map">
+		update ctr_regions
+		<if test="type == 1">
+			set right_value=right_value-#{add}
+		</if>
+		<if test="type == 2">
+			set right_value=right_value+#{add}
+		</if>
+		where right_value>=#{right}
+	</update>
+	<update id="updateCtrRegionsLeftNotSelf" parameterType="Map">
+		update ctr_regions
+		<if test="type == 1">
+			set left_value=left_value-#{add}
+		</if>
+		<if test="type == 2">
+			set left_value=left_value+#{add}
+		</if>
+		where left_value>#{left}
+	</update>
+	<update id="updateCtrRegionsToNe" parameterType="Map">
+		update ctr_regions set
+		left_value=left_value*-1,
+		right_value=right_value*-1
+		where left_value>=#{left} and right_value<![CDATA[<=]]>#{right}
+	</update>
+	<update id="updateChildLRT" parameterType="Map">
+		update ctr_regions set
+		left_value=left_value*-1+#{childAdd},
+		right_value=right_value*-1+#{childAdd},
+		tier =tier+#{childTierAdd}
+		where left_value<![CDATA[<]]>0
+	</update>
+	<update id="updateCtrRegions" parameterType="com.daan.domain.CtrRegions">
+		UPDATE ctr_regions soncr 
+		SET soncr.time_version = now(), 
+			soncr.`name` = #{name}, 
+			soncr.en_short_name = #{enShortName}, 
+			soncr.en_name = #{enName}, 
+			soncr.fast_code = #{fastCode}
+		WHERE soncr.id = #{id}
+	</update>
+	<select id="findCtrRegionsByName" parameterType="String" resultType="com.daan.domain.CtrRegions">
+		SELECT
+			soncr.id as id,
+			soncr.code_no as codeNo,
+			soncr.en_name as enName,
+			soncr.en_short_name as enShortName,
+			soncr.fast_code as fastCode,
+			soncr.left_value as leftValue,
+			soncr.right_value as rightValue,
+			soncr.`name` as name,
+			soncr.`status` as status,
+			soncr.time_version as timeVersion,
+			soncr.tier
+		FROM
+			ctr_regions soncr
+		WHERE 1=1 AND soncr.`name` = #{name}
+	</select>
+	<select id="findById" parameterType="Long" resultType="com.daan.domain.CtrRegions">
+		SELECT
+			soncr.id as id,
+			soncr.code_no as codeNo,
+			soncr.en_name as enName,
+			soncr.en_short_name as enShortName,
+			soncr.fast_code as fastCode,
+			soncr.left_value as leftValue,
+			soncr.right_value as rightValue,
+			soncr.`name` as name,
+			soncr.`status` as status,
+			soncr.time_version as timeVersion,
+			soncr.tier
+		FROM
+			ctr_regions soncr
+		WHERE 1=1 AND soncr.id = #{id}
+	</select>
+     <select id="findByProperty" parameterType="com.daan.domain.CtrRegions" resultType="com.daan.domain.CtrRegions">
+		SELECT
+			soncr.id as id,
+			soncr.code_no as codeNo,
+			soncr.en_name as enName,
+			soncr.en_short_name as enShortName,
+			soncr.fast_code as fastCode,
+			soncr.left_value as leftValue,
+			soncr.right_value as rightValue,
+			soncr.`name` as name,
+			soncr.`status` as status,
+			soncr.time_version as timeVersion,
+			soncr.tier
+		FROM
+			ctr_regions soncr
+		WHERE 1=1
+		<if test="id != null and id != ''">
+			AND soncr.id = #{id}
+		</if>
+		<if test="codeNo != null and codeNo != ''">
+			AND soncr.code_no = #{codeNo}
+		</if>
+		<if test="name != null and name!= ''">
+			AND soncr.`name` = #{name}
+		</if>
+		<if test="enShortName != null and enShortName != ''">
+			AND soncr.en_short_name = #{enShortName}
+		</if>
+		<if test="enName != null and enName != ''">
+			AND soncr.en_name = #{enName}
+		</if>
+		<if test="fastCode != null and fastCode != ''">
+			AND soncr.fast_code = #{fastCode}
+		</if>
+		<if test="leftValue != null and leftValue != ''">
+			AND soncr.left_value = #{leftValue}
+		</if>
+		<if test="rightValue != null and rightValue != ''">
+			AND soncr.right_value = #{rightValue}
+		</if>
+		<if test="status != null and status != ''">
+			AND soncr.`status` = #{status}
+		</if>
+		<if test="timeVersion != null and timeVersion != ''">
+			AND soncr.time_version = #{timeVersion}
+		</if>
+		<if test="tier != null and tier != ''">
+			AND soncr.tier = #{tier}
+		</if>
+	</select>
+	<select id="findByIdReturnSon" parameterType="java.lang.String" resultType="com.daan.domain.CtrRegions">
+		SELECT
+			soncr.id as id,
+			soncr.code_no as codeNo,
+			soncr.en_name as enName,
+			soncr.en_short_name as enShortName,
+			soncr.fast_code as fastCode,
+			soncr.left_value as leftValue,
+			soncr.right_value as rightValue,
+			soncr.`name` as name,
+			soncr.`status` as status,
+			soncr.time_version as timeVersion,
+			soncr.tier
+		FROM
+			ctr_regions soncr
+		INNER JOIN (
+			SELECT
+				cr.left_value AS leftValue,
+				cr.right_value AS rightValue
+			FROM
+				ctr_regions cr
+			WHERE
+				cr.id = #{id}
+		) parentcr ON soncr.left_value <![CDATA[>]]> parentcr.leftValue
+		AND soncr.right_value <![CDATA[<]]> parentcr.rightValue
+	</select>
+
+	<select id="findByTierReturnSon" parameterType="com.daan.domain.CtrRegions" resultType="com.daan.domain.CtrRegions">
+		SELECT
+			soncr.id as id,
+			soncr.code_no as codeNo,
+			soncr.en_name as enName,
+			soncr.en_short_name as enShortName,
+			soncr.fast_code as fastCode,
+			soncr.left_value as leftValue,
+			soncr.right_value as rightValue,
+			soncr.`name` as name,
+			soncr.`status` as status,
+			soncr.time_version as timeVersion,
+			soncr.tier
+		FROM
+			ctr_regions soncr
+			<if test="id!= null and id != ''">
+				INNER JOIN (
+					SELECT
+						cr.left_value AS leftValue,
+						cr.right_value AS rightValue,
+						cr.tier as crtier
+					FROM
+						ctr_regions cr
+					WHERE
+						cr.id = #{id}
+				) parentcr ON (soncr.left_value <![CDATA[>]]> parentcr.leftValue
+				AND soncr.right_value <![CDATA[<]]> parentcr.rightValue)
+				AND soncr.tier = crtier+1
+				</if>
+			<if test="id == null or id == ''">
+				WHERE soncr.tier = #{tier}
+			</if>
+	</select>
+	
+	<select id="deleteById">
+		DELETE FROM ctr_regions WHERE id = #{id}
+	</select>
+	
+	<!-- 查询所有的地区名称LIST  -->
+	<select id="getAllRegionNameList" resultType="com.daan.domain.CtrRegions" >
+	SELECT
+         r.id AS id,
+         r.name AS name
+   FROM
+        ctr_regions  r
+   WHERE 1=1
+	</select>
+</mapper>

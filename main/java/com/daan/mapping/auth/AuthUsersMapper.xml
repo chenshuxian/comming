@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daan.dao.auth.AuthUsersDao">
+    <resultMap id="BaseResultMap" type="com.daan.domain.auth.AuthUsers">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_no" jdbcType="VARCHAR" property="userNo"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="password" jdbcType="CHAR" property="password"/>
+        <result column="is_first_signin" jdbcType="INTEGER" property="isFirstSignin"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="memo" jdbcType="VARCHAR" property="memo"/>
+        <result column="time_version" jdbcType="TIMESTAMP" property="timeVersion"/>
+        <result column="display_order" jdbcType="INTEGER" property="displayOrder"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, user_no, user_name, mobile, email, password, is_first_signin, status, memo, time_version, 
+    display_order
+  </sql>
+    <select id="doView" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        select
+            id, user_no, user_name, mobile, email, password, is_first_signin, status, memo, time_version,
+    display_order
+        from auth_users
+        where id = #{id}
+    </select>
+    <!-- 搜索查询拼接条件 -->
+    <sql id="queryCondition">
+        <where>
+            <if test="searchStr != null and searchStr != ''">
+                (d.user_no LIKE CONCAT('%',#{searchStr},'%')
+                OR d.user_name LIKE CONCAT('%',#{searchStr},'%'))
+            </if>
+
+            <if test="status != null and status != ''">
+                AND d.status = #{status}
+            </if>
+
+        </where>
+        <if test="sort != null and sort != ''">
+            <choose>
+                <when test="sort == 0">
+                    ORDER BY d.display_order
+                </when>
+                <when test="sort == 1">
+                    ORDER BY CONVERT(name USING gbk) COLLATE gbk_chinese_ci
+                </when>
+                <when test="sort == 2">
+                    ORDER BY d.id desc
+                </when>
+            </choose>
+        </if>
+    </sql>
+
+    <!-- 分页查询，查出总条数 -->
+    <select id="doPageCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        auth_users AS d
+        <include refid="queryCondition"></include>
+    </select>
+
+    <!-- 分页查询LIST  -->
+    <select id="doPageList" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+        SELECT
+        d.id,
+        d.user_no,
+        d.user_name,
+        d.memo,
+        d.status,
+        d.display_order
+        FROM
+        auth_users AS d
+        <include refid="queryCondition"></include>
+        ${page.mysqlQueryCondition}
+    </select>
+
+    <delete id="doDelete" parameterType="java.lang.Long">
+    delete from auth_users
+    where id = #{id}
+  </delete>
+
+    <insert id="doAdd" parameterType="com.daan.domain.auth.AuthUsers">
+    insert into auth_users (id, user_no, user_name,
+    mobile, email, password,
+    is_first_signin, status, memo,
+    time_version, display_order)
+    values (#{id}, #{userNo,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR},
+    #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{password,jdbcType=CHAR},
+    #{isFirstSignin,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{memo,jdbcType=VARCHAR},
+    #{timeVersion,jdbcType=TIMESTAMP}, #{displayOrder,jdbcType=INTEGER})
+</insert>
+
+
+    <insert id="doAddDefault" parameterType="com.daan.domain.auth.UserProfiles">
+
+            insert into user_profiles (id, user_id, property_name,
+            property_value)
+            values (#{id}, #{userId}, #{propertyName,jdbcType=VARCHAR},
+            #{propertyValue,jdbcType=VARCHAR})
+
+    </insert>
+
+    <insert id="doAddNotNull" parameterType="com.daan.domain.auth.AuthUsers">
+        insert into auth_users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userNo != null">
+                user_no,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="isFirstSignin != null">
+                is_first_signin,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="memo != null">
+                memo,
+            </if>
+            <if test="timeVersion != null">
+                time_version,
+            </if>
+            <if test="displayOrder != null">
+                display_order,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="userNo != null">
+                #{userNo,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=CHAR},
+            </if>
+            <if test="isFirstSignin != null">
+                #{isFirstSignin,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="memo != null">
+                #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="timeVersion != null">
+                #{timeVersion,jdbcType=TIMESTAMP},
+            </if>
+            <if test="displayOrder != null">
+                #{displayOrder,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="doUpdateUserNo" parameterType="com.daan.domain.auth.AuthUsers">
+        update auth_users
+        set user_no = #{userNo,jdbcType=VARCHAR},
+        user_name = #{userName,jdbcType=VARCHAR},
+        memo = #{memo,jdbcType=VARCHAR},
+        time_version = #{timeVersion,jdbcType=TIMESTAMP},
+        display_order = #{displayOrder,jdbcType=INTEGER}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="doUpdate" parameterType="com.daan.domain.auth.AuthUsers">
+    update auth_users
+    set user_no = #{userNo,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      password = #{password,jdbcType=CHAR},
+      is_first_signin = #{isFirstSignin,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      memo = #{memo,jdbcType=VARCHAR},
+      time_version = #{timeVersion,jdbcType=TIMESTAMP},
+      display_order = #{displayOrder,jdbcType=INTEGER}
+    where id = #{id}
+  </update>
+    <update id="doChangeStatus" parameterType="com.daan.domain.auth.AuthUsers">
+        update auth_users
+        set status = #{status}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="resetPassword" parameterType="com.daan.domain.auth.AuthUsers">
+        update auth_users
+        set password = #{password} ,is_first_signin='1'
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    
+    <select id="findByUserNameAndPwd" parameterType="Map" resultType="com.daan.domain.auth.AuthUsers" >
+         SELECT
+			user.user_name AS userName,
+			user.password,
+			user.id,
+			user.user_no,
+			user.mobile,
+			user.email,
+			user.is_first_signin,
+			user.status,
+			user.memo,
+			user.time_version as timeVersion
+		FROM
+			auth_users AS user
+		WHERE 
+		user.user_name = #{userName}
+		AND user.password = #{pwd}
+     </select>
+     
+     <!-- 修改或设置用户密码 -->
+	<update id="updatePassword"  parameterType="Map">
+		UPDATE auth_users
+			SET      		
+			PASSWORD = #{newPassword} 
+		WHERE
+			user_name = #{userName}  
+	</update>
+
+
+    <select id="getUserGroupByUserId" parameterType="java.util.HashMap" resultType="com.daan.dto.auth.UserGroupDto">
+
+                    SELECT
+                auth_groups.id,
+                auth_groups.org_id,
+                auth_groups.app_id,
+                auth_groups.group_name,
+                auth_groups.`status`,
+                auth_groups.display_order,
+                (
+                    SELECT
+                        count(1)
+                    FROM
+                        auth_user_group
+                    WHERE
+                        auth_user_group.user_id = #{userId}
+                    AND auth_user_group.group_id = auth_groups.id
+                ) > 0 checked
+            FROM
+                auth_groups
+    </select>
+    
+     <!-- 修改用户默认登录机构和系统 -->
+	<update id="updateUserSysAndOrg"  parameterType="Map">
+		UPDATE user_profiles
+			SET      		
+			property_value = #{property_value} 
+		WHERE
+			user_id = #{user_id} 
+			AND property_name = #{property_name} 
+	</update>
+
+    <delete id="delUserGroupByUserId" parameterType="java.util.HashMap">
+        delete from auth_user_group  where auth_user_group.user_id  = #{userId}
+    </delete>
+    <insert id="addUserGroup" parameterType="java.util.HashMap">
+            insert into auth_user_group (id, user_id, group_id )
+            values (#{id}, #{userId}, #{groupId})
+
+    </insert>
+
+</mapper>

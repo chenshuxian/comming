@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daan.dao.InstrMicsDao">
+	<!-- 搜索查询拼接条件 -->
+	<sql id="queryCondition">
+		WHERE 1 = 1
+			AND i.org_id = o.id
+			AND i.instrument_id = it.id
+			AND i.mic_item_id = m.id
+		<if test="queryDto.searchStr != null and queryDto.searchStr != ''">
+			 AND (m.code_no LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+                 OR m.name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+                 OR i.channel_code LIKE CONCAT('%',#{queryDto.searchStr},'%'))
+		</if>
+		<if test="queryDto.orgId != null and queryDto.orgId != ''">
+			AND i.org_id = #{queryDto.orgId}
+		</if>
+		<if test="queryDto.instrumentId != null and queryDto.instrumentId != ''">
+			AND i.instrument_id = #{queryDto.instrumentId}
+		</if>
+		<if test="queryDto.itemTypeId != null and queryDto.itemTypeId != ''">
+			AND i.item_type_id = #{queryDto.itemTypeId}
+		</if>
+		ORDER BY i.print_order
+	</sql>
+	
+	<!-- 搜索查询拼接条件 -->
+	<sql id="queryCondition2">
+		WHERE 1 = 1
+		<if test="queryDto.orgId != null and queryDto.orgId != ''">
+			AND i.org_id = #{queryDto.orgId}
+		</if>
+		<if test="queryDto.instrumentId != null and queryDto.instrumentId != ''">
+			AND i.instrument_id = #{queryDto.instrumentId}
+		</if>
+		<if test="queryDto.itemTypeId != null and queryDto.itemTypeId != ''">
+			AND i.item_type_id = #{queryDto.itemTypeId}
+		</if>
+		<if test="queryDto.micItemId != null and queryDto.micItemId != ''">
+			AND i.mic_item_id = #{queryDto.micItemId}
+		</if>
+		<if test="queryDto.id != null and queryDto.id != ''">
+			AND i.id = #{queryDto.id}
+		</if>
+		<if test="queryDto.channelCode != null and queryDto.channelCode != ''">
+			AND i.channel_code = #{queryDto.channelCode}
+		</if>
+	</sql>
+	
+	<!-- 分页查询LIST  -->
+	<select id="queryPageListByConditions" parameterType="com.daan.dto.InstrMicsQueryDto" resultType="com.daan.dto.InstrMicsDto" >
+		SELECT
+			i.id,
+			i.app_id AS appId,
+			i.org_id AS orgId,
+			o.name AS orgName,
+			i.instrument_id AS instrumentId,
+			it.`name` AS instrumentName,
+		    i.item_type_id AS itemTypeId,
+			i.channel_code AS channelCode,
+			i.mic_item_id AS micItemId,
+			m.code_no as micItemCode,
+			m.name as micItemName,
+			i.print_order AS printOrder
+		FROM
+			instr_mics i,
+			orgs o,
+			instruments it,
+			mic_items m
+		<include refid="queryCondition"></include>
+	</select>
+	
+	<!-- 条件查询InstrMicsy LIST  -->
+	<select id="queryInstrMicsyConditions" parameterType="com.daan.domain.InstrMics" resultType="com.daan.domain.InstrMics" >
+		SELECT
+			i.id,
+			i.app_id AS appId,
+			i.org_id AS orgId,
+			i.instrument_id AS instrumentId,
+		    i.item_type_id AS itemTypeId,
+			i.channel_code AS channelCode,
+			i.print_order AS printOrder,
+			i.time_version AS timeVersion
+		FROM
+			instr_mics i
+		<include refid="queryCondition2"></include>
+	</select>
+	
+	<!-- 细菌、抗生素项目明细列表  -->
+	<select id="queryInstrMicsNoAddItems" parameterType="com.daan.dto.InstrMicsQueryDto" resultType="com.daan.dto.InstrMicsDto" >
+		SELECT
+			mi.id as micItemId, mi.code_no as micItemCode,mi.en_name as micItemName,mi.en_short_name as enShortName
+		FROM
+			mic_items mi,
+			instr_items it
+		WHERE
+			1 = 1
+		AND mi.id = it.test_item_id
+		AND mi.org_id = it.org_id
+		AND NOT EXISTS (
+			SELECT
+				1
+			FROM
+				instr_mics i
+			WHERE
+				i.mic_item_id = mi.id
+			AND i.item_type_id = #{queryDto.itemTypeId}
+			AND i.org_id =  #{queryDto.orgId}
+			AND i.instrument_id = #{queryDto.instrumentId}
+		)
+		AND mi.item_type_id = #{queryDto.itemTypeId}
+		AND mi.org_id = #{queryDto.orgId}
+		AND it.instrument_id = #{queryDto.instrumentId}
+		<if test="queryDto.searchStr != null and queryDto.searchStr != ''"> 
+			 AND (mi.code_no LIKE CONCAT('%',#{queryDto.searchStr},'%') 
+                 OR mi.name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+                 OR mi.en_name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+                 OR mi.en_short_name LIKE CONCAT('%',#{queryDto.searchStr},'%')
+                 OR mi.fast_code LIKE CONCAT('%',#{queryDto.searchStr},'%'))
+		</if> 
+		ORDER BY mi.display_order
+	</select>
+
+	<!-- 查询最大打印顺序号 -->
+	<select id="getMaxPrintOrder" resultType="java.lang.Integer" parameterType="com.daan.domain.InstrMics">
+		SELECT
+			MAX(print_order)
+		FROM
+			instr_mics i
+		<include refid="queryCondition2"></include>
+	</select>
+	
+	<!-- 添加信息  useGeneratedKeys="true" keyProperty="id"-->
+	<insert id="addInstrMics" parameterType="com.daan.domain.InstrMics">
+		INSERT INTO instr_mics (
+			id, app_id, org_id, instrument_id, item_type_id, channel_code, mic_item_id, print_order, time_version)
+		VALUES (#{id}, #{appId}, #{orgId}, #{instrumentId}, #{itemTypeId}, #{channelCode}, #{micItemId}, #{printOrder},  NOW())
+	</insert>
+	
+	<!-- 修改字典信息 -->
+	<update id="modifyInstrMics" parameterType="com.daan.domain.InstrMics">
+		UPDATE instr_mics
+			SET print_order = #{printOrder} ,channel_code = #{channelCode}, time_version = NOW() WHERE id = #{id}
+	</update>
+	
+	<!-- 删除字典 -->
+	<delete id="deleteById" parameterType="java.lang.String">
+		DELETE FROM instr_mics WHERE id = #{id}
+	</delete>
+	
+	<!-- ID查询  -->
+	<select id="findById" parameterType="java.lang.String" resultType="com.daan.domain.InstrMics" >
+		SELECT
+			i.id,
+			i.app_id AS appId,
+			i.org_id AS orgId,
+			i.instrument_id AS instrumentId,
+		    i.item_type_id AS itemTypeId,
+			i.channel_code AS channelCode,
+			i.print_order AS printOrder,
+			i.time_version AS timeVersion
+		FROM
+			instr_mics i
+		WHERE i.id = #{id}
+	</select>
+	<!-- 新增抗生素对照表  -->
+	<insert id="insertInstrumentsMics" parameterType="com.daan.domain.InstrumentsMics" keyProperty="id">
+		INSERT INTO instr_mics (
+			id, 
+			app_id, 
+			org_id, 
+			instrument_id, 
+			mic_item_id, 
+			item_type_id, 
+			channel_code, 
+			print_order, 
+			time_version
+		)
+		VALUES
+		(
+			#{id},              
+			#{appId},          
+			#{orgId},            
+			#{instrumentId},     
+			#{micsItemId},       
+			#{itemTypeId},    
+			#{channelCode},    
+			#{printOrder},     
+			NOW()     
+		)
+	</insert>
+</mapper>
