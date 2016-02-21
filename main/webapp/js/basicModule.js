@@ -47,18 +47,11 @@ BasicModule = (function($){
 				//console.log("delbatch");
 
 				var
-					dataGrid = this.dataGrid,
-					url = this.delBatUrl,
+					dataGrid = params.dataGrid,
+					url = params.delBatUrl,
 					checkedItems,
 					names = [],
 					ids = [];
-
-
-				if(params){
-					console.log("deletbatch");
-					dataGrid = params.dataGrid;
-					url = params.url;
-				}
 
 				//console.log("deletbatch:"+url);
 
@@ -121,14 +114,22 @@ BasicModule = (function($){
 			},
 
 			/* 启用、停用状态 */
-			_changeStatus= function(index, rowData) {
+			_changeStatus= function(params) {
 
 				var
-					url = this.changeStatusUrl,
-					dataGrid = this.dataGrid,
-					id = rowData.stringId,
-					val = rowData.status.toString(),
+					url = params.url,
+					dataGrid = params.dataGrid,
+					id = params.id,
+					val = params.val,
+					index = params.index,
 					confirmMeg,operatioType,newVal;
+				/*var
+					 url = this.changeStatusUrl,
+					 dataGrid = this.dataGrid,
+					 id = rowData.stringId,
+					 val = rowData.status.toString(),
+					 index = params.index,
+					 confirmMeg,operatioType,newVal;*/
 
 				if (id == '' || val == '') {
 					showMessage('请选择操作记录!');
@@ -178,8 +179,8 @@ BasicModule = (function($){
 
 				var
 				 	status = params.status,
-					url = this.delUrl,
-					dataGrid = this.dataGrid,
+					url = params.url,
+					dataGrid = params.dataGrid,
 					Params = {id: params.id};
 
 				if (status == true) {
@@ -207,11 +208,10 @@ BasicModule = (function($){
 
 			_dataControl= function(params) {
 				//防止重复提交
-				console.log("dataC"+this);
 				//var obj = this;
 				_dataStore = params.data;
-				_dataGrid = this.dataGrid;
-				_exParams = this.exParams;
+				_dataGrid = params.dataGrid;
+				_exParams = params.exParams;
 
 
 				$("#editBtn").attr("disabled", true);
@@ -328,7 +328,9 @@ BasicModule = (function($){
 		addPop: function(newParams) {
 
 			// update defaultDialogParams
-			var DDP = $.extend({},this.defaultDialogParams(),newParams);
+			var
+				params = this.defaultDialogParams(),
+				DDP = this.getNewParams(params,newParams);
 
 			DDP.data = this.addParams;
 
@@ -340,9 +342,11 @@ BasicModule = (function($){
 		editRow: function(rowData) {
 
 			//var url = this.InfoUrl;
-			var DDP,editParams,editStatus;
-
-			DDP = $.extend({},this.defaultDialogParams(),{callback:this.editCallBack});
+			var
+				editParams,editStatus,
+				params = this.defaultDialogParams(),
+				newParams = {callback:this.editCallBack},
+				DDP = this.getNewParams(params,newParams);
 
 			editParams = {
 				id:rowData.stringId,
@@ -371,7 +375,10 @@ BasicModule = (function($){
 		/* 弹出详情信息框 */
 		showDialog: function(rowData) {
 
-			var DDP =  $.extend({},this.defaultDialogParams(),{callback:this.showCallBack}),
+			var
+				params = this.defaultDialogParams(),
+				newParams = {callback:this.showCallBack},
+				DDP =  this.getNewParams(params,newParams),
 
 				showParams = {
 					id:rowData.stringId,
@@ -421,7 +428,7 @@ BasicModule = (function($){
 				};
 
 
-			_commonAjax.call(this,params);
+			_commonAjax(params);
 		},
 
 		update: function() {
@@ -432,13 +439,19 @@ BasicModule = (function($){
 					url: _updateUrl
 				};
 
-			_commonAjax.call(this,params);
+			_commonAjax(params);
 
 		},
 
 		/* 批量删除 */
-		deleteBetch: function(){
-			_deleteBatch.call(this);
+		deleteBetch: function(newParams){
+
+			var params = {
+				url: this.delBatUrl,
+				dataGrid: this.dataGrid
+			}
+
+			_deleteBatch(params);
 		},
 
 		/* 删除行 */
@@ -447,14 +460,25 @@ BasicModule = (function($){
 			var params = {
 				id: rowData.stringId,
 				status: rowData.status,
+				url: this.delUrl,
+				dataGrid: this.dataGrid
 			}
-			_deleteRow.call(this,params);
+			_deleteRow(params);
 		},
 
 
 		/* 启用、停用状态 */
 		changeStatus: function(index, rowData) {
-			_changeStatus.call(this, index, rowData);
+
+			var params = {
+				url: this.changeStatusUrl,
+				dataGrid: this.dataGrid,
+				id: rowData.stringId,
+				val: rowData.status.toString(),
+				index: index
+			}
+
+			_changeStatus(params);
 		},
 
 		// Data Operation Block End
@@ -475,18 +499,32 @@ BasicModule = (function($){
 			_updateUrl = this.updateUrl;
 			_addUrl = this.addUrl;
 
+			if(newParams) {
+
+				if (newParams.updateUrl)
+					_updateUrl = newParams.updateUrl;
+
+				if (newParams.addUrl)
+					_addUrl = newParams.addUrl;
+
+			}
+
 			var
 				opType = $("#opType").val(),
 				data = $("#InfoForm").serialize(),
 				existUrl = this.existUrl,
 				validate = this.validateSave,
+				dataGrid = this.dataGrid,
+				exParams = this.exParams,
 
 				params ={
 					existUrl: existUrl,
 					Method: METHOD,
 					data: data,
 					validate: validate,
-					opType:opType
+					opType: opType,
+					dataGrid: dataGrid,
+					exParams: exParams
 				};
 
 
@@ -497,9 +535,8 @@ BasicModule = (function($){
 			}
 
 			//if there is newParams then update oldParams
-			params = $.extend({},params,newParams);
-
-			_dataControl.call(this,params);
+			params = this.getNewParams(params,newParams);
+			_dataControl(params);
 
 
 		},
@@ -603,6 +640,12 @@ BasicModule = (function($){
 			}
 
 			return obj;
+
+		},
+
+		getNewParams: function(old,newParams) {
+
+			 return $.extend({},old,newParams);
 
 		}
 
