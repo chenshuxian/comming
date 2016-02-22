@@ -120,7 +120,7 @@
      <input type="hidden" id="codeNo" name="codeNo" value="${codeNo}">
      <input type="hidden" id="opType" name="opType" value="${opType}"/> 
      <div class="wrapper-footer text-center">
-	           <button id="editBtn" class="btn btn-submit sm-size" onclick="validate.submit('Inst','${opType}')">确定</button>
+	           <button id="editBtn" class="btn btn-submit sm-size" onclick="BasicModule.submit()">确定</button>
 	           <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
 	 </div>
      </form>

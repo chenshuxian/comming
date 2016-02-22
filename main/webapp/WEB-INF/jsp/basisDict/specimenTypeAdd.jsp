@@ -74,7 +74,7 @@
                 <input type="hidden" id="editTypeKey" name="typeKey" value="${typeKey}"/>
                     <div class="wrapper-footer text-center">
                 <button id="editBtn" class="btn btn-submit sm-size"
-                        onclick="validate.submit('SpecimenType','${opType}')">确定 <!--CtrDictCodes.editDictCode('${opType}', '${typeKey}')-->
+                        onclick="BasicModule.submit()">确定 <!--CtrDictCodes.editDictCode('${opType}', '${typeKey}')-->
                 </button>
                 <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
             </div>

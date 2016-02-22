@@ -34,9 +34,11 @@ dataGridM = (function($){
 			  
 			  onAfterRender = function() {
 				  //
+				  if (_module == "ResultType2")
+				  	_module = "ResultType";
+
 				  var obj = eval("(" + _module + ")");
-				  //console.log(obj.currentEvent);
-				  //console.log(this);
+
 				  switch (obj.currentEvent) {
 					  case "add":
 	                      newcommonjs.setSearchConditions(_preId, "", 2, 2);
@@ -46,6 +48,7 @@ dataGridM = (function($){
 			  };
 		
 		 var gridObj = {
+
 	            url: _url,
 	            method: POST,
 	            queryParams: _data,
@@ -62,8 +65,7 @@ dataGridM = (function($){
 		 };
 		 
 		 
-		 gridObj.view =    
-	     $.extend({}, $.fn.datagrid.defaults.view, {onAfterRender: onAfterRender});
+		 gridObj.view = $.extend({}, $.fn.datagrid.defaults.view, {onAfterRender: onAfterRender});
 
 		 //取得欄位
 		 gridObj.columns = ColCollect.getColumns(_module);

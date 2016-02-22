@@ -12,19 +12,12 @@ var MED = (function($){
         _hideCols = [],	//要穩藏的欄位
         _data = MED.searchObj(_preId),
         _pageListUrl = MED.pageListUrl,
+        _module = "MED",
 
-    /* 参数说明:
-     * url:pagelisturl
-     * data:初始时后台所有接收的参数，是一个物件
-     * module:目前的这个模组名，会对晕到gridColumus.js需要注意
-     * hideCols:想稳藏的栏位，是一个array
-     * tableList:dataGird的对象
-     * preId:前辍
-     */
         _dgParams = {
             url:_pageListUrl,
             data:_data,
-            module:"MED",
+            module:_module,
             hideCols:_hideCols,
             tableList:_tableList,
             preId:_preId

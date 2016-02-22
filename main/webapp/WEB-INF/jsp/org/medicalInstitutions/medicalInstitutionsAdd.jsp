@@ -179,7 +179,7 @@
 	 <input type="hidden" id="orgTypeId" name="orgTypeId" value=${orgTypeId} /> 
 	  <div class="wrapper-footer text-center">
 	           <!--button id="editBtn" class="btn btn-submit sm-size"><input type='submit'>确定</button-->
-	           <button id="editBtn" class="btn btn-submit sm-size" onclick="validate.submit('MED','${opType}')">确定</button>
+	           <button id="editBtn" class="btn btn-submit sm-size" onclick="BasicModule.submit()">确定</button>
 	           <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
 	     </div>  
      </form>

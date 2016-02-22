@@ -307,7 +307,7 @@ ColCollect = (function($){
 			{
 				title: "编码", field: 'codeNo', width: 80, formatter: function (value, row) {
 				var rowData = JSON.stringify(row);
-				return "<a onclick='obj.showDialog(" + rowData + ")'>" + value + "</a>";
+				return "<a onclick='" + obj + ".showDialog(" + rowData + ")'>" + value + "</a>";
 			}
 			},
 			{title: "中文名称", field: 'name', flex: 1, width: 60},
@@ -315,9 +315,9 @@ ColCollect = (function($){
 			{
 				title: "状态", field: 'status', formatter: function (value, row, index) {
 				var rowData = JSON.stringify(row);
-				var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='obj.changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+				var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='" + obj + ".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
 				if (value == '1') {
-					returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='obj.changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+					returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='" + obj + ".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
 				}
 				return returnStr;
 			}
@@ -327,8 +327,8 @@ ColCollect = (function($){
 				formatter: function (value, row, index) {
 					var str = "";
 					var rowData = JSON.stringify(row);
-					str += "<a class='icon icon-edit' onclick='obj.editResultType(" + rowData + ")'></a>";
-					str += "<a class=\"icon icon-trash\" onclick='obj.deleteResultType(" + index + "," + rowData + ")'></a>";
+					str += "<a class='icon icon-edit' onclick='" + obj + ".editRow(" + rowData + ")'></a>";
+					str += "<a class=\"icon icon-trash\" onclick='" + obj + ".deleteRow(" + index + "," + rowData + ")'></a>";
 					return str;
 				}
 			}

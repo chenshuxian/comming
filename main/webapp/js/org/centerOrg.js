@@ -90,54 +90,6 @@ var CenterOrg = (function($){
 		InfoUrl: ctx + "/org/centerOrg/centerOrgInfo",
 		pageListUrl: ctx + "/org/centerOrg/centerOrgPageList",
 
-		/*Start edit 相关参数设定  */
-		/*editRow: function(rowData) {
-
-			var
-				editParams = {
-					id:rowData.stringId,
-					opType:"edit",
-					orgTypeId:this.orgTypeId
-				},
-
-				editStatus = rowData.status;
-
-				params = {
-					data : editParams,
-					callback : this.editCallBack
-				};
-
-			if (editStatus == true) {
-				showMessage('当前选中记录已启用，不允许修改！');
-				return;
-			}
-
-			BasicModule.rowData = rowData;
-
-			this.Dialog(params);
-
-		},*/
-		/*End edit 相关参数设定  */
-
-		/*Start 弹出详情信息框 */
-		/*showDialog: function (rowData) {
-
-			var
-				showParams = {
-					id:rowData.stringId,
-					opType:'view',
-					orgTypeId:this.orgTypeId
-				},
-				params ={
-					data : showParams,
-					callback : this.showCallBack
-				};
-				BasicModule.rowData = rowData;
-
-			this.Dialog(params);
-
-		},*/
-
 		/*callback function area*/
 
 		//新增成功callback

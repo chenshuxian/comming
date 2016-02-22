@@ -35,13 +35,14 @@
 					</div>
 				</div>
 				<input type="hidden" id="editId" name="id"/>
-				<input type="hidden" id="editOpType" name="opType" value="${opType}"/>
+				<input type="hidden" id="opType" name="opType" value="${opType}"/>
 				<input type="hidden" id="editTypeId" name="typeId" value="${typeId}"/>
+				<div class="wrapper-footer text-center">
+					<button id="editBtn" class="btn btn-submit sm-size" onclick="ResultType.submit()">确定</button>
+					<button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
+				</div>
 			</form>
-			<div class="wrapper-footer text-center">
-				<button id="editBtn" class="btn btn-submit sm-size" onclick="ResultType.resultDescEdit('${opType}')">确定</button>
-				<button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
-			</div>
+
 		</div>
 	</div>
 </div>

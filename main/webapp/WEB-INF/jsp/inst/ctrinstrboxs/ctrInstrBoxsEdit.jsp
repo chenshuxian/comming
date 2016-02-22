@@ -49,7 +49,7 @@
         <input type="hidden" id="editAppId" name="app_id" value="0"/>
         <input type="hidden" id="editStatus" name="status" value=""/>
         <div class="wrapper-footer text-center">
-          <button id="editBtn" class="btn btn-submit sm-size" onclick="validate.submit('CtrInstrBoxs','${opType}')">确定</button>
+          <button id="editBtn" class="btn btn-submit sm-size" onclick="BasicModule.submit()">确定</button>
           <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
         </div>
       </form>

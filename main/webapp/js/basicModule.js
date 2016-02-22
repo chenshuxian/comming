@@ -48,7 +48,7 @@ BasicModule = (function($){
 
 				var
 					dataGrid = params.dataGrid,
-					url = params.delBatUrl,
+					url = params.url,
 					checkedItems,
 					names = [],
 					ids = [];
@@ -123,13 +123,7 @@ BasicModule = (function($){
 					val = params.val,
 					index = params.index,
 					confirmMeg,operatioType,newVal;
-				/*var
-					 url = this.changeStatusUrl,
-					 dataGrid = this.dataGrid,
-					 id = rowData.stringId,
-					 val = rowData.status.toString(),
-					 index = params.index,
-					 confirmMeg,operatioType,newVal;*/
+
 
 				if (id == '' || val == '') {
 					showMessage('请选择操作记录!');
@@ -261,6 +255,30 @@ BasicModule = (function($){
 
 					}
 				});
+			},
+
+			_beforeSubmit = function (obj,BCB) {
+
+				var successCallback = function(){
+
+					if(BCB){
+						if(BCB == "resultDescEdit")
+							ResultType.resultDescEdit();
+					}else{
+						obj.editDictCode();
+					}
+
+				};
+
+
+
+				$('form').form({
+					onSubmit:function(){
+						console.log("onsubmit:"+ $(this).form('validate'));
+						return $(this).form('validate');
+					},
+					success:successCallback
+				});
 			};
 
 
@@ -314,12 +332,13 @@ BasicModule = (function($){
 		},
 
 		defaultDialogParams: function(){
-			return {
+			var obj = {
 				url: this.InfoUrl,
 				focusId: this.focusId,
 				callback: this.addCallBack,
 				popArea: this.popArea
 			};
+			return obj;
 		},
 
 		// Pop Block Start
@@ -336,16 +355,17 @@ BasicModule = (function($){
 
 			this.currentEvent = "add";
 			this.Dialog(DDP);
+
 		},
 
 		/* 编辑 */
-		editRow: function(rowData) {
+		editRow: function(rowData,newParams) {
 
 			//var url = this.InfoUrl;
 			var
-				editParams,editStatus,
-				params = this.defaultDialogParams(),
-				newParams = {callback:this.editCallBack},
+				editParams,editStatus,DDP,
+				params = this.defaultDialogParams();
+				params.callback = this.editCallBack;
 				DDP = this.getNewParams(params,newParams);
 
 			editParams = {
@@ -402,13 +422,16 @@ BasicModule = (function($){
 				callbackFun = params.callback,
 				url = params.url,
 				focusId = params.focusId,
-				dialogWidth = params.popArea;
+				dialogWidth = params.popArea,
+				beforeCB = params.BCB,
+				obj = this;
 
 			console.log("Dialog:"+params.url);
 
 			$("#"+POPDIV).load(url, data, function () {
 				dialog(POPDIV, {width: dialogWidth}, callbackFun);
 				validate.validateBox();
+				_beforeSubmit(obj,beforeCB);
 				$("#"+focusId).focus();
 			});
 
@@ -446,23 +469,30 @@ BasicModule = (function($){
 		/* 批量删除 */
 		deleteBetch: function(newParams){
 
-			var params = {
-				url: this.delBatUrl,
-				dataGrid: this.dataGrid
-			}
+			var
+				params = {
+					url: this.delBatUrl,
+					dataGrid: this.dataGrid
+				};
+
+			params = this.getNewParams(params,newParams);
 
 			_deleteBatch(params);
 		},
 
 		/* 删除行 */
-		deleteRow: function(index, rowData) {
+		deleteRow: function(index, rowData,newParams) {
 			//var url = this._delUrl;
-			var params = {
-				id: rowData.stringId,
-				status: rowData.status,
-				url: this.delUrl,
-				dataGrid: this.dataGrid
-			}
+			var
+				params = {
+					id: rowData.stringId,
+					status: rowData.status,
+					url: this.delUrl,
+					dataGrid: this.dataGrid
+				};
+
+			params = this.getNewParams(params,newParams);
+
 			_deleteRow(params);
 		},
 
@@ -483,17 +513,6 @@ BasicModule = (function($){
 
 		// Data Operation Block End
 
-
-		/* 判断新增还是修改
-		* newParams include
-		* existUrl
-		* callback
-		* validate
-		* Method
-		* opType
-		* updateUrl
-		* addUrl
-		* */
 		editDictCode: function(newParams) {
 
 			_updateUrl = this.updateUrl;
@@ -540,34 +559,6 @@ BasicModule = (function($){
 
 
 		},
-		/*editDictCode: function() {
-
-			var
-				opType = $("#opType").val(),
-				data = $("#InfoForm").serialize(),
-				existUrl = this.existUrl,
-				validate = this.validateSave,
-				params ={
-					existUrl: existUrl,
-					Method: METHOD,
-					data: data,
-					validate: validate,
-					opType:opType
-				};
-
-
-			if(opType == "add"){
-				params.callback = this.addSuccess;
-				_addUrl = this.addUrl;
-			}else{
-				params.callback = this.editSuccess;
-				_updateUrl = this.updateUrl;
-			}
-
-			_dataControl.call(this,params);
-
-
-		},*/
 
 		searchGrid: function() {
 			//console.log(this.preId);
@@ -647,7 +638,18 @@ BasicModule = (function($){
 
 			 return $.extend({},old,newParams);
 
-		}
+		},
+
+		submit: function() {
+
+			console.log("submit");
+			$('form').submit(function(event){
+				//避免重复提交
+				console.log("sumbit1");
+				event.preventDefault();
+			});
+
+		},
 
 	});
 

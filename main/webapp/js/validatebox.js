@@ -94,28 +94,7 @@ validate = (function($){
                 )).getTime() / 1000;
         
     };
-    
-    //before sumbit check
-    var _beforeSubmit = function () {
 
-    	$('form').form({
-    		onSubmit:function(){
-				console.log("onsubmit:"+ $(this).form('validate'));
-    			return $(this).form('validate');
-    		},
-    		success:function(){
-    			var obj = validate._obj;
-    			if (typeof validate._obj !== "object") {  	
-    				//console.log(typeof validate._obj);
-    				obj = eval("(" + validate._obj + ")"); 
-    			}
-
-				console.log("beforesumbit");
-    			/*obj.editDictCode(validate._type,validate._num);*/
-				obj.editDictCode();
-    		}
-    	});
-    };
 	
     $.extend(validate,{
     	
@@ -205,10 +184,13 @@ validate = (function($){
 				validType:  ['symbol','digits'],
 				missingMessage: "联系电话为空，请重新输入！"
 			});
+			$("#editResultValue").validatebox({
+				required:true,
+				validType:  ['symbol'],
+				missingMessage: "结果描述为空，请重新输入！"
+			});
 
-
-        	
-        	_beforeSubmit();
+        	//_beforeSubmit();
         	
         },
         getAuth : function(obj) {
@@ -230,7 +212,7 @@ validate = (function($){
     			
     		}
         	
-        	_beforeSubmit();
+        	//_beforeSubmit();
         	
         },
         authUser : function() {
@@ -247,18 +229,6 @@ validate = (function($){
         	
         },
 
-        submit : function(obj,type,num) {
-        	validate._obj = obj;
-        	validate._type = type;
-        	validate._num = num;
-        	//_beforeSubmit(obj);
-			console.log("submit");
-        	$('form').submit(function(event){
-        		//避免重复提交
-        		event.preventDefault();
-        	});
-        	
-        },
         updatePW : function() {
         	
         	$("#up_newPassword").validatebox({

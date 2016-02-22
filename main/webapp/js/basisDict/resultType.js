@@ -9,14 +9,30 @@ var ResultType = (function($){
     /* END render basicModule */
     var
         _preId = CB.PREID.RT,
-        _tableList =  $("#" + _preId + "List"),
-        _tableList2 = $("#" + _preId + "List2"),
+        _tableList =  $("#" + _preId + "ResultTypeList"),
+        _tableList2 = $("#" + _preId + "ResultDescList"),
         _hideCols = [],	//要穩藏的欄位
         _data = ResultType.searchObj(_preId),
         _pageListUrl = ctx + "/basisDict/ctrResultTypes/ctrResultTypesPageList",
         _pageListUrl2 = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailPageList",
         _module = "ResultType",
         _module2 = "ResultType2",
+        _delBatUrl = ctx + "/basisDict/ctrResultTypes/ctrResultTypesDeleteBatch",
+        _existUrl = ctx + "/basisDict/ctrResultTypes/checkNameExisted",
+        _updateUrl = ctx + "/basisDict/ctrResultTypes/ctrResultTypesEdit",
+        _addUrl = ctx + "/basisDict/ctrResultTypes/ctrResultTypesAdd",
+        _delUrl = ctx + "/basisDict/ctrResultTypes/ctrResultTypesDelete",
+        _changeStatusUrl = ctx + "/basisDict/ctrResultTypes/ctrResultTypesDisableOrEnable",
+        _InfoUrl = ctx + "/basisDict/ctrResultTypes/ctrResultTypesInfo",
+
+        //url2
+        _delBatUrl2 = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailDeleteBatch",
+        _existUrl2 = ctx + "/basisDict/ctrResultTypeDetail/checkNameExisted",
+        _updateUrl2 = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailEdit",
+        _addUrl2 = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailAdd",
+        _delUrl2 = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailDelete",
+        _InfoUrl2 = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailInfo",
+
     /* START dataGrid 生成*/
 
         //first dataGrid
@@ -26,7 +42,8 @@ var ResultType = (function($){
             module:_module,
             hideCols:_hideCols,
             tableList:_tableList,
-            preId:_preId
+            preId:_preId,
+            height:''
         },
         //resultType dataGrid obj render
         _gridObj = dataGridM.init(_dgParams),
@@ -36,10 +53,10 @@ var ResultType = (function($){
 
             onLoadSuccess: function(data) {
 
-                var rows = _tableList.datagrid("getRows");
+                var rows = ResultType.dataGrid.datagrid("getRows");
 
                 if (data.total == 0) {
-                    _tableList.datagrid('loadData', {total: 0, rows: []});//清空下方DateGrid
+                    ResultType.dataGrid.datagrid('loadData', {total: 0, rows: []});//清空下方DateGrid
                 } else {
                     ResultType.typeId = rows[0].stringId;
                     _loadResultDescDataGrid(ResultType.typeId);
@@ -59,14 +76,12 @@ var ResultType = (function($){
 
         _gridObj = $.extend({},_gridObj,_upgradeObj),
         // render dataGrid
-        _dataGrid = _tableList.datagrid(_gridObj);
+        _dataGrid = _tableList.datagrid(_gridObj),
 
 
     /* 加载结果描述 */
-    var _loadResultDescDataGrid= function (typeId) {
+        _loadResultDescDataGrid = function (typeId) {
         // 结果描述列表
-        //this.resultDescTableList = $("#" + this.preId + "ResultDescList");
-        //var resultDescUrl = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailPageList";
         var
             _data2 = {typeId: typeId, sort: ResultType.descSort},
 
@@ -89,50 +104,49 @@ var ResultType = (function($){
 
                 onLoadSuccess: function(data) {
 
-                    var columns = ResultType.tableList2.datagrid('getColumnFields');
+                    var columns = ResultType.dataGrid2.datagrid('getColumnFields');
 
                 },
                 onClickRow: function(index, row) {
                         // 刷新结果描述表
-                    newcommonjs.rowClickStyle(ResultType.resultDescDataGrid, this);
+                    newcommonjs.rowClickStyle(ResultType.dataGrid, this);
 
                 }
 
             },
             // render dataGrid
-            _gridObj2 = $.extend({},_gridObj2,_upgradeObj2);
+            _gridObj2 = ResultType.getNewParams(_gridObj2,_upgradeObj2);//extend({},_gridObj2,_upgradeObj2);
 
         ResultType.dataGrid2 = _tableList2.datagrid(_gridObj2);
-
 
     };
 
     /* 状态搜索 */
-    $("." + ResultType.preId + "-status-selector li").on("click", function () {
-        $("#" + ResultType.preId + "StatusSpan").html($(this).html());
-        $("." + ResultType.preId + "-status-selector li.selected").removeClass("selected");
+    $("." + _preId + "-status-selector li").on("click", function () {
+        $("#" + _preId + "StatusSpan").html($(this).html());
+        $("." + _preId + "-status-selector li.selected").removeClass("selected");
         var flg = $(this).is('.selected');
         $(this).addClass(function () {
             return flg ? '' : 'selected';
         })
 
         var statusVal = $(this).attr("el-value");
-        $("#" + ResultType.preId + "Status").val(statusVal);
+        $("#" + _preId + "Status").val(statusVal);
 
         ResultType.searchGrid();
     });
 
     /* 排序 */
-    $("." + ResultType.preId + "-sort-selector li").on("click", function () {
-        $("#" + ResultType.preId + "SortSpan").html($(this).html());
-        $("." + ResultType.preId + "-sort-selector li.selected").removeClass("selected");
+    $("." + _preId + "-sort-selector li").on("click", function () {
+        $("#" + _preId + "SortSpan").html($(this).html());
+        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
         var flg = $(this).is('.selected');
         $(this).addClass(function () {
             return flg ? '' : 'selected';
         })
 
         var sortVal = $(this).attr("el-value");
-        $("#" + ResultType.preId + "Sort").val(sortVal);
+        $("#" + _preId + "Sort").val(sortVal);
 
         ResultType.searchGrid();
     });
@@ -153,7 +167,7 @@ var ResultType = (function($){
     });
 
     // delete desc batch
-    $("#" + this.preId + "DeleteResultDescBatch").click(function () {
+    $("#" + _preId + "DeleteResultDescBatch").click(function () {
 
         var params = {
             dataGrid : ResultType.dataGrid2,
@@ -165,11 +179,18 @@ var ResultType = (function($){
     });
 
     /* 结果描述新增 */
-    $("#" + this.preId + "AddResultDesc").click(function () {
+    $("#" + _preId + "AddResultDesc").click(function () {
 
         var params = {
-            callback : function(){$("#editTypeId").val(ResultType.typeId);},
-            url : ResultType.InfoUrl2
+            callback : function(){
+                $("#editTypeId").val(ResultType.typeId);
+                $("#editResultValue").focus();
+            },
+            url: ResultType.InfoUrl2,
+
+            //beforeCallBack of submit before
+            BCB: "resultDescEdit"
+
         };
         ResultType.addPop(params);
 
@@ -197,22 +218,22 @@ var ResultType = (function($){
         tableList:_tableList,
         tableList2:_tableList2,
         /*START url 定義*/
-        delBatUrl: ctx + "/basisDict/ctrResultTypes/ctrResultTypesDeleteBatch",
-        existUrl: ctx + "/basisDict/ctrResultTypes/checkNameExisted",
-        updateUrl: ctx + "/basisDict/ctrResultTypes/ctrResultTypesEdit",
-        addUrl: ctx + "/basisDict/ctrResultTypes/ctrResultTypesAdd",
-        delUrl: ctx + "/basisDict/ctrResultTypes/ctrResultTypesDelete",
-        changeStatusUrl: ctx + "/basisDict/ctrResultTypes/ctrResultTypesDisableOrEnable",
-        InfoUrl: ctx + "/basisDict/ctrResultTypes/ctrResultTypesInfo",
+        delBatUrl: _delBatUrl,
+        existUrl: _existUrl,
+        updateUrl: _updateUrl,
+        addUrl: _addUrl,
+        delUrl: _delUrl,
+        changeStatusUrl: _changeStatusUrl,
+        InfoUrl: _InfoUrl,
         pageListUrl: _pageListUrl,
 
         //dataGrid2 of Url
-        delBatUrl2: ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailDeleteBatch",
-        existUrl2: ctx + "/basisDict/ctrResultTypeDetail/checkNameExisted",
-        updateUrl2: ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailEdit",
-        addUrl2: ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailAdd",
-        delUrl2: ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailDelete",
-        InfoUrl2: ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailInfo",
+        delBatUrl2: _delBatUrl2,
+        existUrl2: _existUrl2,
+        updateUrl2: _updateUrl2,
+        addUrl2: _addUrl2,
+        delUrl2: _delUrl2,
+        InfoUrl2: _InfoUrl2,
         pageListUrl2: _pageListUrl2,
         /*END url 定義*/
         dataGrid:_dataGrid,
@@ -220,187 +241,74 @@ var ResultType = (function($){
 
         validateSave: function() {
 
-            var name = $.trim($("#editName").val());
             var displayOrderId = "editDisplayOrder";
 
-            if (name == '') {
-
-                showMessage('中文名称为空，请重新输入！');
-                $("#editName").focus();
+            if(validateDisplayOrder(displayOrderId)){
                 return false;
-
-            }
-            if (validateDisplayOrder(displayOrderId)) {
-
-                return false;
-
             }
             return true;
         },
 
         reloadResultDesc: function(row) {
+
             this.typeId = row.stringId;
             ResultType.dataGrid2.datagrid('reload', {
                 typeId: row.stringId,
                 sort: ResultType.descSort
             });
+
         },
 
         /* 结果描述判断新增还是修改 */
         resultDescEdit: function (opType) {
-            if (opType == "add") {
-                this.addResultDesc();
-            } else if (opType == "edit") {
-                this.updateResultDesc();
-            }
+
+            var
+                params = {
+                    addUrl: _addUrl2,
+                    updateUrl: _updateUrl2,
+                    existUrl: _existUrl2,
+                    dataGrid: this.dataGrid2,
+                    exParams: {typeId: this.typeId}
+                }
+
+            this.editDictCode(params);
+
         },
 
         editResultDesc: function (rowData) {
-            var id = rowData.stringId;
-            var url = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailInfo";
-            newcommonjs.showDictCodeEditDialog(id, 'edit', ResultType.typeId, function () {
-                $("#InfoForm").form("load", {
-                    resultValue: rowData.resultValue,
-                    displayOrder: rowData.displayOrder,
-                    id: rowData.stringId,
-                    fastCode: rowData.fastCode,
-                    opType: 'edit',
-                    typeId: ResultType.typeId
-                });
-                ResultType.oldResultValue = rowData.resultValue;
-            }, url, 480);
-        },
 
-        addResultDesc: function () {
-            //防止重复提交
-            $("#editBtn").attr("disabled", true);
-            formTextTrim("InfoForm");
-            if(!this.validateResultDescForm()){
-                return;
-            }
+            var url = _InfoUrl2,
+                callback = function(){
 
-            var name = $.trim($("#editResultValue").val());
-            var typeId = ResultType.typeId;
-            // 检查是否同名
-            $.ajax({
-                url: ctx + "/basisDict/ctrResultTypeDetail/checkNameExisted",
-                type: "POST",
-                data : {name : name, typeId : typeId},
-                success: function (data) {
-                    $("#editBtn").attr("disabled", false);
-                    if (data.indexOf("confirm|") == 0) {
-                        // 有同名
-                        showConfirm(data.substring(8), function () {
-                            // 确认继续
-                            ResultType.addDesc();
-                        })
-                    } else {
-                        // 无同名，确认继续
-                        ResultType.addDesc();
-                    }
-                },
-                error: function () {
-                    $("#editBtn").attr("disabled", false);
-                }
-            });
-        },
-
-        addDesc: function () {
-            var data = $("#InfoForm").serialize();
-            $.ajax({
-                url: ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailAdd",
-                type: "POST",
-                data: data,
-                success: function (data) {
-                    $("#editBtn").attr("disabled", false);
-                    resolutionData(data);
-                    ResultType.resultDescDataGrid.datagrid('reload', {
-                        sort: 2,
+                    $("#InfoForm").form("load", {
+                        resultValue: rowData.resultValue,
+                        displayOrder: rowData.displayOrder,
+                        id: rowData.stringId,
+                        fastCode: rowData.fastCode,
+                        opType: 'edit',
                         typeId: ResultType.typeId
                     });
-                    $("#ctrDictInfoModal").hide();
+                    ResultType.oldResultValue = rowData.resultValue;
+
                 },
-                error: function () {
-                    $("#editBtn").attr("disabled", false);
-                }
-            });
-        },
+                params = {
+                    url: url,
+                    callback: callback
+                };
 
-        updateResultDesc: function () {
-            //防止重复提交
-            $("#editBtn").attr("disabled", true);
-            formTextTrim("InfoForm");
-            if (!this.validateResultDescForm()) {
-                return;
-            }
+            this.editRow(rowData,params);
 
-            var id = $("#editId").val();
-            var resultValue = $.trim($("#editResultValue").val());
-            // 检查是否同名
-            if (ResultType.oldResultValue != resultValue) {
-                $.ajax({
-                    url : ctx + "/basisDict/ctrResultTypeDetail/checkNameExisted",
-                    type : "POST",
-                    data : {id : id, name : resultValue, typeId : ResultType.typeId},
-                    success: function (data) {
-                        $("#editBtn").attr("disabled", false);
-                        if (data.indexOf("confirm|") == 0) {
-                            // 有同名
-                            showConfirm(data.substring(8), function () {
-                                // 确认继续
-                                ResultType.updateDesc();
-                            });
-                        } else {
-                            // 无同名，确认继续
-                            ResultType.updateDesc();
-                        }
-                    },
-                    error: function () {
-                        $("#editBtn").attr("disabled", false);
-                    }
-                });
-            } else {
-                ResultType.updateDesc();
-            }
-        },
-
-        updateDesc: function () {
-            var data = $("#InfoForm").serialize();
-            $.ajax({
-                url : ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailEdit",
-                type : "POST",
-                data: data,
-                success: function (data) {
-                    $("#editBtn").attr("disabled", false);
-                    resolutionData(data);
-                    ResultType.resultDescDataGrid.datagrid('reload');
-                    $("#ctrDictInfoModal").hide();
-                },
-                "error": function () {
-                    $("#editBtn").attr("disabled", false);
-                }
-            });
         },
 
         deleteResultDesc: function (index, rowData) {
-            var resultTypeId = ResultType.typeId;
-            $.messager.confirm("提示", "是否删除当前记录？", function (r) {
-                if (r) {
-                    $.ajax({
-                        url : ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailDelete",
-                        type : "POST",
-                        data : {
-                            id : rowData.stringId
-                        },
-                        success : function(data) {
-                            resolutionData(data);
-                            ResultType.resultDescDataGrid.datagrid('reload');
-                        },
-                        error : function() {
-                        }
-                    });
-                }
-            });
+
+            var
+                params = {
+                    url: this.delUrl2,
+                    dataGrid: this.dataGrid2
+                };
+
+            this.deleteRow(index,rowData,params);
         },
 
         editCallBack: function() {
@@ -424,6 +332,7 @@ var ResultType = (function($){
 
             var rowData = BasicModule.rowData;
             $("#InfoForm").form("load", {
+                name: rowData.name,
                 displayOrder: rowData.displayOrder,
                 memo: rowData.memo
             });
@@ -776,7 +685,7 @@ $(function(){
     editResultDesc: function (rowData) {
         var id = rowData.stringId;
         var url = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailInfo";
-        newcommonjs.showDictCodeEditDialog(id, 'edit', ResultType.typeId, function () {
+        newcommonjs.showDictCodeEditDialog(id, 'edit', '', function () {
             $("#InfoForm").form("load", {
                 resultValue: rowData.resultValue,
                 displayOrder: rowData.displayOrder,
