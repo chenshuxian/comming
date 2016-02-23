@@ -298,7 +298,7 @@ BasicModule = (function($){
 
 			},
 
-			_Dialog= function(params) {
+			_Dialog = function(params) {
 
 				var
 					data = params.data,
@@ -318,7 +318,24 @@ BasicModule = (function($){
 					$("#"+focusId).focus();
 				});
 
+			},
+
+			_getType = function(obj,rowData) {
+
+				if(rowData.typeKey){
+					obj.typeKey = rowData.typeKey;
+				}
+
+				// for centerOrg.js
+				if(this.orgTypeId != null){
+					obj.orgTypeId = this.orgTypeId;
+				}
+
+				return obj;
+
 			};
+
+
 
 
 
@@ -423,7 +440,7 @@ BasicModule = (function($){
 				opType:"edit"
 			};
 
-			editParams = this.getType(editParams,rowData);
+			editParams = _getType.call(this,editParams,rowData);
 
 			DDP.data = editParams;
 
@@ -455,7 +472,7 @@ BasicModule = (function($){
 					opType:'view'
 				};
 
-			showParams = this.getType(showParams,rowData);
+			showParams = _getType.call(this,showParams,rowData);
 
 			DDP.data = showParams;
 
@@ -628,6 +645,13 @@ BasicModule = (function($){
 
 		},
 
+		addCallBack: function() {
+
+			//write from everyobject
+
+		},
+
+
 		showCallBack: function() {
 
 			////write from everyobject
@@ -642,7 +666,7 @@ BasicModule = (function($){
 
 		},
 
-		getType: function(obj,rowData) {
+		/*getType: function(obj,rowData) {
 
 			if(rowData.typeKey){
 				obj.typeKey = rowData.typeKey;
@@ -655,8 +679,7 @@ BasicModule = (function($){
 
 			return obj;
 
-		},
-
+		},*/
 		getNewParams: function(old,newParams) {
 
 			 return $.extend({},old,newParams);
