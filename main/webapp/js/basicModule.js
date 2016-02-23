@@ -26,6 +26,7 @@ BasicModule = (function($){
 				sort:""
 			},
 			_addUrl,_updateUrl,_exParams,
+			_addNewReload,_updateNewReload,
 
 			/* 批量删除
 			* params includes
@@ -196,7 +197,7 @@ BasicModule = (function($){
 				//var obj = this;
 				_dataStore = params.data;
 				_dataGrid = params.dataGrid;
-				_exParams = params.exParams;
+				//_exParams = params.exParams;
 
 
 				$("#editBtn").attr("disabled", true);
@@ -277,7 +278,7 @@ BasicModule = (function($){
 
 				var
 					params = {
-						rd: $.extend(_addreload,_exParams),
+						rd: _addNewReload,//$.extend(_addreload,_exParams),
 						url: _addUrl
 					};
 
@@ -289,11 +290,33 @@ BasicModule = (function($){
 
 				var
 					params = {
-						rd: $.extend(_updatereload,_exParams),
+						rd: _updateNewReload,//$.extend(_updatereload,_exParams),
 						url: _updateUrl
 					};
 
 				_commonAjax(params);
+
+			},
+
+			_Dialog= function(params) {
+
+				var
+					data = params.data,
+					callbackFun = params.callback,
+					url = params.url,
+					focusId = params.focusId,
+					dialogWidth = params.popArea,
+					beforeCB = params.BCB,
+					obj = this;
+
+				console.log("Dialog:"+params.url);
+
+				$("#"+POPDIV).load(url, data, function () {
+					dialog(POPDIV, {width: dialogWidth}, callbackFun);
+					validate.validateBox();
+					_beforeSubmit(obj,beforeCB);
+					$("#"+focusId).focus();
+				});
 
 			};
 
@@ -381,7 +404,7 @@ BasicModule = (function($){
 			DDP.data = this.addParams;
 
 			this.currentEvent = "add";
-			this.Dialog(DDP);
+			_Dialog.call(this,DDP);
 
 		},
 
@@ -414,7 +437,7 @@ BasicModule = (function($){
 
 			BM.rowData = rowData;
 
-			this.Dialog(DDP);
+			_Dialog.call(this,DDP);
 			//_newshowDictCodeEditDialog.call(this,params);
 
 		},
@@ -438,31 +461,10 @@ BasicModule = (function($){
 
 			BM.rowData = rowData;
 
-			this.Dialog(DDP);
+			_Dialog.call(this,DDP);
 
 		},
 
-		Dialog: function(params) {
-
-			var
-				data = params.data,
-				callbackFun = params.callback,
-				url = params.url,
-				focusId = params.focusId,
-				dialogWidth = params.popArea,
-				beforeCB = params.BCB,
-				obj = this;
-
-			console.log("Dialog:"+params.url);
-
-			$("#"+POPDIV).load(url, data, function () {
-				dialog(POPDIV, {width: dialogWidth}, callbackFun);
-				validate.validateBox();
-				_beforeSubmit(obj,beforeCB);
-				$("#"+focusId).focus();
-			});
-
-		},
 
 		// Pop Block End
 
@@ -520,6 +522,8 @@ BasicModule = (function($){
 
 			_updateUrl = this.updateUrl;
 			_addUrl = this.addUrl;
+			_addNewReload = $.extend({},_addreload,this.exParams);
+			_updateNewReload = $.extend({},_updatereload,this.exParams);
 
 			if(newParams) {
 
@@ -537,7 +541,7 @@ BasicModule = (function($){
 				existUrl = this.existUrl,
 				validate = this.validateSave,
 				dataGrid = this.dataGrid,
-				exParams = this.exParams,
+				//exParams = this.exParams,
 
 				params ={
 					existUrl: existUrl,
@@ -546,7 +550,7 @@ BasicModule = (function($){
 					validate: validate,
 					opType: opType,
 					dataGrid: dataGrid,
-					exParams: exParams
+					//exParams: exParams
 				};
 
 
