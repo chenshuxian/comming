@@ -15,26 +15,17 @@ BasicModule = (function($){
 			POPDIV = CB.POPDIV,
 			_dataStore = {},
 			_dataGrid = {},
+			_addreload = {
+				searchStr:"",
+				status:"",
+				sort:"2"
+			},
+			_updatereload = {
+				searchStr:"",
+				status:"",
+				sort:""
+			},
 			_addUrl,_updateUrl,_exParams,
-
-
-			/*2016/1/15 add by chenshuxian 由使用者传入data obj 让方法更灵活*/
-			/*_newshowDictCodeEditDialog= function(params) {
-
-				var
-					data = params.data,
-					callbackFun = params.callback,
-					url = this.InfoUrl,
-					focusId = this.focusId,
-					dialogWidth = this.popArea;
-
-				$("#"+POPDIV).load(url, data, function () {
-					dialog(POPDIV, {width: dialogWidth}, callbackFun);
-					validate.validateBox();
-					$("#"+focusId).focus();
-				});
-
-			},*/
 
 			/* 批量删除
 			* params includes
@@ -103,6 +94,38 @@ BasicModule = (function($){
 				});
 			},
 
+			/* 删除行 */
+			_deleteRow= function(params) {
+
+				var
+					status = params.status,
+					url = params.url,
+					dataGrid = params.dataGrid,
+					Params = {id: params.id};
+
+				if (status == true) {
+					showMessage('当前选中记录已启用，不允许删除！');
+					return;
+				}
+				$.messager.confirm("提示", "你确定要删除吗?", function (r) {
+					if (r) {
+						$.ajax({
+							url: url,
+							type: METHOD,
+							data: Params,
+							success: function (data) {
+								resolutionData(data);
+								dataGrid.datagrid('reload');
+
+							},
+							error: function () {
+
+							}
+						});
+					}
+				});
+			},
+
 			/* 处理返回提示中名称集合 */
 			_getItemsMsg= function (items) {
 
@@ -166,38 +189,6 @@ BasicModule = (function($){
 					}
 				});
 
-			},
-
-			/* 删除行 */
-			_deleteRow= function(params) {
-
-				var
-				 	status = params.status,
-					url = params.url,
-					dataGrid = params.dataGrid,
-					Params = {id: params.id};
-
-				if (status == true) {
-					showMessage('当前选中记录已启用，不允许删除！');
-					return;
-				}
-				$.messager.confirm("提示", "你确定要删除吗?", function (r) {
-					if (r) {
-						$.ajax({
-							url: url,
-							type: METHOD,
-							data: Params,
-							success: function (data) {
-								resolutionData(data);
-								dataGrid.datagrid('reload');
-
-							},
-							error: function () {
-
-							}
-						});
-					}
-				});
 			},
 
 			_dataControl= function(params) {
@@ -264,6 +255,7 @@ BasicModule = (function($){
 					if(BCB){
 						if(BCB == "resultDescEdit")
 							ResultType.resultDescEdit();
+
 					}else{
 						obj.editDictCode();
 					}
@@ -279,22 +271,56 @@ BasicModule = (function($){
 					},
 					success:successCallback
 				});
+			},
+
+			_add = function() {
+
+				var
+					params = {
+						rd: $.extend(_addreload,_exParams),
+						url: _addUrl
+					};
+
+
+				_commonAjax(params);
+			},
+
+			_update = function() {
+
+				var
+					params = {
+						rd: $.extend(_updatereload,_exParams),
+						url: _updateUrl
+					};
+
+				_commonAjax(params);
+
 			};
 
 
 
 	$.extend(BM,{
 
-		dataGrid:null,
-		preId:null,
-		url:null,
-		params:{},
-		currentEvent:null,
+		dataGrid: {},
+		preId: null,
+		popArea: 480,
+		//url: null,
+		focusId: null,
+		currentEvent: null,
+		delBatUrl: null,
+		existUrl: null,
+		updateUrl: null,
+		addUrl: null,
+		delUrl: null,
+		changeStatusUrl: null,
+		InfoUrl: null,
+		pageListUrl: null,
+		//params:{},
 		addParams: {
 			id:'',
 			opType:'add'
 		},
-		editParams:{
+		/*editParams:{
 			id:'',
 			opType:'edit'
 		},
@@ -314,7 +340,7 @@ BasicModule = (function($){
 			searchStr:"",
 			status:"",
 			sort:""
-		},
+		},*/
 
 		validateSave: function(){
 			return true;
@@ -336,7 +362,8 @@ BasicModule = (function($){
 				url: this.InfoUrl,
 				focusId: this.focusId,
 				callback: this.addCallBack,
-				popArea: this.popArea
+				popArea: this.popArea,
+				BCB:null
 			};
 			return obj;
 		},
@@ -441,30 +468,6 @@ BasicModule = (function($){
 
 
 		// Data Operation Block
-
-		newadd: function() {
-
-			var
-				params = {
-					rd: $.extend(this.addreload,_exParams),
-					url: _addUrl
-				};
-
-
-			_commonAjax(params);
-		},
-
-		update: function() {
-
-			var
-				params = {
-					rd: $.extend(this.updatereload,_exParams),
-					url: _updateUrl
-				};
-
-			_commonAjax(params);
-
-		},
 
 		/* 批量删除 */
 		deleteBetch: function(newParams){
@@ -586,11 +589,13 @@ BasicModule = (function($){
 				// 有同名
 				showConfirm(data.substring(8), function () {
 					// 确认继续
-					BasicModule.newadd();
+					//BasicModule.add();
+					_add();
 				})
 			} else {
 				// 无同名，确认继续
-				BasicModule.newadd();
+				//BasicModule.add();
+				_add();
 			}
 
 		},
@@ -602,12 +607,26 @@ BasicModule = (function($){
 				// 有同名
 				showConfirm(data.substring(8), function () {
 					// 确认继续
-					BasicModule.update();
+					//BasicModule.update();
+					_update();
 				});
 			} else {
 				// 无同名，确认继续
-				BasicModule.update();
+				//BasicModule.update();
+				_update();
 			}
+
+		},
+
+		editCallBack: function() {
+
+			//write from everyobject
+
+		},
+
+		showCallBack: function() {
+
+			////write from everyobject
 
 		},
 

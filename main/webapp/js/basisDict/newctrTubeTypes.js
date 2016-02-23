@@ -16,6 +16,14 @@ var TubeTypes = (function($){
         _pageListUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesPageList",
         _module = "TubeTypes",
         _focusId = "editName",
+        _popArea = 480,
+        _delBatUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDeleteBatch",
+        _existUrl = ctx + "/basisDict/ctrTubeTypes/checkNameExisted",
+        _updateUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesEide",
+        _addUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesAdd",
+        _delUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDelete",
+        _changeStatusUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDisableOrEnable",
+        _InfoUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesInfo",
         /* START dataGrid 生成*/
         _dgParams = {
             url:_pageListUrl,
@@ -31,31 +39,31 @@ var TubeTypes = (function($){
         _dataGrid = _tableList.datagrid(_gridObj);
 
     /* 状态搜索 */
-    $("." + TubeTypes.preId + "-status-selector li").on("click", function () {
-        $("#" + TubeTypes.preId + "StatusSpan").html($(this).html());
-        $("." + TubeTypes.preId + "-status-selector li.selected").removeClass("selected");
+    $("." + _preId + "-status-selector li").on("click", function () {
+        $("#" + _preId + "StatusSpan").html($(this).html());
+        $("." + _preId + "-status-selector li.selected").removeClass("selected");
         var flg = $(this).is('.selected');
         $(this).addClass(function () {
             return flg ? '' : 'selected';
         })
 
         var statusVal = $(this).attr("el-value");
-        $("#" + TubeTypes.preId + "Status").val(statusVal);
+        $("#" + _preId + "Status").val(statusVal);
 
         TubeTypes.searchGrid();
     });
 
     /* 排序 */
-    $("." + TubeTypes.preId + "-sort-selector li").on("click", function () {
-        $("#" + TubeTypes.preId + "SortSpan").html($(this).html());
-        $("." + TubeTypes.preId + "-sort-selector li.selected").removeClass("selected");
+    $("." + _preId + "-sort-selector li").on("click", function () {
+        $("#" + _preId + "SortSpan").html($(this).html());
+        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
         var flg = $(this).is('.selected');
         $(this).addClass(function () {
             return flg ? '' : 'selected';
         })
 
         var sortVal = $(this).attr("el-value");
-        $("#" + TubeTypes.preId + "Sort").val(sortVal);
+        $("#" + _preId + "Sort").val(sortVal);
 
         TubeTypes.searchGrid();
     });
@@ -80,17 +88,17 @@ var TubeTypes = (function($){
 
         preId:_preId,
         //设定pop弹出框的大小
-        popArea: 480,
+        popArea: _popArea,
         focusId: _focusId,
         tableList:_tableList,
         /*START url 定義*/
-        delBatUrl: ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDeleteBatch",
-        existUrl: ctx + "/basisDict/ctrTubeTypes/checkNameExisted",
-        updateUrl: ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesEide",
-        addUrl: ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesAdd",
-        delUrl: ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDelete",
-        changeStatusUrl: ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDisableOrEnable",
-        InfoUrl: ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesInfo",
+        delBatUrl: _delBatUrl,
+        existUrl: _existUrl,
+        updateUrl: _updateUrl,
+        addUrl: _addUrl,
+        delUrl: _delUrl,
+        changeStatusUrl: _changeStatusUrl,
+        InfoUrl: _InfoUrl,
         pageListUrl: _pageListUrl,
         /*END url 定義*/
         dataGrid:_dataGrid,

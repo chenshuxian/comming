@@ -181,17 +181,20 @@ var ResultType = (function($){
     /* 结果描述新增 */
     $("#" + _preId + "AddResultDesc").click(function () {
 
-        var params = {
-            callback : function(){
-                $("#editTypeId").val(ResultType.typeId);
-                $("#editResultValue").focus();
-            },
-            url: ResultType.InfoUrl2,
+        var
+            params = {
 
-            //beforeCallBack of submit before
-            BCB: "resultDescEdit"
+                callback : function(){
+                    $("#editTypeId").val(ResultType.typeId);
+                    $("#editResultValue").focus();
+                },
+                url: ResultType.InfoUrl2,
 
-        };
+                //beforeCallBack of submit before
+                BCB: "resultDescEdit"
+
+            };
+            //BCB = ResultType.resultDescEdit;
         ResultType.addPop(params);
 
     });
