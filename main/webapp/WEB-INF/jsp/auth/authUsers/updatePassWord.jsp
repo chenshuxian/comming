@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/taglibs.jsp"%>
     <div class="panel-main">
@@ -49,6 +49,6 @@
 </style>
 <script>
 	$("#up_oldPassword").focus();
-	validate.getAuth("UpdatePw");
+	validate.updatePW();
 </script>
 <!--end-->
