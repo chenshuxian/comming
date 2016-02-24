@@ -54,6 +54,8 @@
                     if (callback) {
                         callback();
                     }
+                }else{
+                    $("#editBtn").attr("disabled", false);
                 }
             });
         }
