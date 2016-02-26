@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/common/pageIds.jsp" %>
-<script src="${ctx}/js/org/centerOrg.js?var=${randomVal}"></script>
 <script src="${ctx}/js/org/med.js?var=${randomVal}"></script>
 <%--<script>--%>
 <%--$(function () {--%>

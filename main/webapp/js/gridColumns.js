@@ -367,6 +367,51 @@ ColCollect = (function($){
 
 	}
 
+	/***
+	 * RMM2
+	 * date:2016/2/26
+	 * author:chenshuxian
+	 */
+	var _getMedInst2 = function(obj){
+
+		var _columns = [[
+
+			{field: "ck", checkbox: true, width: 30},
+			{
+				title: "编码", field: 'codeNo', width: 80, formatter: function (value, row) {
+				var rowData = JSON.stringify(row);
+				return "<a onclick='RegionalManagement.showDialog(" + rowData + ")'>" + value + "</a>";
+			}
+			},
+			{title: "中文名称", field: 'name', flex: 1, width: 60},
+			{title: "中文地址", field: 'address', flex: 1, width: 200},
+			{title: "联系人", field: 'contacts', flex: 1, width: 60},
+			{title: "联系电话", field: 'telephone', flex: 1, width: 60},
+			{
+				title: "状态", field: 'status', formatter: function (value, row, index) {
+				var rowData = JSON.stringify(row);
+				var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='RegionalManagement.changeRelatedStatus(" + index + "," + rowData + ")' /><i></i></div>";
+				if (value == '1') {
+					returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='RegionalManagement.changeRelatedStatus(" + index + "," + rowData + ")' /><i></i></div>";
+				}
+				return returnStr;
+			}
+			},
+			{
+				title: "操作", field: 'opt', width: 60, align: 'center',
+				formatter: function (value, row, index) {
+					var str = "";
+					var rowData = JSON.stringify(row);
+					str += "<a class=\"icon icon-trash\" onclick='RegionalManagement.deleteRelated(" + index + "," + rowData + ")'></a>";
+					return str;
+				}
+			}
+
+		]];
+
+		return _columns;
+	}
+
 
 	
 	var _getColumns = function(table){
@@ -375,7 +420,11 @@ ColCollect = (function($){
 
 			case "MED" :
 			case "Indenpent" :
+			case "RegionalManagement":
 				return _getMedInst(table);
+				break;
+			case "RegionalManagement2":
+				return _getMedInst2(table);
 				break;
 			case "Inst" :
 				return _getInstrument(table);

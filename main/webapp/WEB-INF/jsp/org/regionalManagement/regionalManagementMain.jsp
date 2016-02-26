@@ -44,14 +44,14 @@
 
                     <span class="symbol">|</span>
 
-                    <span id="${rmm}AddRegional"><i class="icon icon-plus-square"></i>添加</span>
-                    <span id="${rmm}DeleteRegionalBatch"><i class="icon icon-trash"></i>删除选中</span>
+                    <span id="${rmm}Add"><i class="icon icon-plus-square"></i>添加</span>
+                    <span id="${rmm}DeleteBatch"><i class="icon icon-trash"></i>删除选中</span>
                 </div>
             </div>
         </div>
 
         <div class="main-content-body">
-            <table id="${rmm}ManagementList"></table>
+            <table id="${rmm}List"></table>
         </div>
     </div>
 
@@ -73,7 +73,7 @@
 
     <input type="hidden" id="${rmm}Status"/>
     <input type="hidden" id="${rmm}Sort"/>
-    <input type="hidden" id="orgTypeId" name="orgTypeId" value="${orgTypeId}" />
+    <input type="hidden" id="${rmm}orgTypeId" name="orgTypeId" value="${orgTypeId}" />
     <input type="hidden" id="regionalManagementPreId" value="${rmm}">
 </div>
 

@@ -31,19 +31,24 @@ dataGridM = (function($){
 			  _preId =params.preId,
 			  _hideCols = (params.hideCols == null) ? new Array() : params.hideCols,
 			  _height = params.height,
+			  _isSecond = params.isSecond,
 			  
 			  onAfterRender = function() {
 				  //
 				  if (_module == "ResultType2")
 				  	_module = "ResultType";
 
-				  var obj = eval("(" + _module + ")");
+				  if(!_isSecond) {
 
-				  switch (obj.currentEvent) {
-					  case "add":
-	                      newcommonjs.setSearchConditions(_preId, "", 2, 2);
-	                      obj.currentEvent = undefined;
-	                      break;
+					  var obj = eval("(" + _module + ")");
+
+					  switch (obj.currentEvent) {
+						  case "add":
+							  newcommonjs.setSearchConditions(_preId, "", 2, 2);
+							  obj.currentEvent = undefined;
+							  break;
+					  }
+
 				  }
 			  };
 		

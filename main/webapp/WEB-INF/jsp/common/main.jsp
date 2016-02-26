@@ -690,6 +690,7 @@
 <script src="${ctx}/js/EasyTree.js?var=${randomVal}"></script>
 <script src="${ctx}/js/dataGrid.js?var=${randomVal}"></script>
 <script src="${ctx}/js/validatebox.js?var=${randomVal}"></script>
+<script src="${ctx}/js/org/centerOrg.js?var=${randomVal}"></script>
 
 
 <script src="${ctx}/js/auth/authUsers.js"></script>

@@ -41,7 +41,7 @@ BasicModule = (function($){
 				var
 					dataGrid = params.dataGrid,
 					url = params.url,
-					checkedItems,
+					checkedItems,data,
 					names = [],
 					ids = [];
 
@@ -73,14 +73,21 @@ BasicModule = (function($){
 					return false;
 				}
 
+				if(params.data){
+					//add for RMM
+					data = $.extend(params.data,{delTestItemIds:ids.join(",")});
+				}else{
+					data = {ids: ids.join(",")};
+				}
+
+
+
 				$.messager.confirm("提示", "是否删除所选中的记录？", function (r) {
 					if (r) {
 						$.ajax({
 							url: url,
 							type: METHOD,
-							data: {
-								ids: ids.join(",")
-							},
+							data: data,
 							success: function (data) {
 								resolutionData(data);
 								dataGrid.datagrid('reload');
@@ -102,7 +109,14 @@ BasicModule = (function($){
 					status = params.status,
 					url = params.url,
 					dataGrid = params.dataGrid,
-					Params = {id: params.id};
+					data = null;
+
+				if(params.data){
+					data = params.data;
+				}else{
+					data = {id: params.id};
+				}
+
 
 				if (status == true) {
 					showMessage('当前选中记录已启用，不允许删除！');
@@ -113,7 +127,7 @@ BasicModule = (function($){
 						$.ajax({
 							url: url,
 							type: METHOD,
-							data: Params,
+							data: data,
 							success: function (data) {
 								resolutionData(data);
 								dataGrid.datagrid('reload');
@@ -146,6 +160,7 @@ BasicModule = (function($){
 					id = params.id,
 					val = params.val,
 					index = params.index,
+					callback = params.callback,
 					confirmMeg,operatioType,newVal;
 
 
@@ -178,6 +193,9 @@ BasicModule = (function($){
 										status: newVal
 									}
 								});
+								if(callback){
+									callback();
+								}
 
 							},
 							error: function () {
@@ -249,7 +267,7 @@ BasicModule = (function($){
 				});
 			},
 
-			_beforeSubmit = function (obj,BCB) {
+			_beforeSubmit = function(obj,BCB) {
 
 				var successCallback = function(){
 
@@ -274,29 +292,6 @@ BasicModule = (function($){
 				});
 			},
 
-			_add = function() {
-
-				var
-					params = {
-						rd: _addNewReload,//$.extend(_addreload,_exParams),
-						url: _addUrl
-					};
-
-
-				_commonAjax(params);
-			},
-
-			_update = function() {
-
-				var
-					params = {
-						rd: _updateNewReload,//$.extend(_updatereload,_exParams),
-						url: _updateUrl
-					};
-
-				_commonAjax(params);
-
-			},
 
 			_Dialog = function(params) {
 
@@ -418,7 +413,8 @@ BasicModule = (function($){
 				params = this.defaultDialogParams(),
 				DDP = this.getNewParams(params,newParams);
 
-			DDP.data = this.addParams;
+			if(!DDP.data)
+				DDP.data = this.addParams;
 
 			this.currentEvent = "add";
 			_Dialog.call(this,DDP);
@@ -520,15 +516,18 @@ BasicModule = (function($){
 
 
 		/* 启用、停用状态 */
-		changeStatus: function(index, rowData) {
+		changeStatus: function(index, rowData,newParams) {
 
 			var params = {
 				url: this.changeStatusUrl,
 				dataGrid: this.dataGrid,
 				id: rowData.stringId,
 				val: rowData.status.toString(),
-				index: index
+				index: index,
+				callback: this.changeStatusCallBack
 			}
+
+			params = this.getNewParams(params,newParams);
 
 			_changeStatus(params);
 		},
@@ -539,6 +538,7 @@ BasicModule = (function($){
 
 			_updateUrl = this.updateUrl;
 			_addUrl = this.addUrl;
+			//for add or update success callback reload params
 			_addNewReload = $.extend({},_addreload,this.exParams);
 			_updateNewReload = $.extend({},_updatereload,this.exParams);
 
@@ -584,6 +584,30 @@ BasicModule = (function($){
 
 		},
 
+		add: function() {
+
+			var
+				params = {
+					rd: _addNewReload,//$.extend(_addreload,_exParams),
+					url: _addUrl
+				};
+
+
+			_commonAjax(params);
+		},
+
+		update: function() {
+
+			var
+				params = {
+					rd: _updateNewReload,//$.extend(_updatereload,_exParams),
+					url: _updateUrl
+				};
+
+			_commonAjax(params);
+
+		},
+
 		searchGrid: function() {
 			//console.log(this.preId);
 			this.dataGrid.datagrid('load', this.searchObj(this.preId));
@@ -610,13 +634,13 @@ BasicModule = (function($){
 				// 有同名
 				showConfirm(data.substring(8), function () {
 					// 确认继续
-					//BasicModule.add();
-					_add();
+					BasicModule.add();
+					//_add();
 				})
 			} else {
 				// 无同名，确认继续
-				//BasicModule.add();
-				_add();
+				BasicModule.add();
+				//_add();
 			}
 
 		},
@@ -628,13 +652,13 @@ BasicModule = (function($){
 				// 有同名
 				showConfirm(data.substring(8), function () {
 					// 确认继续
-					//BasicModule.update();
-					_update();
+					BasicModule.update();
+					//_update();
 				});
 			} else {
 				// 无同名，确认继续
-				//BasicModule.update();
-				_update();
+				BasicModule.update();
+				//_update();
 			}
 
 		},
@@ -653,6 +677,12 @@ BasicModule = (function($){
 
 
 		showCallBack: function() {
+
+			////write from everyobject
+
+		},
+
+		changeStatusCallBack: function() {
 
 			////write from everyobject
 

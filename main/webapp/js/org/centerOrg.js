@@ -12,6 +12,18 @@ var CenterOrg = (function($){
 	/* START render basicModule */
 	CenterOrg =  Object.create(BasicModule);
 	/* END render basicModule */
+
+	var
+		_delBatUrl = ctx + "/org/centerOrg/centerOrgDeleteBatch",
+		_existUrl = ctx + "/org/centerOrg/centerOrgIfExisted",
+		_exist2Url = ctx + "/org/centerOrg/checkNacaoIdExisted",
+		_updateUrl = ctx + "/org/centerOrg/centerOrgEdit",
+		_addUrl = ctx + "/org/centerOrg/centerOrgAdd",
+		_delUrl = ctx + "/org/centerOrg/centerOrgDelete",
+		_changeStatusUrl = ctx + "/org/centerOrg/centerOrgDisableOrEnable",
+		_InfoUrl = ctx + "/org/centerOrg/centerOrgInfo",
+		_pageListUrl = ctx + "/org/centerOrg/centerOrgPageList";
+
 	var _initTree= function(){
 
 		var obj = EasyTree.getInit();
@@ -53,7 +65,7 @@ var CenterOrg = (function($){
 					// 有相同的卫生机构代码
 					showConfirm(data.substring(8), function() {
 						if(type == 'add'){
-							CenterOrg.newadd();
+							CenterOrg.add();
 						}else{
 							CenterOrg.update();
 						}
@@ -61,7 +73,7 @@ var CenterOrg = (function($){
 				} else {
 					// 无，确认继续
 					if(type == 'add'){
-						CenterOrg.newadd();
+						CenterOrg.add();
 					}else{
 						CenterOrg.update();
 					}
@@ -80,15 +92,15 @@ var CenterOrg = (function($){
 		focusId: "name",
 		tableList:null,
 		dataGrid:null,
-		delBatUrl: ctx + "/org/centerOrg/centerOrgDeleteBatch",
-		existUrl: ctx + "/org/centerOrg/centerOrgIfExisted",
-		exist2Url: ctx + "/org/centerOrg/checkNacaoIdExisted",
-		updateUrl: ctx + "/org/centerOrg/centerOrgEdit",
-		addUrl: ctx + "/org/centerOrg/centerOrgAdd",
-		delUrl: ctx + "/org/centerOrg/centerOrgDelete",
-		changeStatusUrl: ctx + "/org/centerOrg/centerOrgDisableOrEnable",
-		InfoUrl: ctx + "/org/centerOrg/centerOrgInfo",
-		pageListUrl: ctx + "/org/centerOrg/centerOrgPageList",
+		delBatUrl: _delBatUrl,
+		existUrl: _existUrl,
+		exist2Url: _exist2Url,
+		updateUrl: _updateUrl,
+		addUrl: _addUrl,
+		delUrl: _delUrl,
+		changeStatusUrl: _changeStatusUrl,
+		InfoUrl: _InfoUrl,
+		pageListUrl: _pageListUrl,
 
 		/*callback function area*/
 
@@ -105,7 +117,7 @@ var CenterOrg = (function($){
 						 _checkNacaoId(orgTypeId);
 
 					 } else {
-						 CenterOrg.newadd();
+						 CenterOrg.add();
 					 }
 				 });
 			 } else {
@@ -115,7 +127,7 @@ var CenterOrg = (function($){
 					 _checkNacaoId(orgTypeId);
 
 				 } else {
-					 CenterOrg.newadd();
+					 CenterOrg.add();
 				 }
 			 }
 
@@ -209,6 +221,7 @@ var CenterOrg = (function($){
 			$("form textarea").attr("readonly","readonly");
 			$("#editBtn").hide();
 			$("#spanEditCodeNo").html(rowData.codeNo);
+
 
 		},
 
