@@ -1,15 +1,107 @@
 /***
  *@ClassName: antibioticDictionary.js
  * @Description: TODO(抗生素字典-JS)
- * @author subanmiao
- * @date 2015年01月16日
+ * @author chenshuxian
+ * @date 2016年03月01日
  ***/
+var AntibioticDictionary = (function($){
+
+    /* START render basicModule */
+    AntibioticDictionary = Object.create(MG);
+    /* END render basicModule */
+
+    var
+        _preId = CB.PREID.AD,
+        _tableList =  $("#" + _preId + "List"),
+        _itemTypeId = $("#" + _preId + "ItemTypeId").val(),
+        _exParams = {itemTypeId: _itemTypeId},
+        _hideCols = [],	//要穩藏的欄位
+        _data = AntibioticDictionary.searchObj(_preId),
+        _pageListUrl = AntibioticDictionary.pageListUrl,
+        _module = "AntibioticDictionary",
+
+        _dgParams = {
+            url:_pageListUrl,
+            data:_data,
+            module:_module,
+            hideCols:_hideCols,
+            tableList:_tableList,
+            preId:_preId
+        },
+
+        _gridObj = dataGridM.init(_dgParams),
+        _dataGrid = _tableList.datagrid(_gridObj);
+
+
+    $.extend(AntibioticDictionary,{
+        preId: _preId,
+        tableList: _tableList,
+        dataGrid: _dataGrid,
+        addParams: AntibioticDictionary.getAddParams(_exParams),
+        exParams:_exParams,
+        itemTypeId:_itemTypeId
+    })
+
+    /* 状态搜索 */
+    $("." + _preId + "-status-selector li").on("click", function () {
+        $("#" + _preId + "StatusSpan").html($(this).html());
+        $("." + _preId + "-status-selector li.selected").removeClass("selected");
+        var flg = $(this).is('.selected');
+        $(this).addClass(function () {
+            return flg ? '' : 'selected';
+        })
+
+        var statusVal = $(this).attr("el-value");
+        $("#" + _preId + "Status").val(statusVal);
+
+        AntibioticDictionary.searchGrid();
+    });
+
+    /* 排序 */
+    $("." + _preId + "-sort-selector li").on("click", function () {
+        $("#" + _preId + "SortSpan").html($(this).html());
+        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
+        var flg = $(this).is('.selected');
+        $(this).addClass(function () {
+            return flg ? '' : 'selected';
+        })
+
+        var sortVal = $(this).attr("el-value");
+        $("#" + _preId + "Sort").val(sortVal);
+
+        AntibioticDictionary.searchGrid();
+    });
+
+    /* search Btn */
+    $("#" + _preId + "SearchBtn").on("click",function() {
+        AntibioticDictionary.searchGrid();
+    });
+
+    /*Start add 相关参数设定  */
+    $("#" + _preId + "Add").on("click",function() {
+        AntibioticDictionary.addPop();
+    });
+
+    // deleteBatch
+    $("#" + _preId + "DeleteBatch").on("click",function() {
+        AntibioticDictionary.deleteBetch();
+    });
+
+    return AntibioticDictionary;
+
+
+}(jQuery));
+
+$(function(){
+    AntibioticDictionary.init();
+});
+/*
 var AntibioticDictionary = {
 
     preId: $("#antibioticDictionaryPreId").val(),
-    /*url 定義*/
+    /!*url 定義*!/
     delBatUrl: ctx + "/pm/CentreMicrobeItem/batchDeleteCentreMicrobeitems",
-    checkUrl: ctx + "/pm/CentreMicrobeItem/checkIfCentreMicrobeitemNameExist",
+    checkUrl:  ctx + "/pm/CentreMicrobeItem/checkIfCentreMicrobeitemNameExist",
     check2Url: ctx + "/pm/CentreMicrobeItem/checkIfCentreMicrobeitemNameExist",
     updateUrl: ctx + "/pm/CentreMicrobeItem/modifyCentreMicrobeitem",
     addUrl: ctx + "/pm/CentreMicrobeItem/addCentreMicrobeitem",
@@ -52,15 +144,15 @@ var AntibioticDictionary = {
             });
 
 
-        //* render DataGrid */
+        //!* render DataGrid *!/
         this.dataGrid = AntibioticDictionary.tableList.datagrid(gridObj);
 
-        /* 关键词搜索 */
+        /!* 关键词搜索 *!/
         $("#" + this.preId + "SearchBtn").click(function () {
             newcommonjs.dataGridSearch(AntibioticDictionary.dataGrid, AntibioticDictionary.searchObj());
         });
 
-        /* 状态搜索 */
+        /!* 状态搜索 *!/
         $("." + this.preId + "-status-selector").on("click", "li", function () {
             $("#" + AntibioticDictionary.preId + "StatusSpan").html($(this).html());
             $("." + AntibioticDictionary.preId + "-status-selector li.selected").removeClass("selected");
@@ -75,7 +167,7 @@ var AntibioticDictionary = {
             newcommonjs.dataGridSearch(AntibioticDictionary.dataGrid, AntibioticDictionary.searchObj());
         });
 
-        /* 排序 */
+        /!* 排序 *!/
         $("." + this.preId + "-sort-selector").on("click", "li", function () {
             $("#" + AntibioticDictionary.preId + "SortSpan").html($(this).html());
             $("." + AntibioticDictionary.preId + "-sort-selector li.selected").removeClass("selected");
@@ -90,12 +182,12 @@ var AntibioticDictionary = {
             newcommonjs.dataGridSearch(AntibioticDictionary.dataGrid, AntibioticDictionary.searchObj());
         });
 
-        /* 批量删除 */
+        /!* 批量删除 *!/
         $("#" + this.preId + "DeleteTypeBatch").click(function () {
             newcommonjs.deleteBatch(AntibioticDictionary.dataGrid, AntibioticDictionary.delBatUrl, POST);
         });
 
-        /* 新增 */
+        /!* 新增 *!/
         $("#" + this.preId + "AddType").click(function () {
             AntibioticDictionary.currentEvent = "add";
             var data = {id: '', opType: 'add', itemTypeId: AntibioticDictionary.itemTypeId};
@@ -110,10 +202,10 @@ var AntibioticDictionary = {
         });
     },
 
-    /* *
+    /!* *
      * 取得所有搜尋欄資訊
      * 返回obj 格式
-     * */
+     * *!/
     searchObj: function () {
         return {
             searchStr: $.trim($("#" + this.preId + "SearchStr").val()),
@@ -123,14 +215,14 @@ var AntibioticDictionary = {
         };
     },
 
-    /* 创建dataGrid
+    /!* 创建dataGrid
      * url:为pageList
      * typekey:可有可无
      * params:可有可无
      * method: POST OR GET
      * tableList: main.jsp 中的 呈现dataGrid 的　div
      * hideColumns:是一个阵列，用来存要稳藏的栏位。
-     * */
+     * *!/
     createDataGrid: function (url, typeKey, params, method, tableList, hideColumns) {
         var gridObj = newcommonjs.createGridObj(url, method, params);
         gridObj.columns = ColCollect.getColumns("AntibioticDictionary");
@@ -148,21 +240,21 @@ var AntibioticDictionary = {
         return gridObj;
     },
 
-    /* 启用、停用状态 */
+    /!* 启用、停用状态 *!/
     changeStatus: function (index, rowData) {
         var url = this.changeStatusUrl;
         var dataGrid = this.dataGrid;
         newcommonjs.changeStatus(index, rowData, dataGrid, url, "POST");
     },
 
-    /* 删除行 */
+    /!* 删除行 *!/
     deleteRow: function (index, rowData) {
         var url = this.delUrl;
         var dataGrid = this.dataGrid;
         newcommonjs.deleteRow(rowData, url, dataGrid, "POST");
     },
 
-    /* 编辑 */
+    /!* 编辑 *!/
     editRow: function (rowData) {
         var id = rowData.stringId;
         if (rowData.status == true) {
@@ -175,7 +267,7 @@ var AntibioticDictionary = {
         var callback = function () {
 
             $("#InfoForm").form("load", {
-                /* input's name attr : data */
+                /!* input's name attr : data *!/
                 name: rowData.name,
                 enShortName: rowData.enShortName,
                 enName: rowData.enName,
@@ -196,14 +288,14 @@ var AntibioticDictionary = {
 
     },
 
-    /* 弹出详情信息框 */
+    /!* 弹出详情信息框 *!/
     showDialog: function (rowData) {
         var url = this.tubeInfoUrl;
         var data = {id: rowData.stringId, opType: 'view', itemTypeId: this.itemTypeId, id: rowData.stringId};
         var callback = function () {
 
             $("#InfoForm").form("load", {
-                /* input's name attr : data */
+                /!* input's name attr : data *!/
                 name: rowData.name,
                 enShortName: rowData.enShortName,
                 enName: rowData.enName,
@@ -221,7 +313,7 @@ var AntibioticDictionary = {
         newcommonjs.newshowDictCodeEditDialog(data, callback, url, 480);
     },
 
-    /* 判断新增还是修改 */
+    /!* 判断新增还是修改 *!/
     editDictCode: function (opType, typeKey) {
         var existUrl = AntibioticDictionary.checkUrl;
         var dataGrid = AntibioticDictionary.dataGrid;
@@ -233,7 +325,7 @@ var AntibioticDictionary = {
         };
 
         var successF = function (data) {
-            //alert(MedInst.orgTypeId);
+            //alert(AntibioticDictionaryInst.orgTypeId);
             var opType = $("#editOpType").val();
             //alert(opType);
             if (data.indexOf("confirm|") == 0) {
@@ -272,13 +364,13 @@ var AntibioticDictionary = {
                         newcommonjs.update(AntibioticDictionary.updateUrl, 'POST', AntibioticDictionary.dataGrid);
                     }
                 }
-//				if (MedInst.orgTypeId == '40') {
+//				if (AntibioticDictionaryInst.orgTypeId == '40') {
 //					 if(opType == 'add')
-//						 MedInst.checkNacaoId('add');
+//						 AntibioticDictionaryInst.checkNacaoId('add');
 //					 else
-//						 MedInst.checkNacaoId();
+//						 AntibioticDictionaryInst.checkNacaoId();
 //				} else {
-//					newcommonjs.newadd(addUrl,'POST',MedInst.dataGrid,MedInst.reloadData);
+//					newcommonjs.newadd(addUrl,'POST',AntibioticDictionaryInst.dataGrid,AntibioticDictionaryInst.reloadData);
 //				}
             }
         };
@@ -342,4 +434,4 @@ var AntibioticDictionary = {
 
 $(function () {
     AntibioticDictionary.init();
-});
+});*/

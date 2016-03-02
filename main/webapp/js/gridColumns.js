@@ -412,8 +412,67 @@ ColCollect = (function($){
 		return _columns;
 	}
 
+	/***
+	 * LOINC編碼表
+	 * date:2016/03/01
+	 * author:chenshuxian
+	 */
+	var _getLoinc = function(obj){
 
-	
+		var _columns = [[
+
+			{field: "ck", checkbox: true, width: 30},
+			{
+				title: "编码", field: 'codeNo', width: 80, formatter: function (value, row) {
+				var rowData = JSON.stringify(row);
+				return "<a onclick='CtrLoinc.showDialog(" + rowData + ")'>" + value + "</a>";
+				}
+			},
+			{title: "受检成份", field: 'componentName', flex: 1, width: 60},
+			{title: "受检属性", field: 'testPropertyName', flex: 1, width: 60},
+			{title: "检验方法", field: 'testMethodName', flex: 1, width: 60},
+			{title: "标本标识", field: 'typeOfScaleName', flex: 1, width: 60},
+			{title: "时间特性", field: 'timeAspectName', flex: 1, width: 60},
+			{title: "标本类型", field: 'sampleTypeName', flex: 1, width: 60},
+			{title: "助记符", field: 'fastCode', flex: 1, width: 60},
+			{title: "顺序号", field: 'displayOrder', flex: 1, width: 60},
+			{
+				title: "备注", field: 'memo', width: 200, formatter: function (value) {
+				if (value.length > newcommonjs.colMaxLength) {
+					return value.substring(0, newcommonjs.colMaxLength) + "……";
+				} else {
+					return value;
+				}
+			}
+			},
+			{
+				title: "状态", field: 'status', formatter: function (value, row, index) {
+					var rowData = JSON.stringify(row);
+					var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='CtrLoinc.changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+					if (value == '1') {
+						returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='CtrLoinc.changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+					}
+					return returnStr;
+				}
+
+			},
+			{
+				title: "操作", field: 'opt', width: 60, align: 'center',
+				formatter: function (value, row, index) {
+					var str = "";
+					var rowData = JSON.stringify(row);
+					str += "<a class='icon icon-edit' onclick='CtrLoinc.editRow(" + rowData + ")'></a>";
+					str += "<a class=\"icon icon-trash\" onclick='CtrLoinc.deleteRow(" + index + "," + rowData + ")'></a>";
+					return str;
+				}
+			}
+		]];
+
+		return _columns;
+	}
+
+
+
 	var _getColumns = function(table){
 
 		switch(table){
@@ -446,6 +505,9 @@ ColCollect = (function($){
 				break;
 			case "ResultType2" :
 				return _getResultType2(table);
+				break;
+			case "CtrLoinc" :
+				return _getLoinc(table);
 				break;
 			default:
 				return _getCtrTubeType(table);

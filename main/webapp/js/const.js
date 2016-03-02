@@ -6,6 +6,7 @@ var CB = ConstBox = (function(){
     const ConstBox = {
         METHOD: "POST",
         POPDIV: "ctrDictInfoModal",
+        DELSUCC: "succ|刪除成功!",
 
         PREID:{
             //就诊类型
