@@ -43,14 +43,14 @@
 
 				<span class="symbol">|</span>
 
-				<span id="${sl}AddCtrDictCode"><i class="icon icon-plus-square"></i>添加</span>
-				<span id="${sl}DeleteCtrDictCodeBatch"><i class="icon icon-trash"></i>删除选中</span>
+				<span id="${sl}Add"><i class="icon icon-plus-square"></i>添加</span>
+				<span id="${sl}DeleteBatch"><i class="icon icon-trash"></i>删除选中</span>
 			</div>
 		</div>
 	</div>
 
 	<div class="main-content-body">
-		<table id="${sl}CtrDictCodeList"></table>
+		<table id="${sl}List"></table>
 	</div>
 
 	<input type="hidden" id="${sl}TypeKey" name="typeKey" value="${typeKey}"/>

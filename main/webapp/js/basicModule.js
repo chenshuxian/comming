@@ -89,6 +89,7 @@ BasicModule = (function($){
 							type: METHOD,
 							data: data,
 							success: function (data) {
+								data = CB.DELSUCC;
 								resolutionData(data);
 								dataGrid.datagrid('reload');
 
@@ -129,6 +130,7 @@ BasicModule = (function($){
 							type: METHOD,
 							data: data,
 							success: function (data) {
+								data = CB.DELSUCC;
 								resolutionData(data);
 								dataGrid.datagrid('reload');
 
@@ -232,12 +234,22 @@ BasicModule = (function($){
 				//console.log("dataControl");
 
 				// 检查是否同名
-				$.ajax({
-					url: params.existUrl,
-					type: params.Method,
-					data: params.data,
-					success: params.callback,
-				});
+				if(params.existUrl){
+
+					$.ajax({
+						url: params.existUrl,
+						type: params.Method,
+						data: params.data,
+						success: params.callback
+					});
+
+				}else{
+
+					if(params.opType == "add")
+						BasicModule.add();
+					else
+						BasicModule.update();
+				}
 
 			},
 
@@ -324,6 +336,11 @@ BasicModule = (function($){
 				// for centerOrg.js
 				if(this.orgTypeId != null){
 					obj.orgTypeId = this.orgTypeId;
+				}
+
+				// for microorganism.js
+				if(this.itemTypeId != null){
+					obj.itemTypeId = this.itemTypeId;
 				}
 
 				return obj;
@@ -566,7 +583,7 @@ BasicModule = (function($){
 					data: data,
 					validate: validate,
 					opType: opType,
-					dataGrid: dataGrid,
+					dataGrid: dataGrid
 					//exParams: exParams
 				};
 
@@ -619,7 +636,7 @@ BasicModule = (function($){
 			return {
 				searchStr: $.trim($("#" + preId + "SearchStr").val()),
 				status: $("#" + preId + "Status").val(),
-				sort: $("#" + preId + "Sort").val(),
+				sort: $("#" + preId + "Sort").val()
 			};
 
 		},
@@ -725,7 +742,7 @@ BasicModule = (function($){
 				event.preventDefault();
 			});
 
-		},
+		}
 
 	});
 

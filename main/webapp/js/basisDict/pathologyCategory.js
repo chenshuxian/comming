@@ -17,14 +17,6 @@ var PathologyCategory = (function($){
         _data = PathologyCategory.searchObj(_preId),
         _pageListUrl = PathologyCategory.pageListUrl,
 
-    /* 参数说明:
-     * url:pagelisturl
-     * data:初始时后台所有接收的参数，是一个物件
-     * module:目前的这个模组名，会对晕到gridColumus.js需要注意
-     * hideCols:想稳藏的栏位，是一个array
-     * tableList:dataGird的对象
-     * preId:前辍
-     */
         _dgParams = {
             url:_pageListUrl,
             data:_data,
@@ -43,7 +35,7 @@ var PathologyCategory = (function($){
         tableList: _tableList,
         dataGrid: _dataGrid,
         addParams: PathologyCategory.getAddParams(_exParams),
-        exParams:_exParams,
+        exParams:_exParams
     })
 
 
