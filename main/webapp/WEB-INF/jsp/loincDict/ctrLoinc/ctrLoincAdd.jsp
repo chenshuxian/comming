@@ -9,7 +9,7 @@
 				<input type="hidden" id="${cl}_id" name="id" value='<c:out value="${crtTestItemDto.id}" escapeXml="true"/>'>
 
 				<input id="${cl}_codeNo" name="codeNo" type="hidden" value='${codeNo}'/>
-				<input id="${cl}_opType" name="opType" type="hidden" value='${opType}'/>
+				<input id="opType" name="opType" type="hidden" value='${opType}'/>
 				<div class="wrapper-header flex-container flex-space-between">
 					<h1>基本信息</h1>
 					<small class="basic-code">编码: ${codeNo}<span id="spanEditCodeNo"></span></small>
@@ -76,9 +76,11 @@
                                 </div> --%>
 				</div>
 				<div class="wrapper-footer text-center">
-				<button id="editBtn" class="btn btn-submit sm-size" onclick="CtrLoinc.editCtrLoinc('${opType}')">确定</button>
+				<%--<button id="editBtn" class="btn btn-submit sm-size" onclick="CtrLoinc.editCtrLoinc('${opType}')">确定</button>--%>
+				<button id="editBtn" class="btn btn-submit sm-size" onclick="BasicModule.submit()">确定</button>
 				<button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
 			</div>
+			</form>
 			</form>
 			<input id="${cl}_componentId" name="componentId" type="hidden" value='<c:out value="${crtTestItemDto.testItemId}" escapeXml="true"/>'/>
 			<input id="${cl}_propertyId" name="testPropertyId" type="hidden" value="${crtTestItemDto.testMethodId}"/>

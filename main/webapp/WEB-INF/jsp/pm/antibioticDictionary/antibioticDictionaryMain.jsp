@@ -43,14 +43,14 @@
 
 				<span class="symbol">|</span>
 
-				<span id="${ad}AddType"><i class="icon icon-plus-square"></i>添加</span>
-				<span id="${ad}DeleteTypeBatch"><i class="icon icon-trash"></i>删除选中</span>
+				<span id="${ad}Add"><i class="icon icon-plus-square"></i>添加</span>
+				<span id="${ad}DeleteBatch"><i class="icon icon-trash"></i>删除选中</span>
 			</div>
 		</div>
 	</div>
 
 	<div class="main-content-body">
-		<table id="${ad}TypeList"></table>
+		<table id="${ad}List"></table>
 	</div>
 
 	<input type="hidden" id="${ad}Status"/>

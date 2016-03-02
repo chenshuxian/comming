@@ -5,8 +5,6 @@
  * @date 2015年01月15日 
  ***/
 
-
-
 var CenterOrg = (function($){
 
 	/* START render basicModule */

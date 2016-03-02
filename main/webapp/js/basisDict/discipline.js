@@ -13,7 +13,7 @@ var Discipline = (function($){
         _tableList =  $("#" + _preId + "List"),
         _typeKey = $("#" + _preId + "TypeKey").val(),
         _exParams = {typeKey: _typeKey},
-        _hideCols = null,	//要穩藏的欄位
+        _hideCols = [],	//要穩藏的欄位
         _data = Discipline.searchObj(_preId),
         _pageListUrl = Discipline.pageListUrl,
 
@@ -35,7 +35,7 @@ var Discipline = (function($){
         tableList: _tableList,
         dataGrid: _dataGrid,
         addParams: SpecimenType.getAddParams(_exParams),
-        exParams:_exParams,
+        exParams:_exParams
     })
 
 
