@@ -15,7 +15,7 @@ gridColumns
 * 新增 return 方法
 
   ``_getCIB(obj) = function(){}``
-* 于 [datagrid] ( comming/main/doc/dataGrid.md ) 产生时传入对映的参数
+* 于 [datagrid] (/comming/main/doc/dataGrid.md) 产生时传入对映的参数
 
   主要对映参数是 module 
   
