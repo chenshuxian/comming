@@ -30,7 +30,7 @@
 						<div class="form-group">
 							<label for=""><strong>默认登录机构</strong></label>
 							<div class="form-control-icon icon-right block-show">
-								<button class="control-icon J_ShowPop" data-show="ui_loginOrganization">设置</button>
+								<button class="control-icon J_ShowPop" data-show="ui_loginOrganization" onclick="fox('orglogin');">设置</button>
 								<input id="ui_loginOrgId" type="hidden" value="${user.orgId }"/>
 								<input id="ui_loginOrgName" type="text" class="form-control block-show" value="${user.orgName }" readonly="readonly" />
 							</div>
@@ -38,7 +38,7 @@
 						<div class="form-group">
 							<label for=""><strong>默认登录系统</strong></label>
 							<div class="form-control-icon icon-right block-show">
-								<button class="control-icon J_ShowPop" data-show="ui_loginSystem">设置</button>
+								<button class="control-icon J_ShowPop" data-show="ui_loginSystem" onclick="fox('sysreg');">设置</button>
 								<input id="ui_loginSysId" type="hidden" value="${user.sysId }"/>
 								<input id="ui_loginSysName" type="text" class="form-control block-show" value="${user.sysName }" readonly="readonly" />
 							</div>

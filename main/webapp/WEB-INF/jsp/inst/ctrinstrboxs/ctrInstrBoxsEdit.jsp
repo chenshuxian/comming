@@ -43,7 +43,7 @@
           </div>
         </div>
         <input type="hidden" id="editId" name="id"/>
-        <input type="hidden" id="editOpType" name="opType" value="${opType}"/>
+        <input type="hidden" id="opType" name="opType" value="${opType}"/>
         <input type="hidden" id="editCodeNo" name="code_no" value="${codeNo}"/>
         <input type="hidden" id="editOrgId" name="org_id" value=""/>
         <input type="hidden" id="editAppId" name="app_id" value="0"/>

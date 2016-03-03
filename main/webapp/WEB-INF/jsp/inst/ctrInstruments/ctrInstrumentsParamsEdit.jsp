@@ -250,7 +250,6 @@
 	           <button id="editBtn" class="btn btn-submit sm-size" onclick="Inst.updateParams()">确定</button>
 	           <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
 	  </div>
-			
       </div>
    </div>
 </div>

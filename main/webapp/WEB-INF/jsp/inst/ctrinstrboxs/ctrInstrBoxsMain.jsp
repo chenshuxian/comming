@@ -60,14 +60,14 @@
 
         <span class="symbol">|</span>
 
-        <span id="${ctrInsBox}AddCtrInstrBoxs"><i class="icon icon-plus-square"></i>添加</span>
-        <span id="${ctrInsBox}DeleteCtrInstrBoxs"><i class="icon icon-trash"></i>删除选中</span>
+        <span id="${ctrInsBox}Add"><i class="icon icon-plus-square"></i>添加</span>
+        <span id="${ctrInsBox}DeleteBatch"><i class="icon icon-trash"></i>删除选中</span>
       </div>
     </div>
   </div>
 
   <div class="main-content-body">
-    <table id="${ctrInsBox}ResultList"></table>
+    <table id="${ctrInsBox}List"></table>
   </div>
 
   <%--基本信息--%>
@@ -76,7 +76,7 @@
   <input type="hidden" id="${ctrInsBox}Sort"/>
 
   <script src="${ctx}/js/inst/ctrInstrBoxs.js?var=${randomVal}"></script>
-  <script language="JavaScript">
+  <%--<script language="JavaScript">
     $(
             function () {
               CtrInstrBoxs.preId = "${ctrInsBox}";
@@ -91,6 +91,6 @@
             }
     )
 
-  </script>
+  </script>--%>
 
 </div>

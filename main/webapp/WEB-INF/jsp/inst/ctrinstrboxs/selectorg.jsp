@@ -36,13 +36,17 @@
 <script>
     $(function () {
         $("#" + CtrInstrBoxs.preId + "OrgSearchBtn").click(function () {
-            CtrInstrBoxs.reloadDatagrid();
+            //CtrInstrBoxs.reloadDatagrid();
+            CtrInstrBoxs.searchGrid();
         });
 
         $("#selectOrgBtn").click(function () {
+            CtrInstrBoxs.exParams = {orgId: CtrInstrBoxs.orgId};
+            //console.log("CIBORG"+ CtrInstrBoxs.orgId);
             if(typeof CtrInstrBoxs.orgId != "undefined") {
                 $("#" + CtrInstrBoxs.preId + "SelectOrg").html(CtrInstrBoxs.orgName);
-                CtrInstrBoxs.reloadDatagrid();
+                //CtrInstrBoxs.reloadDatagrid();
+                CtrInstrBoxs.searchGrid();
             } else {
                 CtrInstrBoxs.orgId = CtrInstrBoxs.tempOrgId;
                 CtrInstrBoxs.orgName = CtrInstrBoxs.tempOrgName;
