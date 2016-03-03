@@ -43,7 +43,7 @@ var TreatmentType = (function($){
         tableList: _tableList,
         dataGrid: _dataGrid,
         addParams: TreatmentType.getAddParams(_exParams),//$.extend({},TreatmentType.addParams,{typeKey:_typeKey}),
-        exParams:_exParams,
+        exParams:_exParams
     });
 
 

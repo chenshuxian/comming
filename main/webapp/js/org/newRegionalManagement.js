@@ -157,11 +157,22 @@ var RegionalManagement = (function($){
 	/!* 关联机构批量删除 *!/
 	$("#" + _preId + "DeleteRelatedBatch").click(function () {
 
+		var checkedItems = RegionalManagement.dataGrid2.datagrid("getChecked"),
+			ids = [];
+
+		if (checkedItems.length == 0) {
+			showMessage('请选择要删除的数据!');
+			return false;
+		}
+
+		$.each(checkedItems, function (index, item) {
+				ids.push(item.stringId);
+		});
 		var
 			data = {
 				parentId: RegionalManagement.parentId,
 				addTestItemIds: RegionalManagement.addTestItemIds.join(","),
-				delTestItemIds: null
+				delTestItemIds: ids.join(",")
 			},
 			params = {
 				dataGrid : RegionalManagement.dataGrid2,
@@ -223,6 +234,7 @@ var RegionalManagement = (function($){
 
 			preId: _preId,
 			tableList: _tableList,
+			tableLIst2: _tableList2,
 			popArea: _popArea,
 			dataGrid: _dataGrid,
 			initPopHeight: ($(window).height() < 700) ? 400 : 400,
@@ -261,7 +273,7 @@ var RegionalManagement = (function($){
 					};
 
 				if(RegionalManagement.parentStatus == true) {
-					showMessage("you cant del because.....");
+					showMessage("当前选中机构已启用，不允许删除!");
 					return;
 				}
 

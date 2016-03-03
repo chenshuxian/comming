@@ -35,7 +35,7 @@ var SpecimenStatus = (function($){
         tableList: _tableList,
         dataGrid: _dataGrid,
         addParams: SpecimenStatus.getAddParams(_exParams),
-        exParams:_exParams,
+        exParams:_exParams
     })
 
     /* 状态搜索 */

@@ -43,7 +43,7 @@ var ResultUnit = (function($){
         tableList: _tableList,
         dataGrid: _dataGrid,
         addParams: ResultUnit.getAddParams(_exParams),//$.extend({},ResultUnit.addParams,{typeKey:_typeKey}),
-        exParams:_exParams,
+        exParams:_exParams
     });
 
 

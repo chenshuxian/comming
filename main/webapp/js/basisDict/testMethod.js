@@ -43,7 +43,7 @@ var TestMethod = (function($){
         tableList: _tableList,
         dataGrid: _dataGrid,
         addParams: TestMethod.getAddParams(_exParams),//$.extend({},TestMethod.addParams,{typeKey:_typeKey}),
-        exParams:_exParams,
+        exParams:_exParams
     });
 
 
