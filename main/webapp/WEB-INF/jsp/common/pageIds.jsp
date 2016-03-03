@@ -57,7 +57,7 @@
 <%--中心仪器信息--%>
 <c:set var="ins" value="ins"/>
 <%--中心仪器盒子--%>
-<c:set var="ctrInsBox" value="ctrInstrBoxs"/>
+<c:set var="ctrInsBox" value="cib"/>
 
 <%--用户管理--%>
 <c:set var="au" value="authUsers"/>

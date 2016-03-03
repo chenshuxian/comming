@@ -70,6 +70,7 @@
                 var succ = msg.indexOf("succ|");
                 if (err == 0) {
                     showMessage(msg.substring(4));
+                    $("#editBtn").attr("disabled", false);
                     return;
                 }
                 if (info == 0) {

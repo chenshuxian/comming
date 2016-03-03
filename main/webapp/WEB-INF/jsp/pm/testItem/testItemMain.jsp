@@ -18,8 +18,8 @@
 					</div> 
 					<div class="drop-down-menu">
 						<ul class="list-unstyled" id="testItem_ul_status">
-						<c:forEach items="${isAbleList }" var="isAble">
-                        	 <li <c:if test="${isAble.index == 2}">selected="selected"</c:if> value="${isAble.index }">${isAble.text }</li>
+						<c:forEach items="${isAbleList}" var="isAble">
+                        	 <li <c:if test="${isAble.index == 2}">selected="selected"</c:if> value="${isAble.index}">${isAble.text}</li>
                         </c:forEach>
 						</ul>
 					</div>
