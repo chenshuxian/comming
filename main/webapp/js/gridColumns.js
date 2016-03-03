@@ -431,7 +431,7 @@ ColCollect = (function($){
 			{title: "受检成份", field: 'componentName', flex: 1, width: 60},
 			{title: "受检属性", field: 'testPropertyName', flex: 1, width: 60},
 			{title: "检验方法", field: 'testMethodName', flex: 1, width: 60},
-			{title: "标本标识", field: 'typeOfScaleName', flex: 1, width: 60},
+			{title: "样本标识", field: 'typeOfScaleName', flex: 1, width: 60},
 			{title: "时间特性", field: 'timeAspectName', flex: 1, width: 60},
 			{title: "标本类型", field: 'sampleTypeName', flex: 1, width: 60},
 			{title: "助记符", field: 'fastCode', flex: 1, width: 60},
@@ -471,6 +471,52 @@ ColCollect = (function($){
 		return _columns;
 	}
 
+	/***
+	 * 客户盒子登记
+	 * date:2016/03/02
+	 * author:chenshuxian
+	 */
+	var _getCIB = function(obj){
+
+		var _columns = [[
+				{field: "ck", checkbox: true, width: 30},
+				{
+					title: "编码", field: 'code_no', width: 80, formatter: function (value, row) {
+					var rowData = JSON.stringify(row);
+					return "<a onclick='CtrInstrBoxs.showDialog(" + rowData + ")'>" + value + "</a>";
+				}
+				},
+				{title: "盒子条码", field: 'box_barcode', flex: 1, width: 100},
+				{title: "盒子IP", field: 'box_ip', flex: 1, width: 100},
+				{title: "顺序号", field: 'display_order', flex: 1, width: 60},
+				{title: "备注", field: 'memo', width: 200},
+				{
+					title: "状态", field: 'status', formatter: function (value, row, index) {
+					var rowData = JSON.stringify(row);
+					var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='CtrInstrBoxs.changeStatusEx(" + index + "," + rowData + ")' /><i></i></div>";
+					if (value == '1') {
+						returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='CtrInstrBoxs.changeStatusEx(" + index + "," + rowData + ")' /><i></i></div>";
+					}
+					return returnStr;
+				}
+
+				},
+				{
+					title: "操作", field: 'opt', width: 60, align: 'center',
+					formatter: function (value, row, index) {
+						var str = "";
+						var rowData = JSON.stringify(row);
+						str += "<a class='icon icon-edit' onclick='CtrInstrBoxs.editRow(" + rowData + ")'></a>";
+						str += "<a class=\"icon icon-trash\" onclick='CtrInstrBoxs.deleteRowEx(" + index + "," + rowData + ")'></a>";
+						return str;
+					}
+            }
+		]];
+
+		return _columns;
+
+	}
+
 
 
 	var _getColumns = function(table){
@@ -508,6 +554,9 @@ ColCollect = (function($){
 				break;
 			case "CtrLoinc" :
 				return _getLoinc(table);
+				break;
+			case "CtrInstrBoxs" :
+				return _getCIB(table);
 				break;
 			default:
 				return _getCtrTubeType(table);

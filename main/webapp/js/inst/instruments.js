@@ -1,250 +1,208 @@
-var Inst = {
-		
-    preId: "ins", 
-    /*url 定義*/
-    delBatUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsDeleteBatch",
-    checkUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsIfExisted",
-    updateUrlIf:  ctx + "/inst/ctrInstruments/ctrInstrumentsIfEdit",
-    updateUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsEdit",
-    updateUrl2: ctx + "/inst/ctrInstruments/ctrInstrumentsParamsEdit",
-    addUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsAdd", 
-    delUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsDelete",
-    changeStatusUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsDisableOrEnable",
-    tubeInfoUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsInfo",
-    InfoUrl2: ctx + "/inst/ctrInstruments/ctrInstrumentsParamsInfo",
-    pageListUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsPageList",
-    getTestItemUrl: ctx + "/inst/ctrInstruments/getTestItem",
-    
-	reloadData: {
-	        searchStr: '',
-	        status:'',
-	        sort: '',
-	        frontClassName:'',
-	        realtime: 1	
-    },
-	//默认标本类型Grid
-	sampleTypeParam: {					//下拉Grid参数,所有参数均为必填
-	  	div_id:"sampleTypeDiv", 			//对应表单DIV的id
-	  	grid_id:"gridSampleType", 			//对应数据源Grid的Id
-	  	name:"sampleTypeId",				//在表单中对应的提交name
-	  	columnShow:1,						//将要在文本框中显示的列序号
-	  	width : 207, 					    //Combo的宽度
-	  	clearOff:false,						//是否禁用clear按钮
-	  	searchColumn:[1],					//要搜索的列下标以及顺序，[2,1]就是优先搜索第3列，然后搜索第2列
-	  	lockBy:[26,471],					//锁定Grid，传入数组[top,left]
-	  	onEnter:function(){
-	  	}
-	},
-	  
-//	//单列报告模板Grid
-	reportTemplateParam: {				//下拉Grid参数,所有参数均为必填
-	  	div_id:"reportTemplateDiv", 		//对应表单DIV的id
-	  	grid_id:"gridReportTemplate", 		//对应数据源Grid的Id
-	  	name:"reportTemplateId",			//在表单中对应的提交name
-	  	columnShow:1,						//将要在文本框中显示的列序号
-	  	width : 180, 					    //Combo的宽度
-	  	clearOff:false,						//是否禁用clear按钮
-	  	searchColumn:[1],					//要搜索的列下标以及顺序，[2,1]就是优先搜索第3列，然后搜索第2列
-	  	lockBy:[26,471],					//锁定Grid，传入数组[top,left]
-	  	onEnter:function(){
-	  	}
-	},
+/**
+ * 标本类型js
+ * Created by chenshuxian on 2016/03/02
+ *
+ */
 
-	/*reportComboGrid:{
-		delay:500,
-		mode:'local',
-		url: ctx + "/inst/ctrInstruments/getTestItem",
-		idField:'id',
-		textField:'name',
-		columns:[[
-		          {field:'name',title:'名称',width:100,sortable:true}
-		        ]],
-		filter: function(q,row){
-			//console.log(q);
-			var opts = $(this).combogrid('options');
-			//console.log(opts.textField);
-			if(row[opts.textField].indexOf(q) == 0)
-				$(this).combogrid('setValue',row);
-			
-			//$(this).combogrid('')
-			
-			
-		}
-	},*/
-    
-    init: function () {
-    	newcommonjs.pageInit(this.preId);
-        Inst.tableList = $("#" + Inst.preId + "TypeList");
-        
-        var url = Inst.pageListUrl;
-        var POST = "POST";
-        var GET = "GET";
-        //var typeKey =null;
-        var params = Inst.reloadData;  //如有需要在編寫如上方格式。
-        var coloumns=new Array()
-        //coloumns[0]="whonetCode";	//要穩藏的欄位
-        //alert(Inst.tableList + ":" + Inst.pageListUrl);
-        
-        var gridObj = Inst.createDataGrid(url, params,POST, Inst.tableList,coloumns);
-        gridObj.view =    
-            $.extend({}, $.fn.datagrid.defaults.view, {
-                onAfterRender: function () {
-                    // 操作成功后刷新dataGrid
-                    switch (Inst.currentEvent) {
-                        case "add":
-                            newcommonjs.setSearchConditions(Inst.preId, "", 2, 2);
-                            Inst.currentEvent = undefined;
-                            break;
-                    }
-                }
-            });
+var Inst = (function($){
 
-        
-        //* render DataGrid */
-        this.dataGrid = Inst.tableList.datagrid(gridObj);
+    /* START render basicModule */
+    Inst = Object.create(BasicModule);
 
-        /* 关键词搜索 */
-        $("#" + this.preId + "SearchBtn").click(function () {
-        	newcommonjs.dataGridSearch(Inst.dataGrid, Inst.searchObj());
-        });
+    var
+        _preId = CB.PREID.INS,
+        _tableList =  $("#" + _preId + "List"),
+        _hideCols = [],	//要穩藏的欄位
+        _data = Inst.searchObj(_preId),
+        _module = "Inst",
+        _focusId = "editName",
+        _popArea = 720,
+        _delBatUrl = ctx + "/inst/ctrInstruments/ctrInstrumentsDeleteBatch",
+        _existUrl = ctx + "/inst/ctrInstruments/ctrInstrumentsIfExisted",
+        _updateUrl = ctx + "/inst/ctrInstruments/ctrInstrumentsEdit",
+        _updateUrl2 = ctx + "/inst/ctrInstruments/ctrInstrumentsParamsEdit",
+        _updateUrlIf = ctx + "/inst/ctrInstruments/ctrInstrumentsIfEdit",
+        _addUrl = ctx + "/inst/ctrInstruments/ctrInstrumentsAdd",
+        _delUrl = ctx + "/inst/ctrInstruments/ctrInstrumentsDelete",
+        _changeStatusUrl = ctx + "/inst/ctrInstruments/ctrInstrumentsDisableOrEnable",
+        _InfoUrl = ctx + "/inst/ctrInstruments/ctrInstrumentsInfo",
+        _InfoUrl2 = ctx + "/inst/ctrInstruments/ctrInstrumentsParamsInfo",
+        _pageListUrl = ctx + "/inst/ctrInstruments/ctrInstrumentsPageList",
+        _TestItemUrl = ctx + "/inst/ctrInstruments/getTestItem",
 
-        /* 状态搜索 */
-        $("." + this.preId + "-status-selector").on("click", "li", function () {
-            $("#" + Inst.preId + "StatusSpan").html($(this).html());
-            $("." + Inst.preId + "-status-selector li.selected").removeClass("selected");
+        //默认标本类型Grid
+        _sampleTypeParam = {					//下拉Grid参数,所有参数均为必填
+            div_id:"sampleTypeDiv", 			//对应表单DIV的id
+            grid_id:"gridSampleType", 			//对应数据源Grid的Id
+            name:"sampleTypeId",				//在表单中对应的提交name
+            columnShow:1,						//将要在文本框中显示的列序号
+            width : 207, 					    //Combo的宽度
+            clearOff:false,						//是否禁用clear按钮
+            searchColumn:[1],					//要搜索的列下标以及顺序，[2,1]就是优先搜索第3列，然后搜索第2列
+            lockBy:[26,471]					//锁定Grid，传入数组[top,left]
+
+        },
+
+        //单列报告模板Grid
+        _reportTemplateParam = {				//下拉Grid参数,所有参数均为必填
+            div_id:"reportTemplateDiv", 		//对应表单DIV的id
+            grid_id:"gridReportTemplate", 		//对应数据源Grid的Id
+            name:"reportTemplateId",			//在表单中对应的提交name
+            columnShow:1,						//将要在文本框中显示的列序号
+            width : 180, 					    //Combo的宽度
+            clearOff:false,						//是否禁用clear按钮
+            searchColumn:[1],					//要搜索的列下标以及顺序，[2,1]就是优先搜索第3列，然后搜索第2列
+            lockBy:[26,471]					//锁定Grid，传入数组[top,left]
+
+        },
+
+    /* START dataGrid 生成*/
+        _dgParams = {
+            url:_pageListUrl,
+            data:_data,
+            module:_module,
+            hideCols:_hideCols,
+            tableList:_tableList,
+            preId:_preId
+        },
+
+        _gridObj = dataGridM.init(_dgParams),
+    // render dataGrid
+        _dataGrid = _tableList.datagrid(_gridObj);
+
+    /* 状态搜索 */
+    $("." + _preId + "-status-selector li").on("click", function () {
+        $("#" + _preId + "StatusSpan").html($(this).html());
+        $("." + _preId + "-status-selector li.selected").removeClass("selected");
+        var flg = $(this).is('.selected');
+        $(this).addClass(function () {
+            return flg ? '' : 'selected';
+        })
+
+        var statusVal = $(this).attr("el-value");
+        $("#" + _preId + "Status").val(statusVal);
+
+        Inst.searchGrid();
+    });
+
+    /* 前台通讯类 */
+        $("." + _preId + "-frontClass-selector").on("click", "li", function () {
+            $("#" + _preId + "frontClassSpan").html($(this).html());
+            $("." +_preId + "-frontClass-selector li.selected").removeClass("selected");
             var flg = $(this).is('.selected');
             $(this).addClass(function () {
                 return flg ? '' : 'selected';
             })
 
             var statusVal = $(this).attr("el-value");
-            $("#" + Inst.preId + "Status").val(statusVal);
+            $("#" + _preId + "frontClass").val(statusVal);
 
-            newcommonjs.dataGridSearch(Inst.dataGrid, Inst.searchObj());
-        });
-        
-        /* 前台通讯类 */
-        $("." + this.preId + "-frontClass-selector").on("click", "li", function () {
-            $("#" + Inst.preId + "frontClassSpan").html($(this).html());
-            $("." + Inst.preId + "-frontClass-selector li.selected").removeClass("selected");
-            var flg = $(this).is('.selected');
-            $(this).addClass(function () {
-                return flg ? '' : 'selected';
-            })
-
-            var statusVal = $(this).attr("el-value");
-            $("#" + Inst.preId + "frontClass").val(statusVal);
-
-            newcommonjs.dataGridSearch(Inst.dataGrid, Inst.searchObj());
+           Inst.searchGrid();
         });
 
-        /* 排序 */
-        $("." + this.preId + "-sort-selector").on("click", "li", function () {
-            $("#" + Inst.preId + "SortSpan").html($(this).html());
-            $("." + Inst.preId + "-sort-selector li.selected").removeClass("selected");
-            var flg = $(this).is('.selected');
-            $(this).addClass(function () {
-                return flg ? '' : 'selected';
-            })
+    /* 排序 */
+    $("." + _preId + "-sort-selector li").on("click", function () {
+        $("#" + _preId + "SortSpan").html($(this).html());
+        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
+        var flg = $(this).is('.selected');
+        $(this).addClass(function () {
+            return flg ? '' : 'selected';
+        })
 
-            var sortVal = $(this).attr("el-value");
-            $("#" + Inst.preId + "Sort").val(sortVal);
+        var sortVal = $(this).attr("el-value");
+        $("#" + _preId + "Sort").val(sortVal);
 
-            newcommonjs.dataGridSearch(Inst.dataGrid, Inst.searchObj());
-        });
+        Inst.searchGrid();
+    });
 
-        /* 批量删除 */
-        $("#" + this.preId + "DeleteTypeBatch").click(function () {
-            newcommonjs.deleteBatch(Inst.dataGrid,Inst.delBatUrl,POST);
-        });
+    /* search Btn */
+    $("#" + _preId + "SearchBtn").on("click",function() {
+        Inst.searchGrid();;
+    });
 
-        /* 新增 */
-        $("#" + this.preId + "AddType").click(function () {
-        	Inst.currentEvent = "add";
-        	var data = {id:'', opType: 'add', orgTypeId: Inst.orgTypeId};
-        	var url = Inst.tubeInfoUrl; 
-        	
-        	var callback = function(){
-        		sampleTypeGrid = new TextCombo(Inst.sampleTypeParam);
-        		reportTemplateGrid = new TextCombo(Inst.reportTemplateParam);
-        		//$("#reportTemplate").combogrid(Inst.reportComboGrid);
-        		//validate.getAuth("Inst");
-        	};
-        	
-            newcommonjs.newshowDictCodeEditDialog(data,callback,url,720);
-        });
+    /*Start add 相关参数设定  */
+    $("#" + _preId + "Add").on("click",function() {
+        Inst.addPop();
+    });
 
-        $(window).on('resize', function () {
-            newcommonjs.tableAuto(Inst.tableList);
-        });
-    },
+    // deleteBatch
+    $("#" + _preId + "DeleteBatch").on("click",function() {
+        Inst.deleteBetch();
+    });
 
-    /* *
-     * 取得所有搜尋欄資訊
-     * 返回obj 格式
-     * */
-    searchObj: function () {
-    	//console.log($("#" + this.preId + "frontClass").val());
-        return {
-            searchStr: $.trim($("#" + this.preId + "SearchStr").val()),
-            status: $("#" + this.preId + "Status").val(),
-            sort: $("#" + this.preId + "Sort").val(),
-            frontClassName: $("#" + this.preId + "frontClass").val(), 
-            realtime: 1
-        };
-    },
-    
-    /* 创建dataGrid  
-     * url:为pageList
-     * typekey:可有可无
-     * params:可有可无
-     * method: POST OR GET
-     * tableList: main.jsp 中的 呈现dataGrid 的　div
-     * hideColumns:是一个阵列，用来存要稳藏的栏位。
-     * */
-    createDataGrid: function (url, params, method, tableList, hideColumns) {
-    	var gridObj = newcommonjs.createGridObj(url, method, params);
-        gridObj.columns = ColCollect.getColumns("Inst");        
-        gridObj.onLoadSuccess = function () {
-            newcommonjs.tableAuto(tableList);
-            if (hideColumns) {
-                $.each(hideColumns, function (k, v) {
-                    Inst.dataGrid.datagrid('hideColumn', v);
-                })
+
+    $.extend(Inst,{
+
+        preId:_preId,
+        //设定pop弹出框的大小
+        popArea: _popArea,
+        focusId: _focusId,
+        tableList:_tableList,
+        /*START url 定義*/
+        delBatUrl: _delBatUrl,
+        existUrl: _existUrl,
+        updateUrl: _updateUrl,
+        updateUrl2: _updateUrl2,
+        updateUrlIf: _updateUrlIf,
+        addUrl: _addUrl,
+        delUrl: _delUrl,
+        changeStatusUrl: _changeStatusUrl,
+        InfoUrl: _InfoUrl,
+        InfoUrl2: _InfoUrl2,
+        pageListUrl: _pageListUrl,
+        /*END url 定義*/
+        dataGrid:_dataGrid,
+
+
+        validateSave: function() {
+
+            var
+                name = $("#name").val(),
+                model = $("#model").val(),
+                producer = $("#producer").val(),
+                fastCode = $("#fastCode").val(),
+                displayOrder = $("#displayOrder").val(),
+                sampleTypeId = sampleTypeGrid.getValue(),
+                typeId = $("#typeId").val();
+
+            if(name == ''){
+                showMessage('仪器名称为空，请重新输入！',function(){
+                    $("#name").focus();
+                });
+                return false;
             }
-        };
-        return gridObj;
-    },
-    
-    /* 启用、停用状态 */
-    changeStatus: function (index, rowData) {
-        var url = this.changeStatusUrl;
-        var dataGrid = this.dataGrid;
-        newcommonjs.changeStatus(index, rowData, dataGrid, url, "POST");
-    },
-    
-    /* 删除行 */
-    deleteRow: function (index, rowData) {
-        var url = this.delUrl;
-        var dataGrid = this.dataGrid;
-        newcommonjs.deleteRow(rowData, url, dataGrid, "POST");
-    },
-    
-    /* 编辑 */
-    editRow: function (rowData) {
-    
-        var id = rowData.stringId;
-        if (rowData.status == true) {
-            showMessage('当前选中记录已启用，不允许修改！');
-            return;
-        }
-        var url = this.tubeInfoUrl;
-        var data = {id:rowData.stringId, opType: 'edit', orgTypeId: this.orgTypeId};
-        
-        var callback = function () {
-        	sampleTypeGrid = new TextCombo(Inst.sampleTypeParam);
-    		reportTemplateGrid = new TextCombo(Inst.reportTemplateParam);
-    		
+            if(model == ''){
+                showMessage('仪器型号为空，请重新输入！',function(){
+                    $("#model").focus();
+                });
+                return false;
+            }
+            if(sampleTypeId == ''){
+                showMessage('默认标本类型为空，请重新输入！',function(){
+                    //$("#sampleTypeId").focus();
+                });
+                return false;
+            }
+            if(validateDisplayOrder("displayOrder")){
+                return false;
+            }
+            if(typeId == ''){
+                showMessage('仪器类型为空，请重新输入！',function(){
+                    $("#typeId").focus();
+                });
+                return false;
+            }
+
+            return true;
+        },
+
+        editCallBack: function() {
+
+            var rowData = BasicModule.rowData;
+            //console.log(Inst.rowData);
+            sampleTypeGrid = new TextCombo(_sampleTypeParam);
+    		reportTemplateGrid = new TextCombo(_reportTemplateParam);
+
             $("#InfoForm").form("load", {
                 /* input's name attr : data */
             	name: rowData.name,
@@ -258,34 +216,22 @@ var Inst = {
                 orgTypeId: Inst.orgTypeId,
                 id:rowData.stringId,
                 codeNo:rowData.codeNo,
-                opType: 'edit'              
+                opType: 'edit'
             });
             $("#typeId").val(rowData.typeId);
             $("#spanEditCodeNo").html(rowData.codeNo);
             newcommonjs.oldName = rowData.name;
-            setTimeout(function(){
-				//alert(rowData.sampleTypeName);
-				sampleTypeGrid.setValue(rowData.sampleTypeSId,rowData.sampleTypeName);  
-				reportTemplateGrid.setValue(rowData.reportTemplateSId,rowData.reportTemplateName);       					
-			},500);
-            
-            //validate.getAuth("Inst");  
+            setTimeout(function() {
+                //alert(rowData.sampleTypeName);
+                sampleTypeGrid.setValue(rowData.sampleTypeSId, rowData.sampleTypeName);
+                reportTemplateGrid.setValue(rowData.reportTemplateSId, rowData.reportTemplateName);
+            },500);
 
-        };
-              
-        newcommonjs.newshowDictCodeEditDialog(data,callback, url, 720);
-       
-    },
-    
-    /* 弹出详情信息框 */
-    showDialog: function (rowData) {
-    	
-        var url = this.tubeInfoUrl;
-        var data = {id:rowData.stringId, opType: 'view', orgTypeId: this.orgTypeId};
-       
-        
-        var callback = function () {
+        },
 
+        showCallBack: function() {
+
+            var rowData = BasicModule.rowData;
             $("#InfoForm").form("load", {
                 /* input's name attr : data */
                 name: rowData.name,
@@ -296,7 +242,7 @@ var Inst = {
                 typeId: rowData.typeName,
                 sampleTypeDiv: rowData.sampleTypeName,
                 reportTemplateDiv: rowData.reportTemplateName
-                
+
             });
             $("#sampleTypeDiv").html(rowData.sampleTypeName);
             $("#typeId").val(rowData.typeId);
@@ -305,212 +251,638 @@ var Inst = {
             $("select").attr("disabled","disabled");
             $("#editBtn").hide();
             $("#spanEditCodeNo").html(rowData.codeNo);
-        };
-        
-        newcommonjs.newshowDictCodeEditDialog(data,callback, url, 720);
-    },
-    
-    /* 判断新增还是修改 */
-    editDictCode: function (opType, typeKey) {
-        var existUrl = this.checkUrl;
-        var dataGrid = this.dataGrid;
-        var data = $("#InfoForm").serialize();
-        //console.log("before"+data);
-       
-        //for　add callback function
-        var successF = function(data) {
-    		
-			if(data.indexOf("confirm|") == 0){
-				// 有同名
-				resolutionData(data);
-				showConfirm(data.substring(8),function(){
-					newcommonjs.newadd(Inst.addUrl, 'POST', Inst.dataGrid, Inst.reloadData);
-				});
-			} else {
-				
-				newcommonjs.newadd(Inst.addUrl, 'POST', Inst.dataGrid, Inst.reloadData);
-			}
 
-			
-		};
-		
-		//for update callback function
-		var successUp =  function(data) {
-    		//alert(data);
-		
-			if(data.indexOf("confirm|") == 0){
-					
-				showConfirm(data.substring(8),function(){
-					
-					newcommonjs.update(Inst.updateUrl,'POST',Inst.dataGrid);
-				});
-				
-			} else {
-				
-					newcommonjs.update(Inst.updateUrl,'POST',Inst.dataGrid);
-			}
-				
+        },
 
-			
-		};
-		var v = this.validateSave();
-        if (opType == "add") {        	
-            var addUrl = this.addUrl;
-            newcommonjs.newaddDictCode(existUrl, addUrl, "POST", dataGrid, data, successF,v);
-        } else if (opType == "edit") {
-        	
-            var updateUrl = this.updateUrl;
-            var id = $("#id").val();
-            var callbackUpdate =  function(data1) {
-				resolutionData(data1);
-				//alert(data);
-				if(data1.indexOf("err|") != 0){
-					//alert('update');
-					newcommonjs.newupdateDictCode(Inst.existUrl, Inst.updateUrl, "GET", Inst.dataGrid, data, successUp,v);
-				}
-			};
-			
-			this.checkIfEdit(callbackUpdate,id);
-            
+        addCallBack: function() {
+            sampleTypeGrid = new TextCombo(_sampleTypeParam);
+      		reportTemplateGrid = new TextCombo(_reportTemplateParam);
+        },
+
+        searchObj: function(preId) {
+
+            return {
+                searchStr: $.trim($("#" + preId + "SearchStr").val()),
+                status: $("#" + preId + "Status").val(),
+                sort: $("#" + preId + "Sort").val(),
+                frontClassName: $("#" + preId + "frontClass").val(),
+                realtime:1
+            };
+
+        },
+        /*callback function area end*/
+
+        showParamsInfo: function (id){
+
+            var callbackUpdate = function(data) {
+                //alert('showcallback');
+                resolutionData(data);
+                var callback;
+                callback = function () {
+
+                    $("#comPort").val($("#comPort").data('val'));
+                    $("#transferMode").val($("#transferMode").data('val'));
+                    $("#protocol").val($("#protocol").data('val'));
+                    $("#baudRate").val($("#baudRate").data('val'));
+                    $("#dataBit").val($("#dataBit").data('val'));
+                    $("#stopBit").val($("#stopBit").data('val'));
+                    $("#parityBit").val($("#parityBit").data('val'));
+                    // 需要回应
+                    if ($("#isRespond").val() == '1') {
+                        $("#isRespondCheck").attr("checked", 'true');
+                    }
+                    // DTR
+                    if ($("#isDtr").val() == '1') {
+                        $("#isDtrCheck").attr("checked", 'true');
+                    }
+                    // RTS
+                    if ($("#isRts").val() == '1') {
+                        $("#isRtsCheck").attr("checked", 'true');
+                    }
+
+                };
+
+                if(data.indexOf("err|") != 0){
+                    //alert('parInfo');
+                    //url = Inst.InfoUrl2;
+                    //data = {instrumentId:id};
+                    var
+                        params = {
+                            url: Inst.InfoUrl2,
+                            data: {instrumentId: id},
+                            callback: callback
+                        };
+
+                    Inst.CommonPop(params);
+                    //newcommonjs.newshowDictCodeEditDialog(data,callback,url,720);
+                }
+            };
+
+            this.checkIfEdit(callbackUpdate,id);
+        },
+
+        checkIfEdit: function(callback,id){
+
+                  $.ajax({
+                    "url" : Inst.updateUrlIf,
+                    "type" : "POST",
+                    data:"id="+id,
+                    "success" : callback
+                });
+
+        },
+
+        //修改通讯参数
+        updateParams: function(){
+            //防止重复提交
+            $("#editBtn").attr("disabled", true);
+
+            formTextTrim("InfoForm");
+            $("#isRespond").val(0);
+            $("#isDtr").val(0);
+            $("#isRts").val(0);
+
+            $("input[name='checkboxInst']:checked").each(function(){
+                //alert(this.value);
+                $("#"+ this.value).val(1);
+            });
+
+            // 修改
+            $.ajax({
+                url: Inst.updateUrl2, //ctx + "/inst/ctrInstruments/ctrInstrumentsParamsEdit",
+                type: "POST",
+                data:$("#InfoForm").serialize(),
+                success: function(data) {
+                    //resolutionData(data);
+                    $("#ctrDictInfoModal").hide();
+                }
+            });
         }
-    },
-    
-    
-    
-    validateSave: function() {
-		var name = $("#name").val();
-		var model = $("#model").val();
-		var producer = $("#producer").val();
-		var fastCode = $("#fastCode").val();
-		var displayOrder = $("#displayOrder").val();
-		var sampleTypeId = sampleTypeGrid.getValue();
-		var typeId = $("#typeId").val();
-		
-		if(name == ''){
-			showMessage('仪器名称为空，请重新输入！',function(){
-				$("#name").focus();
-			});
-			return false;
-		}
-		if(model == ''){
-			showMessage('仪器型号为空，请重新输入！',function(){
-				$("#model").focus();
-			});
-			return false;
-		}
-		if(sampleTypeId == ''){
-			showMessage('默认标本类型为空，请重新输入！',function(){
-				//$("#sampleTypeId").focus();
-			});
-			return false;
-		}
-		if(validateDisplayOrder("displayOrder")){
-			return false; 
-		}
-		if(typeId == ''){
-			showMessage('仪器类型为空，请重新输入！',function(){
-				$("#typeId").focus();
-			});
-			return false;
-		}
-		
-		return true;
-    },
-    
-	//进入通讯参数修改页面
-	 showParamsInfo: function (id){
-		 
-	  	var url = '';
-	  	var data = '';
-	  	var callbackUpdate = function(data) {
-	  		//alert('showcallback');
-  			resolutionData(data);
-  			var callback = function(){
-  				//alert('callbak');
-  				$("#comPort").val($("#comPort").data('val'));
-  				$("#transferMode").val($("#transferMode").data('val'));
-  				$("#protocol").val($("#protocol").data('val'));
-  				$("#baudRate").val($("#baudRate").data('val'));
-  				$("#dataBit").val($("#dataBit").data('val'));
-  				$("#stopBit").val($("#stopBit").data('val'));
-  				$("#parityBit").val($("#parityBit").data('val'));
-  				
-  				// 需要回应
-  				if($("#isRespond").val() == '1'){
-  					$("#isRespondCheck").attr("checked",'true'); 
-  				}
-  				// DTR
-  				if($("#isDtr").val() == '1'){
-  					$("#isDtrCheck").attr("checked",'true'); 
-  				}
-  				// RTS
-  				if($("#isRts").val() == '1'){
-  					$("#isRtsCheck").attr("checked",'true'); 
-  				}
-  				
-  			};
-  			if(data.indexOf("err|") != 0){
-  				//alert('parInfo');
-  				url = Inst.InfoUrl2; //ctx + "/inst/ctrInstruments/ctrInstrumentsParamsInfo";
-  				data = {instrumentId:id};
-  				newcommonjs.newshowDictCodeEditDialog(data,callback,url,720);
-  			}
-  		};
-  		
-  		this.checkIfEdit(callbackUpdate,id);
-	 },
-	  
-	  checkIfEdit: function(callback,id){
-			  
-			  $.ajax({
-	  			"url" : Inst.updateUrlIf,
-	  			"type" : "POST",
-	  			data:"id="+id,
-	  			"success" : callback,
-	  			"error" : function() {
-	  			}
-	  		});
-		  
-	  },
-	  
-	//修改通讯参数
-	  updateParams: function(){
-		//防止重复提交
-	    $("#editBtn").attr("disabled", true);
-	    
-		formTextTrim("InfoForm");
-		$("#isRespond").val(0);
-		$("#isDtr").val(0);
-		$("#isRts").val(0);
-		
-		$("input[name='checkboxInst']:checked").each(function(){
-			//alert(this.value);
-			$("#"+ this.value).val(1);
-		});
-				
-		// 修改
-		$.ajax({
-			"url" : Inst.updateUrl2, //ctx + "/inst/ctrInstruments/ctrInstrumentsParamsEdit",
-			"type" : "POST",
-			data:$("#InfoForm").serialize(),
-			"success" : function(data) {
-				//resolutionData(data);
-				$("#ctrDictInfoModal").hide();
-			},
-			"error" : function() {
-			}
-		});
-	}
+
+    });
 
 
+    return Inst;
 
-  
 
-};
+}(jQuery));
 
-$(function () {
+$(function(){
     Inst.init();
 });
+//var Inst = {
+//		
+//    preId: "ins", 
+//    /*url 定義*/
+//    delBatUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsDeleteBatch",
+//    checkUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsIfExisted",
+//    updateUrlIf:  ctx + "/inst/ctrInstruments/ctrInstrumentsIfEdit",
+//    updateUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsEdit",
+//    updateUrl2: ctx + "/inst/ctrInstruments/ctrInstrumentsParamsEdit",
+//    addUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsAdd", 
+//    delUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsDelete",
+//    changeStatusUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsDisableOrEnable",
+//    tubeInfoUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsInfo",
+//    InfoUrl2: ctx + "/inst/ctrInstruments/ctrInstrumentsParamsInfo",
+//    pageListUrl: ctx + "/inst/ctrInstruments/ctrInstrumentsPageList",
+//    getTestItemUrl: ctx + "/inst/ctrInstruments/getTestItem",
+//    
+//	reloadData: {
+//	        searchStr: '',
+//	        status:'',
+//	        sort: '',
+//	        frontClassName:'',
+//	        realtime: 1	
+//    },
+//	//默认标本类型Grid
+//	sampleTypeParam: {					//下拉Grid参数,所有参数均为必填
+//	  	div_id:"sampleTypeDiv", 			//对应表单DIV的id
+//	  	grid_id:"gridSampleType", 			//对应数据源Grid的Id
+//	  	name:"sampleTypeId",				//在表单中对应的提交name
+//	  	columnShow:1,						//将要在文本框中显示的列序号
+//	  	width : 207, 					    //Combo的宽度
+//	  	clearOff:false,						//是否禁用clear按钮
+//	  	searchColumn:[1],					//要搜索的列下标以及顺序，[2,1]就是优先搜索第3列，然后搜索第2列
+//	  	lockBy:[26,471],					//锁定Grid，传入数组[top,left]
+//	  	onEnter:function(){
+//	  	}
+//	},
+//	  
+////	//单列报告模板Grid
+//	reportTemplateParam: {				//下拉Grid参数,所有参数均为必填
+//	  	div_id:"reportTemplateDiv", 		//对应表单DIV的id
+//	  	grid_id:"gridReportTemplate", 		//对应数据源Grid的Id
+//	  	name:"reportTemplateId",			//在表单中对应的提交name
+//	  	columnShow:1,						//将要在文本框中显示的列序号
+//	  	width : 180, 					    //Combo的宽度
+//	  	clearOff:false,						//是否禁用clear按钮
+//	  	searchColumn:[1],					//要搜索的列下标以及顺序，[2,1]就是优先搜索第3列，然后搜索第2列
+//	  	lockBy:[26,471],					//锁定Grid，传入数组[top,left]
+//	  	onEnter:function(){
+//	  	}
+//	},
+//
+//	/*reportComboGrid:{
+//		delay:500,
+//		mode:'local',
+//		url: ctx + "/inst/ctrInstruments/getTestItem",
+//		idField:'id',
+//		textField:'name',
+//		columns:[[
+//		          {field:'name',title:'名称',width:100,sortable:true}
+//		        ]],
+//		filter: function(q,row){
+//			//console.log(q);
+//			var opts = $(this).combogrid('options');
+//			//console.log(opts.textField);
+//			if(row[opts.textField].indexOf(q) == 0)
+//				$(this).combogrid('setValue',row);
+//			
+//			//$(this).combogrid('')
+//			
+//			
+//		}
+//	},*/
+//    
+//    init: function () {
+//    	newcommonjs.pageInit(this.preId);
+//        Inst.tableList = $("#" + Inst.preId + "TypeList");
+//        
+//        var url = Inst.pageListUrl;
+//        var POST = "POST";
+//        var GET = "GET";
+//        //var typeKey =null;
+//        var params = Inst.reloadData;  //如有需要在編寫如上方格式。
+//        var coloumns=new Array()
+//        //coloumns[0]="whonetCode";	//要穩藏的欄位
+//        //alert(Inst.tableList + ":" + Inst.pageListUrl);
+//        
+//        var gridObj = Inst.createDataGrid(url, params,POST, Inst.tableList,coloumns);
+//        gridObj.view =    
+//            $.extend({}, $.fn.datagrid.defaults.view, {
+//                onAfterRender: function () {
+//                    // 操作成功后刷新dataGrid
+//                    switch (Inst.currentEvent) {
+//                        case "add":
+//                            newcommonjs.setSearchConditions(Inst.preId, "", 2, 2);
+//                            Inst.currentEvent = undefined;
+//                            break;
+//                    }
+//                }
+//            });
+//
+//        
+//        //* render DataGrid */
+//        this.dataGrid = Inst.tableList.datagrid(gridObj);
+//
+//        /* 关键词搜索 */
+//        $("#" + this.preId + "SearchBtn").click(function () {
+//        	newcommonjs.dataGridSearch(Inst.dataGrid, Inst.searchObj());
+//        });
+//
+//        /* 状态搜索 */
+//        $("." + this.preId + "-status-selector").on("click", "li", function () {
+//            $("#" + Inst.preId + "StatusSpan").html($(this).html());
+//            $("." + Inst.preId + "-status-selector li.selected").removeClass("selected");
+//            var flg = $(this).is('.selected');
+//            $(this).addClass(function () {
+//                return flg ? '' : 'selected';
+//            })
+//
+//            var statusVal = $(this).attr("el-value");
+//            $("#" + Inst.preId + "Status").val(statusVal);
+//
+//            newcommonjs.dataGridSearch(Inst.dataGrid, Inst.searchObj());
+//        });
+//        
+//        /* 前台通讯类 */
+//        $("." + this.preId + "-frontClass-selector").on("click", "li", function () {
+//            $("#" + Inst.preId + "frontClassSpan").html($(this).html());
+//            $("." + Inst.preId + "-frontClass-selector li.selected").removeClass("selected");
+//            var flg = $(this).is('.selected');
+//            $(this).addClass(function () {
+//                return flg ? '' : 'selected';
+//            })
+//
+//            var statusVal = $(this).attr("el-value");
+//            $("#" + Inst.preId + "frontClass").val(statusVal);
+//
+//            newcommonjs.dataGridSearch(Inst.dataGrid, Inst.searchObj());
+//        });
+//
+//        /* 排序 */
+//        $("." + this.preId + "-sort-selector").on("click", "li", function () {
+//            $("#" + Inst.preId + "SortSpan").html($(this).html());
+//            $("." + Inst.preId + "-sort-selector li.selected").removeClass("selected");
+//            var flg = $(this).is('.selected');
+//            $(this).addClass(function () {
+//                return flg ? '' : 'selected';
+//            })
+//
+//            var sortVal = $(this).attr("el-value");
+//            $("#" + Inst.preId + "Sort").val(sortVal);
+//
+//            newcommonjs.dataGridSearch(Inst.dataGrid, Inst.searchObj());
+//        });
+//
+//        /* 批量删除 */
+//        $("#" + this.preId + "DeleteTypeBatch").click(function () {
+//            newcommonjs.deleteBatch(Inst.dataGrid,Inst.delBatUrl,POST);
+//        });
+//
+//        /* 新增 */
+//        $("#" + this.preId + "AddType").click(function () {
+//        	Inst.currentEvent = "add";
+//        	var data = {id:'', opType: 'add', orgTypeId: Inst.orgTypeId};
+//        	var url = Inst.tubeInfoUrl; 
+//        	
+//        	var callback = function(){
+//        		sampleTypeGrid = new TextCombo(Inst.sampleTypeParam);
+//        		reportTemplateGrid = new TextCombo(Inst.reportTemplateParam);
+//        		//$("#reportTemplate").combogrid(Inst.reportComboGrid);
+//        		//validate.getAuth("Inst");
+//        	};
+//        	
+//            newcommonjs.newshowDictCodeEditDialog(data,callback,url,720);
+//        });
+//
+//        $(window).on('resize', function () {
+//            newcommonjs.tableAuto(Inst.tableList);
+//        });
+//    },
+//
+//    /* *
+//     * 取得所有搜尋欄資訊
+//     * 返回obj 格式
+//     * */
+//    searchObj: function () {
+//    	//console.log($("#" + this.preId + "frontClass").val());
+//        return {
+//            searchStr: $.trim($("#" + this.preId + "SearchStr").val()),
+//            status: $("#" + this.preId + "Status").val(),
+//            sort: $("#" + this.preId + "Sort").val(),
+//            frontClassName: $("#" + this.preId + "frontClass").val(), 
+//            realtime: 1
+//        };
+//    },
+//    
+//    /* 创建dataGrid  
+//     * url:为pageList
+//     * typekey:可有可无
+//     * params:可有可无
+//     * method: POST OR GET
+//     * tableList: main.jsp 中的 呈现dataGrid 的　div
+//     * hideColumns:是一个阵列，用来存要稳藏的栏位。
+//     * */
+//    createDataGrid: function (url, params, method, tableList, hideColumns) {
+//    	var gridObj = newcommonjs.createGridObj(url, method, params);
+//        gridObj.columns = ColCollect.getColumns("Inst");        
+//        gridObj.onLoadSuccess = function () {
+//            newcommonjs.tableAuto(tableList);
+//            if (hideColumns) {
+//                $.each(hideColumns, function (k, v) {
+//                    Inst.dataGrid.datagrid('hideColumn', v);
+//                })
+//            }
+//        };
+//        return gridObj;
+//    },
+//    
+//    /* 启用、停用状态 */
+//    changeStatus: function (index, rowData) {
+//        var url = this.changeStatusUrl;
+//        var dataGrid = this.dataGrid;
+//        newcommonjs.changeStatus(index, rowData, dataGrid, url, "POST");
+//    },
+//    
+//    /* 删除行 */
+//    deleteRow: function (index, rowData) {
+//        var url = this.delUrl;
+//        var dataGrid = this.dataGrid;
+//        newcommonjs.deleteRow(rowData, url, dataGrid, "POST");
+//    },
+//    
+//    /* 编辑 */
+//    editRow: function (rowData) {
+//    
+//        var id = rowData.stringId;
+//        if (rowData.status == true) {
+//            showMessage('当前选中记录已启用，不允许修改！');
+//            return;
+//        }
+//        var url = this.tubeInfoUrl;
+//        var data = {id:rowData.stringId, opType: 'edit', orgTypeId: this.orgTypeId};
+//        
+//        var callback = function () {
+//        	sampleTypeGrid = new TextCombo(Inst.sampleTypeParam);
+//    		reportTemplateGrid = new TextCombo(Inst.reportTemplateParam);
+//    		
+//            $("#InfoForm").form("load", {
+//                /* input's name attr : data */
+//            	name: rowData.name,
+//                model: rowData.model,
+//                producer: rowData.producer,
+//                fastCode: rowData.fastCode,
+//                displayOrder: rowData.displayOrder,
+//                typeId: rowData.typeName,
+//                sampleTypeDiv: rowData.sampleTypeName,
+//                reportTemplateDiv: rowData.reportTemplateName,
+//                orgTypeId: Inst.orgTypeId,
+//                id:rowData.stringId,
+//                codeNo:rowData.codeNo,
+//                opType: 'edit'              
+//            });
+//            $("#typeId").val(rowData.typeId);
+//            $("#spanEditCodeNo").html(rowData.codeNo);
+//            newcommonjs.oldName = rowData.name;
+//            setTimeout(function(){
+//				//alert(rowData.sampleTypeName);
+//				sampleTypeGrid.setValue(rowData.sampleTypeSId,rowData.sampleTypeName);  
+//				reportTemplateGrid.setValue(rowData.reportTemplateSId,rowData.reportTemplateName);       					
+//			},500);
+//            
+//            //validate.getAuth("Inst");  
+//
+//        };
+//              
+//        newcommonjs.newshowDictCodeEditDialog(data,callback, url, 720);
+//       
+//    },
+//    
+//    /* 弹出详情信息框 */
+//    showDialog: function (rowData) {
+//    	
+//        var url = this.tubeInfoUrl;
+//        var data = {id:rowData.stringId, opType: 'view', orgTypeId: this.orgTypeId};
+//       
+//        
+//        var callback = function () {
+//
+//            $("#InfoForm").form("load", {
+//                /* input's name attr : data */
+//                name: rowData.name,
+//                model: rowData.model,
+//                producer: rowData.producer,
+//                fastCode: rowData.fastCode,
+//                displayOrder: rowData.displayOrder,
+//                typeId: rowData.typeName,
+//                sampleTypeDiv: rowData.sampleTypeName,
+//                reportTemplateDiv: rowData.reportTemplateName
+//                
+//            });
+//            $("#sampleTypeDiv").html(rowData.sampleTypeName);
+//            $("#typeId").val(rowData.typeId);
+//            $("form input").attr("readonly","readonly");
+//            $("form textarea").attr("readonly","readonly");
+//            $("select").attr("disabled","disabled");
+//            $("#editBtn").hide();
+//            $("#spanEditCodeNo").html(rowData.codeNo);
+//        };
+//        
+//        newcommonjs.newshowDictCodeEditDialog(data,callback, url, 720);
+//    },
+//    
+//    /* 判断新增还是修改 */
+//    editDictCode: function (opType, typeKey) {
+//        var existUrl = this.checkUrl;
+//        var dataGrid = this.dataGrid;
+//        var data = $("#InfoForm").serialize();
+//        //console.log("before"+data);
+//       
+//        //for　add callback function
+//        var successF = function(data) {
+//    		
+//			if(data.indexOf("confirm|") == 0){
+//				// 有同名
+//				resolutionData(data);
+//				showConfirm(data.substring(8),function(){
+//					newcommonjs.newadd(Inst.addUrl, 'POST', Inst.dataGrid, Inst.reloadData);
+//				});
+//			} else {
+//				
+//				newcommonjs.newadd(Inst.addUrl, 'POST', Inst.dataGrid, Inst.reloadData);
+//			}
+//
+//			
+//		};
+//		
+//		//for update callback function
+//		var successUp =  function(data) {
+//    		//alert(data);
+//		
+//			if(data.indexOf("confirm|") == 0){
+//					
+//				showConfirm(data.substring(8),function(){
+//					
+//					newcommonjs.update(Inst.updateUrl,'POST',Inst.dataGrid);
+//				});
+//				
+//			} else {
+//				
+//					newcommonjs.update(Inst.updateUrl,'POST',Inst.dataGrid);
+//			}
+//				
+//
+//			
+//		};
+//		var v = this.validateSave();
+//        if (opType == "add") {        	
+//            var addUrl = this.addUrl;
+//            newcommonjs.newaddDictCode(existUrl, addUrl, "POST", dataGrid, data, successF,v);
+//        } else if (opType == "edit") {
+//        	
+//            var updateUrl = this.updateUrl;
+//            var id = $("#id").val();
+//            var callbackUpdate =  function(data1) {
+//				resolutionData(data1);
+//				//alert(data);
+//				if(data1.indexOf("err|") != 0){
+//					//alert('update');
+//					newcommonjs.newupdateDictCode(Inst.existUrl, Inst.updateUrl, "GET", Inst.dataGrid, data, successUp,v);
+//				}
+//			};
+//			
+//			this.checkIfEdit(callbackUpdate,id);
+//            
+//        }
+//    },
+//    
+//    
+//    
+//    validateSave: function() {
+//		var name = $("#name").val();
+//		var model = $("#model").val();
+//		var producer = $("#producer").val();
+//		var fastCode = $("#fastCode").val();
+//		var displayOrder = $("#displayOrder").val();
+//		var sampleTypeId = sampleTypeGrid.getValue();
+//		var typeId = $("#typeId").val();
+//		
+//		if(name == ''){
+//			showMessage('仪器名称为空，请重新输入！',function(){
+//				$("#name").focus();
+//			});
+//			return false;
+//		}
+//		if(model == ''){
+//			showMessage('仪器型号为空，请重新输入！',function(){
+//				$("#model").focus();
+//			});
+//			return false;
+//		}
+//		if(sampleTypeId == ''){
+//			showMessage('默认标本类型为空，请重新输入！',function(){
+//				//$("#sampleTypeId").focus();
+//			});
+//			return false;
+//		}
+//		if(validateDisplayOrder("displayOrder")){
+//			return false; 
+//		}
+//		if(typeId == ''){
+//			showMessage('仪器类型为空，请重新输入！',function(){
+//				$("#typeId").focus();
+//			});
+//			return false;
+//		}
+//		
+//		return true;
+//    },
+//    
+//	//进入通讯参数修改页面
+//	 showParamsInfo: function (id){
+//		 
+//	  	var url = '';
+//	  	var data = '';
+//	  	var callbackUpdate = function(data) {
+//	  		//alert('showcallback');
+//  			resolutionData(data);
+//  			var callback = function(){
+//  				//alert('callbak');
+//  				$("#comPort").val($("#comPort").data('val'));
+//  				$("#transferMode").val($("#transferMode").data('val'));
+//  				$("#protocol").val($("#protocol").data('val'));
+//  				$("#baudRate").val($("#baudRate").data('val'));
+//  				$("#dataBit").val($("#dataBit").data('val'));
+//  				$("#stopBit").val($("#stopBit").data('val'));
+//  				$("#parityBit").val($("#parityBit").data('val'));
+//  				
+//  				// 需要回应
+//  				if($("#isRespond").val() == '1'){
+//  					$("#isRespondCheck").attr("checked",'true'); 
+//  				}
+//  				// DTR
+//  				if($("#isDtr").val() == '1'){
+//  					$("#isDtrCheck").attr("checked",'true'); 
+//  				}
+//  				// RTS
+//  				if($("#isRts").val() == '1'){
+//  					$("#isRtsCheck").attr("checked",'true'); 
+//  				}
+//  				
+//  			};
+//  			if(data.indexOf("err|") != 0){
+//  				//alert('parInfo');
+//  				url = Inst.InfoUrl2; //ctx + "/inst/ctrInstruments/ctrInstrumentsParamsInfo";
+//  				data = {instrumentId:id};
+//  				newcommonjs.newshowDictCodeEditDialog(data,callback,url,720);
+//  			}
+//  		};
+//  		
+//  		this.checkIfEdit(callbackUpdate,id);
+//	 },
+//	  
+//	  checkIfEdit: function(callback,id){
+//			  
+//			  $.ajax({
+//	  			"url" : Inst.updateUrlIf,
+//	  			"type" : "POST",
+//	  			data:"id="+id,
+//	  			"success" : callback,
+//	  			"error" : function() {
+//	  			}
+//	  		});
+//		  
+//	  },
+//	  
+//	//修改通讯参数
+//	  updateParams: function(){
+//		//防止重复提交
+//	    $("#editBtn").attr("disabled", true);
+//	    
+//		formTextTrim("InfoForm");
+//		$("#isRespond").val(0);
+//		$("#isDtr").val(0);
+//		$("#isRts").val(0);
+//		
+//		$("input[name='checkboxInst']:checked").each(function(){
+//			//alert(this.value);
+//			$("#"+ this.value).val(1);
+//		});
+//				
+//		// 修改
+//		$.ajax({
+//			"url" : Inst.updateUrl2, //ctx + "/inst/ctrInstruments/ctrInstrumentsParamsEdit",
+//			"type" : "POST",
+//			data:$("#InfoForm").serialize(),
+//			"success" : function(data) {
+//				//resolutionData(data);
+//				$("#ctrDictInfoModal").hide();
+//			},
+//			"error" : function() {
+//			}
+//		});
+//	}
+//
+//
+//
+//  
+//
+//};
+//
+//$(function () {
+//    Inst.init();
+//});
 //var canStore = true;
 //
 //var sampleTypeGrid;//默认标本类型

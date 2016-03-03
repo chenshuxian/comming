@@ -7,8 +7,7 @@
 var InstBox;
 
 InstBox = (function($){
-		
-	
+
     /*url 定義*/
 	var preId= "box";
     var delBatUrl= ctx + "/inst/instrumentBox/batchDeleteInstrumentBox";

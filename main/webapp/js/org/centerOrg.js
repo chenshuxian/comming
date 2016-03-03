@@ -238,7 +238,7 @@ var CenterOrg = (function($){
 
 		addCallBack: function(){
 			_initTree();
-		},
+		}
 
 
 	});

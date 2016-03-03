@@ -44,7 +44,7 @@ var SpecimenType = (function($){
         tableList: _tableList,
         dataGrid: _dataGrid,
         addParams: SpecimenType.getAddParams(_exParams),//$.extend({},SpecimenType.addParams,{typeKey:_typeKey}),
-        exParams:_exParams,
+        exParams:_exParams
     });
 
 

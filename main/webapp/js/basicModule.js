@@ -59,8 +59,10 @@ BasicModule = (function($){
 
 						if(item.name){
 							names.push(item.name);
-						}else{
+						}else if(item.componentName){
 							names.push(item.componentName);
+						}else if(item.box_barcode){
+							names.push(item.box_barcode);
 						}
 
 					} else {
@@ -73,14 +75,10 @@ BasicModule = (function($){
 					return false;
 				}
 
+				data = {ids: ids.join(",")};
 				if(params.data){
-					//add for RMM
-					data = $.extend(params.data,{delTestItemIds:ids.join(",")});
-				}else{
-					data = {ids: ids.join(",")};
+					data = params.data;
 				}
-
-
 
 				$.messager.confirm("提示", "是否删除所选中的记录？", function (r) {
 					if (r) {
@@ -110,13 +108,11 @@ BasicModule = (function($){
 					status = params.status,
 					url = params.url,
 					dataGrid = params.dataGrid,
-					data = null;
-
-				if(params.data){
 					data = params.data;
-				}else{
-					data = {id: params.id};
-				}
+
+				/*if(params.data){
+					data = params.data;
+				}*/
 
 
 				if (status == true) {
@@ -133,7 +129,6 @@ BasicModule = (function($){
 								data = CB.DELSUCC;
 								resolutionData(data);
 								dataGrid.datagrid('reload');
-
 							},
 							error: function () {
 
@@ -163,7 +158,7 @@ BasicModule = (function($){
 					val = params.val,
 					index = params.index,
 					callback = params.callback,
-					confirmMeg,operatioType,newVal;
+					confirmMeg,operatioType,newVal,data;
 
 
 				if (id == '' || val == '') {
@@ -181,12 +176,18 @@ BasicModule = (function($){
 					operatioType = "Enable";
 					newVal = '1';
 				}
+
+				data = {id: id, operatioType: operatioType};
+				if(params.data){
+					data = params.data;
+				}
+
 				$.messager.confirm("提示", confirmMeg, function (r) {
 					if (r) {
 						$.ajax({
 							url: url,
 							type: METHOD,
-							data: {id: id, operatioType: operatioType},
+							data: data,
 							success: function (data) {
 								resolutionData(data);
 								dataGrid.datagrid('updateRow', {
@@ -267,14 +268,16 @@ BasicModule = (function($){
 					data: _dataStore,
 					success: function (response) {
 
+						var err = response.indexOf("err|");
 						resolutionData(response);
-						dataGrid.datagrid('reload',rd);
-						$("#"+POPDIV).hide();
+						if(err != 0) {
+							dataGrid.datagrid('reload', rd);
+							$("#" + POPDIV).hide();
+						}
 
 					},
 					"error": function () {
 						$("#editBtn").attr("disabled", false);
-
 					}
 				});
 			},
@@ -282,7 +285,8 @@ BasicModule = (function($){
 			_beforeSubmit = function(obj,BCB) {
 
 				var successCallback = function(){
-
+					//BCB 新增和編輯頁面submit驗證成功後所呼叫的function
+					//一般是呼叫editDictCode
 					if(BCB){
 						if(BCB == "resultDescEdit")
 							ResultType.resultDescEdit();
@@ -324,7 +328,6 @@ BasicModule = (function($){
 					_beforeSubmit(obj,beforeCB);
 					$("#"+focusId).focus();
 				});
-
 			},
 
 			_getType = function(obj,rowData) {
@@ -454,9 +457,11 @@ BasicModule = (function($){
 			};
 
 			editParams = _getType.call(this,editParams,rowData);
-
 			DDP.data = editParams;
-
+			//如果是用get的方法則將data設為null
+			//if(DDP.isGet){
+			//	DDP.data = null;
+			//}
 			editStatus = rowData.status;
 			//console.log("DDP"+DDP.InfoUrl);
 
@@ -473,7 +478,7 @@ BasicModule = (function($){
 		},
 
 		/* 弹出详情信息框 */
-		showDialog: function(rowData) {
+		showDialog: function(rowData,newParams) {
 
 			var
 				params = this.defaultDialogParams(),
@@ -489,10 +494,19 @@ BasicModule = (function($){
 
 			DDP.data = showParams;
 
+
 			BM.rowData = rowData;
 
 			_Dialog.call(this,DDP);
 
+		},
+
+		CommonPop: function(newParams){
+			var
+				params = this.defaultDialogParams(),
+				DDP =  this.getNewParams(params,newParams);
+
+			_Dialog.call(this,DDP);
 		},
 
 
@@ -520,7 +534,7 @@ BasicModule = (function($){
 			//var url = this._delUrl;
 			var
 				params = {
-					id: rowData.stringId,
+					data :{id: rowData.stringId},
 					status: rowData.status,
 					url: this.delUrl,
 					dataGrid: this.dataGrid
@@ -553,22 +567,6 @@ BasicModule = (function($){
 
 		editDictCode: function(newParams) {
 
-			_updateUrl = this.updateUrl;
-			_addUrl = this.addUrl;
-			//for add or update success callback reload params
-			_addNewReload = $.extend({},_addreload,this.exParams);
-			_updateNewReload = $.extend({},_updatereload,this.exParams);
-
-			if(newParams) {
-
-				if (newParams.updateUrl)
-					_updateUrl = newParams.updateUrl;
-
-				if (newParams.addUrl)
-					_addUrl = newParams.addUrl;
-
-			}
-
 			var
 				opType = $("#opType").val(),
 				data = $("#InfoForm").serialize(),
@@ -586,6 +584,23 @@ BasicModule = (function($){
 					dataGrid: dataGrid
 					//exParams: exParams
 				};
+
+			_updateUrl = this.updateUrl;
+			_addUrl = this.addUrl;
+			//for add or update success callback reload params
+			_addNewReload = $.extend({},_addreload,this.exParams);
+			_updateNewReload = $.extend({},_updatereload,this.exParams);
+
+			if(newParams) {
+
+				if (newParams.updateUrl)
+					_updateUrl = newParams.updateUrl;
+
+				if (newParams.addUrl)
+					_addUrl = newParams.addUrl;
+
+			}
+
 
 
 			if(opType == "add"){
@@ -608,7 +623,6 @@ BasicModule = (function($){
 					rd: _addNewReload,//$.extend(_addreload,_exParams),
 					url: _addUrl
 				};
-
 
 			_commonAjax(params);
 		},

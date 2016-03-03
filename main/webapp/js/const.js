@@ -78,7 +78,9 @@ var CB = ConstBox = (function(){
             //客戶盒子登記
             BOX: "box",
             //区域机构管理
-            RMM: "rmm"
+            RMM: "rmm",
+            //客户盒子登记
+            CIB: "cib"
         }
 
     };
