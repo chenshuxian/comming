@@ -13,22 +13,21 @@ dataGrid 用来设定 dataGrid Obj，并返回一个dataGrid Obj
   	* _preId:前辍
   	
 ###范例:
- ``_dgParams = {
+ _dgParams = {
 
-           url:_pageListUrl,``
+            url:_pageListUrl,
+          
+            data:_data,
             
-            ``data:_data,``
+            module:_module,
+           
+            hideCols:_hideCols,
             
-            ``module:_module,``
+            tableList:_tableList,
             
-            ``hideCols:_hideCols,``
+            preId:_preId
             
-            ``tableList:_tableList,``
-            
-            ``preId:_preId``
-            
-        ``},``
-
-        ``_gridObj = dataGridM.init(_dgParams),``
+        },
+        _gridObj = dataGridM.init(_dgParams),
         
-        ``_dataGrid = _tableList.datagrid(_gridObj);``
+        _dataGrid = _tableList.datagrid(_gridObj);
