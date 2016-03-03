@@ -4,6 +4,8 @@ CONST 常量设定
 
 CB.变量名 
 
+范例：CB.METHOD 
+
 ###目前只定义了以下变量:
 
 METHOD:default is POST
