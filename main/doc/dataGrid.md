@@ -11,3 +11,24 @@ dataGrid 用来设定 dataGrid Obj，并返回一个dataGrid Obj
   	* _hideCols:穩藏欄位是一个阵列
   	* _tableList:grid生成對象
   	* _preId:前辍
+  	
+###范例:
+ ``_dgParams = {
+
+           url:_pageListUrl,``
+            
+            ``data:_data,``
+            
+            ``module:_module,``
+            
+            ``hideCols:_hideCols,``
+            
+            ``tableList:_tableList,``
+            
+            ``preId:_preId``
+            
+        ``},``
+
+        ``_gridObj = dataGridM.init(_dgParams),``
+        
+        ``_dataGrid = _tableList.datagrid(_gridObj);``
