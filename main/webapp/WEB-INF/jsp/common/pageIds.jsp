@@ -26,7 +26,7 @@
 <c:set var="rt" value="rt"/>
 <%--试管信息--%>
 <c:set var="tt" value="tt"/>
-<%--檢驗項目--%>
+<%--检验項目--%>
 <c:set var="ti" value="ti"/>
 <%--規則公式--%>
 <c:set var="rf" value="rf"/>
@@ -75,4 +75,7 @@
 <c:set var="box" value="box" />
 <%--区域机构管理--%>
 <c:set var="rmm" value="rmm" />
+
+
+
 
