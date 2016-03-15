@@ -1,5 +1,6 @@
 # comming
 ==========
+comming 是运用 easyui 所设计出的一个前端 web 介面
 ###JS of Comming
 --------
 
