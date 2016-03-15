@@ -2,6 +2,7 @@
  * 2016/1/12
  * easyui dataGrid Module
  * 作者: chenshuxian
+ * 回传一个datagrid obj
  */
 
 var dataGridM;
@@ -20,6 +21,8 @@ dataGridM = (function($){
 	 *_hideCols:穩藏欄位
 	 *_tableList:grid生成對象
 	 *_preId:前辍
+	 * _height:grid 高度设定
+	 * _isSecond:是否为第二个grid ，若只有一个时不给设定，所以值为undefined
 	 */
 	
 	var _initObj = function(params){
