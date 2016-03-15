@@ -1,4 +1,4 @@
-dataGrid 
+[dataGrid](https://github.com/chenshuxian/comming/blob/master/main/webapp/js/dataGrid.js) 
 =========================
 dataGrid 用来设定 dataGrid Obj，并返回一个dataGrid Obj
 
