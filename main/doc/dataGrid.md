@@ -11,6 +11,8 @@ dataGrid 用来设定 dataGrid Obj，并返回一个dataGrid Obj
   	* _hideCols:穩藏欄位是一个阵列
   	* _tableList:grid生成對象
   	* _preId:前辍
+  	* _height:grid 高度
+  	* _isSecond:是否为第二个grid，第二个grid不套用新增事件
   	
 ###范例:
  _dgParams = {
