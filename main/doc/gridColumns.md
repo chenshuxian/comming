@@ -1,4 +1,4 @@
-gridColumns
+[gridColumns](https://github.com/chenshuxian/comming/blob/master/main/webapp/js/gridColumns.js)
 =======
 *gridColums* 是一个 DataGrid 的栏位集合，主要将所有栏位集中管理，提高工作效能，目前已和 datagrid 物件一起始用
 ，当使用者建立 datagrid 时，就会经由 getColumns 的方法取得相对映的栏位表。

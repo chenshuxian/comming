@@ -2,6 +2,7 @@
  * 2016/1/12
  * easyui dataGrid Module
  * 作者: chenshuxian
+ * 回传一个datagrid obj
  */
 
 var dataGridM;
