@@ -121,50 +121,50 @@ var ResultType = (function($){
 
     };
 
-    /* 状态搜索 */
-    $("." + _preId + "-status-selector li").on("click", function () {
-        $("#" + _preId + "StatusSpan").html($(this).html());
-        $("." + _preId + "-status-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var statusVal = $(this).attr("el-value");
-        $("#" + _preId + "Status").val(statusVal);
-
-        ResultType.searchGrid();
-    });
-
-    /* 排序 */
-    $("." + _preId + "-sort-selector li").on("click", function () {
-        $("#" + _preId + "SortSpan").html($(this).html());
-        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var sortVal = $(this).attr("el-value");
-        $("#" + _preId + "Sort").val(sortVal);
-
-        ResultType.searchGrid();
-    });
-
-    /* search Btn */
-    $("#" + _preId + "SearchBtn").on("click",function() {
-        ResultType.searchGrid();
-    });
+    ///* 状态搜索 */
+    //$("." + _preId + "-status-selector li").on("click", function () {
+    //    $("#" + _preId + "StatusSpan").html($(this).html());
+    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var statusVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Status").val(statusVal);
+    //
+    //    ResultType.searchGrid();
+    //});
+    //
+    ///* 排序 */
+    //$("." + _preId + "-sort-selector li").on("click", function () {
+    //    $("#" + _preId + "SortSpan").html($(this).html());
+    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var sortVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Sort").val(sortVal);
+    //
+    //    ResultType.searchGrid();
+    //});
+    //
+    ///* search Btn */
+    //$("#" + _preId + "SearchBtn").on("click",function() {
+    //    ResultType.searchGrid();
+    //});
 
     /*Start add 相关参数设定  */
-    $("#" + _preId + "Add").on("click",function() {
-        ResultType.addPop();
-    });
-
-    // deleteBatch
-    $("#" + _preId + "DeleteBatch").on("click",function() {
-        ResultType.deleteBetch();
-    });
+    //$("#" + _preId + "Add").on("click",function() {
+    //    ResultType.addPop();
+    //});
+    //
+    //// deleteBatch
+    //$("#" + _preId + "DeleteBatch").on("click",function() {
+    //    ResultType.deleteBetch();
+    //});
 
     // delete desc batch
     $("#" + _preId + "DeleteResultDescBatch").click(function () {
@@ -213,6 +213,7 @@ var ResultType = (function($){
     $.extend(ResultType,{
 
         preId:_preId,
+        module: _module,
         typeId: null,
         //设定pop弹出框的大小
         popArea: 480,
@@ -263,7 +264,7 @@ var ResultType = (function($){
         },
 
         /* 结果描述判断新增还是修改 */
-        resultDescEdit: function (opType) {
+        dataUpgrade: function (opType) {
 
             var
                 params = {

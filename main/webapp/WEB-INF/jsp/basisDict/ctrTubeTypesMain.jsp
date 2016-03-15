@@ -55,7 +55,6 @@
 
     <input type="hidden" id="${tt}Status"/>
     <input type="hidden" id="${tt}Sort"/>
-    <input type="hidden" id="${tt}PreId" value="${tt}">
 
 </div>
 

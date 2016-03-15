@@ -9,12 +9,14 @@ var ColCollect;
 ColCollect = (function($){
 	
 	//县浮字串提示
-	var _helpTip = "<span class='help-tips'>",
+	var
+		_helpTip = "<span class='help-tips'>",
 		_editStr = "<i class='help-tips-content'>编辑</i></span>",
 		_delStr = "<i class='help-tips-content'>删除</i></span>",
-		_statusStr = "<i class='help-tips-content'>启用/停用</i></span>",
-		_resetStr = "<i class='help-tips-content'>重置密码</i></span>";
-
+		_statusStr = "<i class='help-tips-content'>启用</i></span>",
+		_statusStrStop = "<i class='help-tips-content'>停用</i></span>",
+		_resetStr = "<i class='help-tips-content'>重置密码</i></span>",
+		_roleStr = "<i class='help-tips-content'>分配角色</i></span>";
 
 	var _getCtrTubeType = function(obj){
 		
@@ -23,7 +25,7 @@ ColCollect = (function($){
 			                 {
 			                     title: "编码", field: 'codeNo', width: 80, formatter: function (value, row) {
 			                     var rowData = JSON.stringify(row);
-			                     return "<a onclick='"+ obj +".showDialog(" + rowData + ")'>" + value + "</a>";
+			                     return "<a onclick="+ obj +".showDialog(" + rowData + ")>" + value + "</a>";
 			                     }
 			                 },
 			                 {title: "中文名称", field: 'name', flex: 1, width: 60},
@@ -36,11 +38,11 @@ ColCollect = (function($){
 			                 {
 			                     title: "状态", field: 'status', formatter: function (value, row, index) {
 			                     var rowData = JSON.stringify(row);
-			                     var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='"+ obj +".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+			                     var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange="+ obj +".changeStatus(" + index + "," + rowData + ") /><i></i></div>"  + _statusStrStop ;
 			                     if (value == '1') {
-			                         returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='"+ obj +".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+			                         returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange="+ obj +".changeStatus(" + index + "," + rowData + ") /><i></i></div>" + _statusStr;
 			                     }
-			                     return _helpTip + returnStr + _statusStr;
+			                     return _helpTip + returnStr;
 			                 }
 	
 			                 },
@@ -49,8 +51,8 @@ ColCollect = (function($){
 			                     formatter: function (value, row, index) {
 			                         var str = "";
 			                         var rowData = JSON.stringify(row);
-			                         str += _helpTip + "<a class='icon icon-edit' onclick='"+ obj +".editRow(" + rowData + ")'></a>" + _editStr ;
-			                         str += _helpTip + "<a class=\"icon icon-trash\" onclick='"+ obj +".deleteRow(" + index + "," + rowData + ")'></a>" + _delStr;
+			                         str += _helpTip + "<a class=\"icon icon-edit\" onclick="+ obj +".editRow(" + rowData + ")></a>" + _editStr ;
+			                         str += _helpTip + "<a class=\"icon icon-trash\" onclick="+ obj +".deleteRow(" + index + "," + rowData + ")></a>" + _delStr;
 			                         return str;
 			                     }
 			                 }
@@ -72,7 +74,7 @@ ColCollect = (function($){
 			                 {
 			                     title: "编码", field: 'codeNo', width: 40, formatter: function (value, row) {
 			                     var rowData = JSON.stringify(row);
-			                     return "<a onclick='"+ obj +".showDialog(" + rowData + ")'>" + value + "</a>";
+			                     return "<a onclick="+ obj +".showDialog(" + rowData + ")>" + value + "</a>";
 			                     }
 			                 },
 			                 {title: "卫生机构代码", field: 'nacaoId', flex: 1, width: 20},
@@ -86,11 +88,11 @@ ColCollect = (function($){
 			                 {
 			                     title: "状态", field: 'status', formatter: function (value, row, index) {
 			                     var rowData = JSON.stringify(row);
-			                     var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='"+ obj +".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+			                     var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange="+ obj +".changeStatus(" + index + "," + rowData + ") /><i></i></div>" + _statusStrStop ;
 			                     if (value == '1') {
-			                         returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='"+ obj +".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+			                         returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange="+ obj +".changeStatus(" + index + "," + rowData + ") /><i></i></div>" + _statusStr;
 			                     }
-			                     return _helpTip + returnStr + _statusStr;
+			                     return _helpTip + returnStr ;
 			                 }
 	
 			                 },
@@ -99,8 +101,8 @@ ColCollect = (function($){
 			                     formatter: function (value, row, index) {
 			                         var str = "";
 			                         var rowData = JSON.stringify(row);
-			                         str += _helpTip + "<a class='icon icon-edit' onclick='"+ obj +".editRow(" + rowData + ")'></a>" + _editStr ;
-			                         str += _helpTip + "<a class=\"icon icon-trash\" onclick='"+ obj +".deleteRow(" + index + "," + rowData + ")'></a>" + _delStr;
+			                         str += _helpTip + "<a class='icon icon-edit' onclick="+ obj +".editRow(" + rowData + ")></a>" + _editStr ;
+			                         str += _helpTip + "<a class=\"icon icon-trash\" onclick="+ obj +".deleteRow(" + index + "," + rowData + ")></a>" + _delStr;
 			                         return str;
 			                     }
 			                 }
@@ -122,7 +124,7 @@ ColCollect = (function($){
 			                 {
 			                     title: "编码", field: 'codeNo', width: 40, formatter: function (value, row) {
 			                     var rowData = JSON.stringify(row);
-			                     return "<a onclick='"+ obj +".showDialog(" + rowData + ")'>" + value + "</a>";
+			                     return "<a onclick="+ obj +".showDialog(" + rowData + ")>" + value + "</a>";
 			                     }
 			                 },
 			                 {title: "仪器名称", field: 'name', flex: 1, width: 20},
@@ -144,11 +146,11 @@ ColCollect = (function($){
 			                 {
 			                     title: "状态", field: 'status', formatter: function (value, row, index) {
 			                     var rowData = JSON.stringify(row);
-			                     var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='"+ obj +".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+			                     var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange="+ obj +".changeStatus(" + index + "," + rowData + ")/><i></i></div>" + _statusStrStop ;
 			                     if (value == '1') {
-			                         returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='"+ obj +".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+			                         returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange="+ obj +".changeStatus(" + index + "," + rowData + ")/><i></i></div>" + _statusStr;
 			                     }
-			                     	return _helpTip + returnStr + _statusStr ;
+			                     	return _helpTip + returnStr;
 			                     }
 	
 			                 },			                 
@@ -157,8 +159,8 @@ ColCollect = (function($){
 			                     formatter: function (value, row, index) {
 			                         var str = "";
 			                         var rowData = JSON.stringify(row);
-			                         str += _helpTip + "<a class='icon icon-edit' onclick='"+ obj +".editRow(" + rowData + ")'></a>" + _editStr ;
-			                         str += _helpTip + "<a class=\"icon icon-trash\" onclick='"+ obj +".deleteRow(" + index + "," + rowData + ")'></a>" + _delStr;
+			                         str += _helpTip + "<a class='icon icon-edit' onclick="+ obj +".editRow(" + rowData + ")></a>" + _editStr ;
+			                         str += _helpTip + "<a class=\"icon icon-trash\" onclick="+ obj +".deleteRow(" + index + "," + rowData + ")></a>" + _delStr;
 			                         return str;
 			                     }
 			                 }
@@ -199,7 +201,7 @@ ColCollect = (function($){
 							{
 							    title: "编码", field: 'codeNo', width: 40, formatter: function (value, row) {
 							    var rowData = JSON.stringify(row);
-							    return "<a onclick='"+ obj +".showDialog(" + rowData + ")'>" + value + "</a>";
+							    return "<a onclick="+ obj +".showDialog(" + rowData + ")>" + value + "</a>";
 							    }
 							},
 							{title: "盒子修码", field: 'boxBarCode', flex: 1, width: 20},
@@ -209,11 +211,11 @@ ColCollect = (function($){
 							{
 			                     title: "状态", field: 'status', formatter: function (value, row, index) {
 			                     var rowData = JSON.stringify(row);
-			                     var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='"+ obj +".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+			                     var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange="+ obj +".changeStatus(" + index + "," + rowData + ")/><i></i></div>" + _statusStrStop;
 			                     if (value == '1') {
-			                         returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='"+ obj +".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+			                         returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange="+ obj +".changeStatus(" + index + "," + rowData + ")/><i></i></div>" + _statusStr;
 			                     }
-			                     	return _helpTip + returnStr + _statusStr;
+			                     	return _helpTip + returnStr;
 			                     }
 	
 			                 },			                 
@@ -222,8 +224,8 @@ ColCollect = (function($){
 			                     formatter: function (value, row, index) {
 			                         var str = "";
 			                         var rowData = JSON.stringify(row);
-			                         str += _helpTip + "<a class='icon icon-edit' onclick='"+ obj +".editRow(" + rowData + ")'></a>" + _editStr ;
-			                         str += _helpTip + "<a class=\"icon icon-trash\" onclick='"+ obj +".deleteRow(" + index + "," + rowData + ")'></a>" + _delStr;
+			                         str += _helpTip + "<a class='icon icon-edit' onclick="+ obj +".editRow(" + rowData + ")></a>" + _editStr ;
+			                         str += _helpTip + "<a class=\"icon icon-trash\" onclick="+ obj +".deleteRow(" + index + "," + rowData + ")></a>" + _delStr;
 			                         return str;
 			                     }
 			                 }
@@ -261,7 +263,7 @@ ColCollect = (function($){
 		                  {
 		                      title: "用戶帐号", field: 'userNo', width: 80, formatter: function (value, row) {
 		                      var rowData = JSON.stringify(row);
-		                      return "<a onclick='" + obj + ".showDialog(" + rowData + ")'>" + value + "</a>";
+		                      return "<a onclick=" + obj + ".showDialog(" + rowData + ")>" + value + "</a>";
 		                  }
 		                  },
 		                  {title: "用户名称", field: 'userName', flex: 1, width: 60},
@@ -270,11 +272,11 @@ ColCollect = (function($){
 		                  {
 		                      title: "状态", field: 'status', formatter: function (value, row, index) {
 		                      var rowData = JSON.stringify(row);
-		                      var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='" + obj + ".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+		                      var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange=" + obj + ".changeStatus(" + index + "," + rowData + ") /><i></i></div>" + _statusStrStop;
 		                      if (value == '1') {
-		                          returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='" + obj + ".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+		                          returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange=" + obj + ".changeStatus(" + index + "," + rowData + ") /><i></i></div>" + _statusStr;
 		                      }
-		                      return _helpTip + returnStr + _statusStr;
+		                      return _helpTip + returnStr;
 		                  }
 
 		                  },
@@ -283,10 +285,10 @@ ColCollect = (function($){
 		                      formatter: function (value, row, index) {
 		                          var str = "";
 		                          var rowData = JSON.stringify(row);
-		                          str += _helpTip + "<a class='icon icon-edit' onclick='" + obj + ".showEditDialog(" + rowData + ")'></a>" + _editStr ;
-		                          str += _helpTip + "<a class=\"icon icon-trash\" onclick='" + obj + ".deleteRow(" + index + "," + rowData + ")'></a>" + _delStr ;
-		                          str += _helpTip + "<a class=\"icon icon-lock-b\" onclick='" + obj + ".resetPassword(" + index + "," + rowData + ")'></a>" + _resetStr ;
-		                          str += "<a class=\"icon icon-user J_ShowPop J_DataRest\" onclick='" + obj + ".showUserGroupDialog(" + index + "," + rowData + ")'></a>";
+		                          str += _helpTip + "<a class='icon icon-edit' onclick=" + obj + ".showEditDialog(" + rowData + ")></a>" + _editStr ;
+		                          str += _helpTip + "<a class=\"icon icon-trash\" onclick=" + obj + ".deleteRow(" + index + "," + rowData + ")></a>" + _delStr ;
+		                          str += _helpTip + "<a class=\"icon icon-lock-b\" onclick=" + obj + ".resetPassword(" + index + "," + rowData + ")></a>" + _resetStr ;
+		                          str += "<a class=\"icon icon-user J_ShowPop J_DataRest\" onclick=" + obj + ".showUserGroupDialog(" + index + "," + rowData + ")></a>";
 		                          return str;
 		                      }
 		                  }
@@ -307,7 +309,7 @@ ColCollect = (function($){
 			{
 				title: "编码", field: 'codeNo', width: 80, formatter: function (value, row) {
 				var rowData = JSON.stringify(row);
-				return "<a onclick='" + obj + ".showDialog(" + rowData + ")'>" + value + "</a>";
+				return "<a onclick=" + obj + ".showDialog(" + rowData + ")>" + value + "</a>";
 			}
 			},
 			{title: "中文名称", field: 'name', flex: 1, width: 60},
@@ -315,11 +317,11 @@ ColCollect = (function($){
 			{
 				title: "状态", field: 'status', formatter: function (value, row, index) {
 				var rowData = JSON.stringify(row);
-				var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='" + obj + ".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+				var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange=" + obj + ".changeStatus(" + index + "," + rowData + ")/><i></i></div>" + _statusStrStop;
 				if (value == '1') {
-					returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='" + obj + ".changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+					returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange=" + obj + ".changeStatus(" + index + "," + rowData + ")/><i></i></div>" + _statusStr;
 				}
-				return returnStr;
+				return _helpTip + returnStr;
 			}
 			},
 			{
@@ -327,8 +329,8 @@ ColCollect = (function($){
 				formatter: function (value, row, index) {
 					var str = "";
 					var rowData = JSON.stringify(row);
-					str += "<a class='icon icon-edit' onclick='" + obj + ".editRow(" + rowData + ")'></a>";
-					str += "<a class=\"icon icon-trash\" onclick='" + obj + ".deleteRow(" + index + "," + rowData + ")'></a>";
+					str += "<a class='icon icon-edit' onclick=" + obj + ".editRow(" + rowData + ")></a>";
+					str += "<a class=\"icon icon-trash\" onclick=" + obj + ".deleteRow(" + index + "," + rowData + ")></a>";
 					return str;
 				}
 			}
@@ -356,8 +358,8 @@ ColCollect = (function($){
 				formatter: function (value, row, index) {
 					var str = "";
 					var rowData = JSON.stringify(row);
-					str += "<a class='icon icon-edit' onclick='ResultType.editResultDesc(" + rowData + ")'></a>";
-					str += "<a class=\"icon icon-trash\" onclick='ResultType.deleteResultDesc(" + index + "," + rowData + ")'></a>";
+					str += "<a class='icon icon-edit' onclick=ResultType.editResultDesc(" + rowData + ")></a>";
+					str += "<a class=\"icon icon-trash\" onclick=ResultType.deleteResultDesc(" + index + "," + rowData + ")></a>";
 					return str;
 				}
 			}
@@ -380,7 +382,7 @@ ColCollect = (function($){
 			{
 				title: "编码", field: 'codeNo', width: 80, formatter: function (value, row) {
 				var rowData = JSON.stringify(row);
-				return "<a onclick='RegionalManagement.showDialog(" + rowData + ")'>" + value + "</a>";
+				return "<a onclick=RegionalManagement.showDialog(" + rowData + ")>" + value + "</a>";
 			}
 			},
 			{title: "中文名称", field: 'name', flex: 1, width: 60},
@@ -390,11 +392,11 @@ ColCollect = (function($){
 			{
 				title: "状态", field: 'status', formatter: function (value, row, index) {
 				var rowData = JSON.stringify(row);
-				var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='RegionalManagement.changeRelatedStatus(" + index + "," + rowData + ")' /><i></i></div>";
+				var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange=RegionalManagement.changeRelatedStatus(" + index + "," + rowData + ") /><i></i></div>" + _statusStrStop;
 				if (value == '1') {
-					returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='RegionalManagement.changeRelatedStatus(" + index + "," + rowData + ")' /><i></i></div>";
+					returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange=RegionalManagement.changeRelatedStatus(" + index + "," + rowData + ") /><i></i></div>" + _statusStr;
 				}
-				return returnStr;
+				return _helpTip + returnStr;
 			}
 			},
 			{
@@ -402,7 +404,7 @@ ColCollect = (function($){
 				formatter: function (value, row, index) {
 					var str = "";
 					var rowData = JSON.stringify(row);
-					str += "<a class=\"icon icon-trash\" onclick='RegionalManagement.deleteRelated(" + index + "," + rowData + ")'></a>";
+					str += "<a class=\"icon icon-trash\" onclick=RegionalManagement.deleteRelated(" + index + "," + rowData + ")></a>";
 					return str;
 				}
 			}
@@ -425,7 +427,7 @@ ColCollect = (function($){
 			{
 				title: "编码", field: 'codeNo', width: 80, formatter: function (value, row) {
 				var rowData = JSON.stringify(row);
-				return "<a onclick='CtrLoinc.showDialog(" + rowData + ")'>" + value + "</a>";
+				return "<a onclick=CtrLoinc.showDialog(" + rowData + ")>" + value + "</a>";
 				}
 			},
 			{title: "受检成份", field: 'componentName', flex: 1, width: 60},
@@ -448,11 +450,11 @@ ColCollect = (function($){
 			{
 				title: "状态", field: 'status', formatter: function (value, row, index) {
 					var rowData = JSON.stringify(row);
-					var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='CtrLoinc.changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+					var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange=CtrLoinc.changeStatus(" + index + "," + rowData + ")/><i></i></div>" + _statusStrStop;
 					if (value == '1') {
-						returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='CtrLoinc.changeStatus(" + index + "," + rowData + ")' /><i></i></div>";
+						returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange=CtrLoinc.changeStatus(" + index + "," + rowData + ") /><i></i></div>" + _statusStr;
 					}
-					return returnStr;
+					return _helpTip + returnStr;
 				}
 
 			},
@@ -461,8 +463,8 @@ ColCollect = (function($){
 				formatter: function (value, row, index) {
 					var str = "";
 					var rowData = JSON.stringify(row);
-					str += "<a class='icon icon-edit' onclick='CtrLoinc.editRow(" + rowData + ")'></a>";
-					str += "<a class=\"icon icon-trash\" onclick='CtrLoinc.deleteRow(" + index + "," + rowData + ")'></a>";
+					str += "<a class='icon icon-edit' onclick=CtrLoinc.editRow(" + rowData + ")></a>";
+					str += "<a class=\"icon icon-trash\" onclick=CtrLoinc.deleteRow(" + index + "," + rowData + ")></a>";
 					return str;
 				}
 			}
@@ -478,12 +480,12 @@ ColCollect = (function($){
 	 */
 	var _getCIB = function(obj){
 
-		var _columns = [[
+			var _columns = [[
 				{field: "ck", checkbox: true, width: 30},
 				{
 					title: "编码", field: 'code_no', width: 80, formatter: function (value, row) {
 					var rowData = JSON.stringify(row);
-					return "<a onclick='CtrInstrBoxs.showDialog(" + rowData + ")'>" + value + "</a>";
+					return "<a onclick=CtrInstrBoxs.showDialog(" + rowData + ")>" + value + "</a>";
 				}
 				},
 				{title: "盒子条码", field: 'box_barcode', flex: 1, width: 100},
@@ -493,12 +495,12 @@ ColCollect = (function($){
 				{
 					title: "状态", field: 'status', formatter: function (value, row, index) {
 					var rowData = JSON.stringify(row);
-					var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange='CtrInstrBoxs.changeStatusEx(" + index + "," + rowData + ")' /><i></i></div>";
+					var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange=CtrInstrBoxs.changeStatusEx(" + index + "," + rowData + ") /><i></i></div>" + _statusStrStop;
 					if (value == '1') {
-						returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange='CtrInstrBoxs.changeStatusEx(" + index + "," + rowData + ")' /><i></i></div>";
+						returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange=CtrInstrBoxs.changeStatusEx(" + index + "," + rowData + ")/><i></i></div>" + _statusStr;
 					}
-					return returnStr;
-				}
+						return _helpTip + returnStr;
+					}
 
 				},
 				{
@@ -506,16 +508,141 @@ ColCollect = (function($){
 					formatter: function (value, row, index) {
 						var str = "";
 						var rowData = JSON.stringify(row);
-						str += "<a class='icon icon-edit' onclick='CtrInstrBoxs.editRow(" + rowData + ")'></a>";
-						str += "<a class=\"icon icon-trash\" onclick='CtrInstrBoxs.deleteRowEx(" + index + "," + rowData + ")'></a>";
+						str += "<a class='icon icon-edit' onclick=CtrInstrBoxs.editRow(" + rowData + ")></a>";
+						str += "<a class=\"icon icon-trash\" onclick=CtrInstrBoxs.deleteRowEx(" + index + "," + rowData + ")></a>";
 						return str;
 					}
-            }
+				}
+			]];
+
+			return _columns;
+
+		}
+
+	/***
+	 * 检验项目
+	 * date:2016/03/08
+	 * author:chenshuxian
+	 */
+	var _getTestItem = function(obj){
+
+		var _columns = [[
+			{field : "ck",checkbox : true,width : 30},
+			{title : "达安标准码",field : 'codeNo',flex : 1,width : 60},
+			{title : "项目名称",field : 'name',flex : 1,width : 60},
+			{title : "英文名称",field : 'enName',flex : 1,width : 60},
+			{title : "英文简称",field : 'enShortName',flex : 1,width : 60},
+			{title : "项目性别",field : 'sexId',flex : 1,width : 60,
+				formatter : function(value) {
+					var returnStr = '不限';
+						if (value == '1') {
+							returnStr = '男';
+						}
+						if (value == '2') {
+							returnStr = '女';
+						}
+							return returnStr;
+						}},
+			{title : "检验方法",field : 'testMethodName',flex : 1,width : 60},
+			{title : "医学专业组",field : 'disciplineName',flex : 1,width : 60},
+			{title : "默认标本类型",field : 'sampleTypeName',flex : 1,width : 60},
+			{title : "助记符",field : 'fastCode',flex : 1,width : 60},
+			{title : "顺序号",field : 'displayOrder',flex : 1,width : 60},
+			{
+				title: "状态", field: 'status', formatter: function (value, row, index) {
+				var rowData = JSON.stringify(row);
+				var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange=TestItem.changeStatusEx(" + index + "," + rowData + ") /><i></i></div>" + _statusStrStop;
+				if (value == '1') {
+					returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange=TestItem.changeStatusEx(" + index + "," + rowData + ") /><i></i></div>" + _statusStr;
+				}
+				return _helpTip + returnStr;
+			}
+			},
+			{title : "操作",field : 'opt',width : 60,align : 'center',
+				formatter : function(value, row,index) {
+					var str = "";
+					var rowData = JSON.stringify(row);
+					str += "<a class='icon icon-edit' onclick=TestItem.editRowEx(" + rowData + ")></a>";
+					str += "<a class=\"icon icon-trash\" onclick=TestItem.deleteRowEx(" + index + "," + rowData + ")></a>";
+					return str;
+				}
+			}
 		]];
 
 		return _columns;
 
 	}
+
+	/***
+	 * 组合项目
+	 * date:2016/03/11
+	 * author:chenshuxian
+	 */
+	var _getTestItemGroup = function(obj){
+
+		var _columns =[[
+			{field: "ck", checkbox: true, width: 30},
+			{title: "编码", field: 'codeNo', width: 80},
+			{title: "中文名称", field: 'name', width: 80},
+			{title: "英文名称", field: 'enShortName', width: 80},
+			{title: "英文简称", field: 'enName', width: 80},
+			{title: "默认标本类型", field: 'sampleTypeName',width: 80},
+			{title: "助记符", field: 'fastCode', width: 80},
+			{title: '顺序号', field: 'displayOrder', align: 'center'},
+			{title: "状态", field: 'status',
+				formatter: function (value,row,index) {
+					var rowData = JSON.stringify(row);
+					var returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" onchange=testItemGroupMain.changeStatusEx(" + index + "," + rowData + ")/><i></i></div>" + _statusStrStop;
+					if (value == '1') {
+						returnStr = "<div class=\"status-switch\"><input type=\"checkbox\" name=\"status\" checked=\"checked\" onchange=testItemGroupMain.changeStatusEx(" + index + "," + rowData + ") /><i></i></div>" + _statusStrStop;
+					}
+					return _helpTip + returnStr;
+				}
+			},
+			{title: "操作", field: 'opt', width: 50, align: 'center',
+				formatter: function (value, row, index) {
+					var str = "";
+					var rowData = JSON.stringify(row);
+					str += "<a class='icon icon-edit' onclick=testItemGroupMain.editRowEx(" + rowData + ")></a>";
+					str += "<a class=\"icon icon-trash\" onclick=testItemGroupMain.deleteRowEx(" + index + "," + rowData + ")></a>";
+					return str;
+				}
+			}
+		]];
+
+		return _columns;
+
+	}
+
+	/***
+	 * 组合项目2
+	 * date:2016/03/11
+	 * author:chenshuxian
+	 */
+	var _getTestItemGroup2 = function(obj){
+
+		var _columns = [[
+			{field : "ck",checkbox : true,width : 30},
+			{title : "达安标准码",field : 'codeNo',flex : 1,width : 60},
+			{title : "项目名称",field : 'name',flex : 1,width : 60},
+			{title : "英文简称",field : 'enShortName',flex : 1,width : 60},
+			{title : "检验方法",field : 'testMethodName',flex : 1,width : 60},
+			{title : "医学专业组",field : 'disciplineName',flex : 1,width : 60},
+			{title : "默认标本类型",field : 'sampleTypeName',flex : 1,width : 60},
+			{title : "操作",field : 'opt',width : 60,align : 'center',
+				formatter : function(value, row,index) {
+					var str = "";
+					var rowData = JSON.stringify(row);
+					str += "<a class=\"icon icon-trash\" onclick=TestItemGroup.deleteRowEx(" + index + "," + rowData + ")></a>";
+					return str;
+				}
+			}
+		]];
+
+		return _columns;
+
+	}
+
 
 
 
@@ -555,8 +682,14 @@ ColCollect = (function($){
 			case "CtrLoinc" :
 				return _getLoinc(table);
 				break;
-			case "CtrInstrBoxs" :
-				return _getCIB(table);
+			case "TestItem" :
+				return _getTestItem(table);
+				break;
+			case "testItemGroupMain" :
+				return _getTestItemGroup(table);
+				break;
+			case "testItemGroupMain2" :
+				return _getTestItemGroup2(table);
 				break;
 			default:
 				return _getCtrTubeType(table);

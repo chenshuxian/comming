@@ -75,6 +75,8 @@
 <c:set var="box" value="box" />
 <%--区域机构管理--%>
 <c:set var="rmm" value="rmm" />
+<%--combindoption--%>
+<c:set var="tig" value="tig" />
 
 
 

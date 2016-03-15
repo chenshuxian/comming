@@ -1,8 +1,8 @@
 /**
  * 标本类型js
- * Created by chenshuxian on 2016/1/8.
+ * Created by chenshuxian
+ * data 2016/1/8.
  */
-
 var TubeTypes = (function($){
 
     /* START render basicModule */
@@ -11,19 +11,19 @@ var TubeTypes = (function($){
     var
         _preId = CB.PREID.TT,
         _tableList =  $("#" + _preId + "List"),
-        _hideCols = new Array("whonetCode"),	//要穩藏的欄位
-        _data = TubeTypes.searchObj(_preId),
-        _pageListUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesPageList",
-        _module = "TubeTypes",
-        _focusId = "editName",
-        _popArea = 480,
-        _delBatUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDeleteBatch",
-        _existUrl = ctx + "/basisDict/ctrTubeTypes/checkNameExisted",
-        _updateUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesEide",
-        _addUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesAdd",
-        _delUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDelete",
-        _changeStatusUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDisableOrEnable",
-        _InfoUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesInfo",
+        _hideCols = ["whonetCode"],	            //要穩藏的欄位
+        _data = TubeTypes.searchObj(_preId),    //取得初始grid时所需要的server 参数
+        _module = "TubeTypes",                  //模组名称，于grid 建立时使用
+        _focusId = "editName",                  //新增、修改页面打开时focus的对象id
+        _popArea = 480,                         //新增、修改页面开启时初始大小
+        _delBatUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDeleteBatch",           //批次删除的url
+        _existUrl = ctx + "/basisDict/ctrTubeTypes/checkNameExisted",                   //查询是否已存在资料url
+        _updateUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesEide",                  //修改url
+        _addUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesAdd",                      //新增url
+        _delUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDelete",                   //删除url
+        _changeStatusUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesDisableOrEnable", //改变状态的url
+        _InfoUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesInfo",                    //新增、修改、view 页面打开时所对映后台调用url
+        _pageListUrl = ctx + "/basisDict/ctrTubeTypes/ctrTubeTypesPageList",            //datagrid 取得资料的url
         /* START dataGrid 生成*/
         _dgParams = {
             url:_pageListUrl,
@@ -34,59 +34,60 @@ var TubeTypes = (function($){
             preId:_preId
         },
 
-        _gridObj = dataGridM.init(_dgParams),
+        _gridObj = dataGridM.init(_dgParams),                   //取得 datagrid 物件参数
         // render dataGrid
         _dataGrid = _tableList.datagrid(_gridObj);
+    //
+    ///* 状态搜索 */
+    //$("." + _preId + "-status-selector li").on("click", function () {
+    //    $("#" + _preId + "StatusSpan").html($(this).html());
+    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var statusVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Status").val(statusVal);
+    //
+    //    TubeTypes.searchGrid();
+    //});
 
-    /* 状态搜索 */
-    $("." + _preId + "-status-selector li").on("click", function () {
-        $("#" + _preId + "StatusSpan").html($(this).html());
-        $("." + _preId + "-status-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
+    ///* 排序 */
+    //$("." + _preId + "-sort-selector li").on("click", function () {
+    //    $("#" + _preId + "SortSpan").html($(this).html());
+    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var sortVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Sort").val(sortVal);
+    //
+    //    TubeTypes.searchGrid();
+    //});
 
-        var statusVal = $(this).attr("el-value");
-        $("#" + _preId + "Status").val(statusVal);
-
-        TubeTypes.searchGrid();
-    });
-
-    /* 排序 */
-    $("." + _preId + "-sort-selector li").on("click", function () {
-        $("#" + _preId + "SortSpan").html($(this).html());
-        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var sortVal = $(this).attr("el-value");
-        $("#" + _preId + "Sort").val(sortVal);
-
-        TubeTypes.searchGrid();
-    });
-
-    /* search Btn */
-    $("#" + _preId + "SearchBtn").on("click",function() {
-        TubeTypes.searchGrid();;
-    });
-
+    ///* search Btn */
+    //$("#" + _preId + "SearchBtn").on("click",function() {
+    //    TubeTypes.searchGrid();
+    //});
     /*Start add 相关参数设定  */
-    $("#" + _preId + "Add").on("click",function() {
-        TubeTypes.addPop();
-    });
-
-    // deleteBatch
-    $("#" + _preId + "DeleteBatch").on("click",function() {
-        TubeTypes.deleteBetch();
-    });
+    //$("#" + _preId + "Add").on("click",function() {
+    //    console.log("clieck");
+    //    //TubeTypes.addPop();
+    //});
+    //
+    //// deleteBatch
+    //$("#" + _preId + "DeleteBatch").on("click",function() {
+    //    TubeTypes.deleteBetch();
+    //});
 
 
     $.extend(TubeTypes,{
 
         preId:_preId,
+        module:_module,
         //设定pop弹出框的大小
         popArea: _popArea,
         focusId: _focusId,
@@ -170,9 +171,7 @@ var TubeTypes = (function($){
 
     });
 
-
    return TubeTypes;
-  
 
 }(jQuery));
 

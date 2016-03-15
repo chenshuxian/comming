@@ -59,7 +59,7 @@ var logQuery = {
 	        	var beginTime = $("#logQbeginTime").datetimebox('getValue'),
 		    	 	endTime = $("#logQendTime").datetimebox('getValue');
 		    	
-	        	if(validate.dateCompare(beginTime,endTime)){
+	        	if(BasicModule.dateCompare(beginTime,endTime)){
 	        		newcommonjs.dataGridSearch(logQuery.dataGrid, logQuery.searchObj());
 	        	}
 	        	
@@ -78,7 +78,6 @@ var logQuery = {
 	            var statusVal = $(this).attr("el-value");
 	    
 	            $("#logQStatus").val(statusVal);
-	      
 
 	            newcommonjs.dataGridSearch(logQuery.dataGrid, logQuery.searchObj());
 	        });
@@ -172,7 +171,6 @@ var logQuery = {
 	//初始化
 	$(function() {
 		logQuery.init();
-		//validate.getAuth("DateCompare");
 	});
 /*
 // 控制重复提交

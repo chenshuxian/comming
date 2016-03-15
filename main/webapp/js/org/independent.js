@@ -12,6 +12,7 @@ var Indenpent = (function($){
 
 	var
 		_preId = CB.PREID.IDL,
+		_module = "Indenpent",
 		_tableList =  $("#" + _preId + "List"),
 		_orgTypeId = $("#" + _preId + "orgTypeId").val(),
 		_exParams = {orgTypeId: _orgTypeId},
@@ -30,7 +31,7 @@ var Indenpent = (function($){
 		_dgParams = {
 			url:_pageListUrl,
 			data:_data,
-			module:"Indenpent",
+			module:_module,
 			hideCols:_hideCols,
 			tableList:_tableList,
 			preId:_preId
@@ -42,6 +43,7 @@ var Indenpent = (function($){
 
 	$.extend(Indenpent,{
 		preId: _preId,
+		module:_module,
 		tableList: _tableList,
 		dataGrid: _dataGrid,
 		addParams: Indenpent.getAddParams(_exParams),
@@ -49,50 +51,50 @@ var Indenpent = (function($){
 		orgTypeId:_orgTypeId
 	})
 
-	/* 状态搜索 */
-	$("." + _preId + "-status-selector li").on("click", function () {
-		$("#" + _preId + "StatusSpan").html($(this).html());
-		$("." + _preId + "-status-selector li.selected").removeClass("selected");
-		var flg = $(this).is('.selected');
-		$(this).addClass(function () {
-			return flg ? '' : 'selected';
-		})
-
-		var statusVal = $(this).attr("el-value");
-		$("#" + _preId + "Status").val(statusVal);
-
-		Indenpent.searchGrid();
-	});
-
-	/* 排序 */
-	$("." + _preId + "-sort-selector li").on("click", function () {
-		$("#" + _preId + "SortSpan").html($(this).html());
-		$("." + _preId + "-sort-selector li.selected").removeClass("selected");
-		var flg = $(this).is('.selected');
-		$(this).addClass(function () {
-			return flg ? '' : 'selected';
-		})
-
-		var sortVal = $(this).attr("el-value");
-		$("#" + _preId + "Sort").val(sortVal);
-
-		Indenpent.searchGrid();
-	});
-
-	/* search Btn */
-	$("#" + _preId + "SearchBtn").on("click",function() {
-		Indenpent.searchGrid();
-	});
+	///* 状态搜索 */
+	//$("." + _preId + "-status-selector li").on("click", function () {
+	//	$("#" + _preId + "StatusSpan").html($(this).html());
+	//	$("." + _preId + "-status-selector li.selected").removeClass("selected");
+	//	var flg = $(this).is('.selected');
+	//	$(this).addClass(function () {
+	//		return flg ? '' : 'selected';
+	//	})
+    //
+	//	var statusVal = $(this).attr("el-value");
+	//	$("#" + _preId + "Status").val(statusVal);
+    //
+	//	Indenpent.searchGrid();
+	//});
+    //
+	///* 排序 */
+	//$("." + _preId + "-sort-selector li").on("click", function () {
+	//	$("#" + _preId + "SortSpan").html($(this).html());
+	//	$("." + _preId + "-sort-selector li.selected").removeClass("selected");
+	//	var flg = $(this).is('.selected');
+	//	$(this).addClass(function () {
+	//		return flg ? '' : 'selected';
+	//	})
+    //
+	//	var sortVal = $(this).attr("el-value");
+	//	$("#" + _preId + "Sort").val(sortVal);
+    //
+	//	Indenpent.searchGrid();
+	//});
+    //
+	///* search Btn */
+	//$("#" + _preId + "SearchBtn").on("click",function() {
+	//	Indenpent.searchGrid();
+	//});
 
 	/*Start add 相关参数设定  */
-	$("#" + _preId + "Add").on("click",function() {
-		Indenpent.addPop();
-	});
-
-	// deleteBatch
-	$("#" + _preId + "DeleteBatch").on("click",function() {
-		Indenpent.deleteBetch();
-	});
+	//$("#" + _preId + "Add").on("click",function() {
+	//	Indenpent.addPop();
+	//});
+    //
+	//// deleteBatch
+	//$("#" + _preId + "DeleteBatch").on("click",function() {
+	//	Indenpent.deleteBetch();
+	//});
 
 	return Indenpent;
 

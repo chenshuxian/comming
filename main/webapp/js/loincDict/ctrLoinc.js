@@ -37,55 +37,56 @@ var CtrLoinc = (function($){
     // render dataGrid
         _dataGrid = _tableList.datagrid(_gridObj);
 
-    /* 状态搜索 */
-    $("." + _preId + "-status-selector li").on("click", function () {
-        $("#" + _preId + "StatusSpan").html($(this).html());
-        $("." + _preId + "-status-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var statusVal = $(this).attr("el-value");
-        $("#" + _preId + "Status").val(statusVal);
-
-        CtrLoinc.searchGrid();
-    });
-
-    /* 排序 */
-    $("." + _preId + "-sort-selector li").on("click", function () {
-        $("#" + _preId + "SortSpan").html($(this).html());
-        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var sortVal = $(this).attr("el-value");
-        $("#" + _preId + "Sort").val(sortVal);
-
-        CtrLoinc.searchGrid();
-    });
-
-    /* search Btn */
-    $("#" + _preId + "SearchBtn").on("click",function() {
-        CtrLoinc.searchGrid();;
-    });
+    ///* 状态搜索 */
+    //$("." + _preId + "-status-selector li").on("click", function () {
+    //    $("#" + _preId + "StatusSpan").html($(this).html());
+    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var statusVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Status").val(statusVal);
+    //
+    //    CtrLoinc.searchGrid();
+    //});
+    //
+    ///* 排序 */
+    //$("." + _preId + "-sort-selector li").on("click", function () {
+    //    $("#" + _preId + "SortSpan").html($(this).html());
+    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var sortVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Sort").val(sortVal);
+    //
+    //    CtrLoinc.searchGrid();
+    //});
+    //
+    ///* search Btn */
+    //$("#" + _preId + "SearchBtn").on("click",function() {
+    //    CtrLoinc.searchGrid();;
+    //});
 
     /*Start add 相关参数设定  */
-    $("#" + _preId + "Add").on("click",function() {
-        CtrLoinc.addPop();
-    });
-
-    // deleteBatch
-    $("#" + _preId + "DeleteBatch").on("click",function() {
-        CtrLoinc.deleteBetch();
-    });
+    //$("#" + _preId + "Add").on("click",function() {
+    //    CtrLoinc.addPop();
+    //});
+    //
+    //// deleteBatch
+    //$("#" + _preId + "DeleteBatch").on("click",function() {
+    //    CtrLoinc.deleteBetch();
+    //});
 
 
     $.extend(CtrLoinc,{
 
         preId:_preId,
+        module:_module,
         //设定pop弹出框的大小
         popArea: _popArea,
         focusId: _focusId,

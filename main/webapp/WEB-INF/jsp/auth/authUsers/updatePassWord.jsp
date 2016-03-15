@@ -49,6 +49,6 @@
 </style>
 <script>
 	$("#up_oldPassword").focus();
-	validate.updatePW();
+	BasicModule.updatePW();
 </script>
 <!--end-->

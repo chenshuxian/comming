@@ -1,7 +1,7 @@
 /**
  * 标本类型js
  * Created by chenshuxian on 2016/03/02
- *
+ * ModuleName 中心仪器信息
  */
 
 var Inst = (function($){
@@ -70,70 +70,71 @@ var Inst = (function($){
     // render dataGrid
         _dataGrid = _tableList.datagrid(_gridObj);
 
-    /* 状态搜索 */
-    $("." + _preId + "-status-selector li").on("click", function () {
-        $("#" + _preId + "StatusSpan").html($(this).html());
-        $("." + _preId + "-status-selector li.selected").removeClass("selected");
+    ///* 状态搜索 */
+    //$("." + _preId + "-status-selector li").on("click", function () {
+    //    $("#" + _preId + "StatusSpan").html($(this).html());
+    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var statusVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Status").val(statusVal);
+    //
+    //    Inst.searchGrid();
+    //});
+    //
+    ///* 排序 */
+    //$("." + _preId + "-sort-selector li").on("click", function () {
+    //    $("#" + _preId + "SortSpan").html($(this).html());
+    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var sortVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Sort").val(sortVal);
+    //
+    //    Inst.searchGrid();
+    //});
+
+    ///* search Btn */
+    //$("#" + _preId + "SearchBtn").on("click",function() {
+    //    Inst.searchGrid();;
+    //});
+
+    /* 前台通讯类 */
+    $("." + _preId + "-frontClass-selector").on("click", "li", function () {
+        $("#" + _preId + "frontClassSpan").html($(this).html());
+        $("." +_preId + "-frontClass-selector li.selected").removeClass("selected");
         var flg = $(this).is('.selected');
         $(this).addClass(function () {
             return flg ? '' : 'selected';
         })
 
         var statusVal = $(this).attr("el-value");
-        $("#" + _preId + "Status").val(statusVal);
+        $("#" + _preId + "frontClass").val(statusVal);
 
         Inst.searchGrid();
-    });
-
-    /* 前台通讯类 */
-        $("." + _preId + "-frontClass-selector").on("click", "li", function () {
-            $("#" + _preId + "frontClassSpan").html($(this).html());
-            $("." +_preId + "-frontClass-selector li.selected").removeClass("selected");
-            var flg = $(this).is('.selected');
-            $(this).addClass(function () {
-                return flg ? '' : 'selected';
-            })
-
-            var statusVal = $(this).attr("el-value");
-            $("#" + _preId + "frontClass").val(statusVal);
-
-           Inst.searchGrid();
-        });
-
-    /* 排序 */
-    $("." + _preId + "-sort-selector li").on("click", function () {
-        $("#" + _preId + "SortSpan").html($(this).html());
-        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var sortVal = $(this).attr("el-value");
-        $("#" + _preId + "Sort").val(sortVal);
-
-        Inst.searchGrid();
-    });
-
-    /* search Btn */
-    $("#" + _preId + "SearchBtn").on("click",function() {
-        Inst.searchGrid();;
     });
 
     /*Start add 相关参数设定  */
-    $("#" + _preId + "Add").on("click",function() {
-        Inst.addPop();
-    });
-
-    // deleteBatch
-    $("#" + _preId + "DeleteBatch").on("click",function() {
-        Inst.deleteBetch();
-    });
+    //$("#" + _preId + "Add").on("click",function() {
+    //    Inst.addPop();
+    //});
+    //
+    //// deleteBatch
+    //$("#" + _preId + "DeleteBatch").on("click",function() {
+    //    Inst.deleteBetch();
+    //});
 
 
     $.extend(Inst,{
 
         preId:_preId,
+        module:_module,
         //设定pop弹出框的大小
         popArea: _popArea,
         focusId: _focusId,
@@ -200,7 +201,7 @@ var Inst = (function($){
 
             var rowData = BasicModule.rowData;
             //console.log(Inst.rowData);
-            sampleTypeGrid = new TextCombo(_sampleTypeParam);
+            Inst.sampleTypeGrid = new TextCombo(_sampleTypeParam);
     		reportTemplateGrid = new TextCombo(_reportTemplateParam);
 
             $("#InfoForm").form("load", {
@@ -223,7 +224,7 @@ var Inst = (function($){
             newcommonjs.oldName = rowData.name;
             setTimeout(function() {
                 //alert(rowData.sampleTypeName);
-                sampleTypeGrid.setValue(rowData.sampleTypeSId, rowData.sampleTypeName);
+                Inst.sampleTypeGrid.setValue(rowData.sampleTypeSId, rowData.sampleTypeName);
                 reportTemplateGrid.setValue(rowData.reportTemplateSId, rowData.reportTemplateName);
             },500);
 
@@ -255,7 +256,7 @@ var Inst = (function($){
         },
 
         addCallBack: function() {
-            sampleTypeGrid = new TextCombo(_sampleTypeParam);
+            Inst.sampleTypeGrid = new TextCombo(_sampleTypeParam);
       		reportTemplateGrid = new TextCombo(_reportTemplateParam);
         },
 

@@ -80,7 +80,9 @@ var CB = ConstBox = (function(){
             //区域机构管理
             RMM: "rmm",
             //客户盒子登记
-            CIB: "cib"
+            CIB: "cib",
+            //组合项目
+            TIG: "tig"
         }
 
     };

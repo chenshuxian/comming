@@ -48,56 +48,56 @@ var CtrInstrBoxs = (function($){
     // render dataGrid
         _dataGrid = _tableList.datagrid(_gridObj);
 
-    /* 状态搜索 */
-    $("." + _preId + "-status-selector li").on("click", function () {
-        $("#" + _preId + "StatusSpan").html($(this).html());
-        $("." + _preId + "-status-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var statusVal = $(this).attr("el-value");
-        $("#" + _preId + "Status").val(statusVal);
-
-        CtrInstrBoxs.searchGrid();
-    });
-
-
-    /* 排序 */
-    $("." + _preId + "-sort-selector li").on("click", function () {
-        $("#" + _preId + "SortSpan").html($(this).html());
-        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var sortVal = $(this).attr("el-value");
-        $("#" + _preId + "Sort").val(sortVal);
-
-        CtrInstrBoxs.searchGrid();
-    });
-
-    /* search Btn */
-    $("#" + _preId + "SearchBtn").on("click",function() {
-        CtrInstrBoxs.searchGrid();
-    });
+    ///* 状态搜索 */
+    //$("." + _preId + "-status-selector li").on("click", function () {
+    //    $("#" + _preId + "StatusSpan").html($(this).html());
+    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var statusVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Status").val(statusVal);
+    //
+    //    CtrInstrBoxs.searchGrid();
+    //});
+    //
+    //
+    ///* 排序 */
+    //$("." + _preId + "-sort-selector li").on("click", function () {
+    //    $("#" + _preId + "SortSpan").html($(this).html());
+    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var sortVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Sort").val(sortVal);
+    //
+    //    CtrInstrBoxs.searchGrid();
+    //});
+    //
+    ///* search Btn */
+    //$("#" + _preId + "SearchBtn").on("click",function() {
+    //    CtrInstrBoxs.searchGrid();
+    //});
 
     /*Start add 相关参数设定  */
-    $("#" + _preId + "Add").on("click",function() {
-        //未选择机构
-        if(!CtrInstrBoxs.orgId){
-               showMessage("请选择机构");
-                return;
-        }
-        CtrInstrBoxs.addPop();
-    });
+    //$("#" + _preId + "Add").on("click",function() {
+    //    //未选择机构
+    //    if(!CtrInstrBoxs.orgId){
+    //           showMessage("请选择机构");
+    //            return;
+    //    }
+    //    CtrInstrBoxs.addPop();
+    //});
 
     // deleteBatch
-    $("#" + _preId + "DeleteBatch").on("click",function() {
-        CtrInstrBoxs.deleteBetch();
-    });
+    //$("#" + _preId + "DeleteBatch").on("click",function() {
+    //    CtrInstrBoxs.deleteBetch();
+    //});
 
     /* 选择机构 */
         $("#" + _preId + "SelectOrg").click(function () {
@@ -159,6 +159,7 @@ var CtrInstrBoxs = (function($){
     $.extend(CtrInstrBoxs,{
 
         preId:_preId,
+        module:_module,
         //设定pop弹出框的大小
         popArea: _popArea,
         focusId: _focusId,
@@ -282,7 +283,18 @@ var CtrInstrBoxs = (function($){
 }(jQuery));
 
 $(function(){
+    var _preId = CB.PREID.CIB;
     CtrInstrBoxs.init();
+
+    $("#" + _preId + "Add").unbind();
+    $("#" + _preId + "Add").on("click",function() {
+        //未选择机构
+        if(!CtrInstrBoxs.orgId){
+            showMessage("请选择机构");
+            return;
+        }
+        CtrInstrBoxs.addPop();
+    });
 });
 ///**
 // * Created by reach-pc on 2016/1/25.

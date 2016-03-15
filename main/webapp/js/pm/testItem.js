@@ -35,66 +35,60 @@ var TestItem = (function($){
     // render dataGrid
         _dataGrid = _tableList.datagrid(_gridObj);
 
-    /* 状态搜索 */
-    $("." + _preId + "-status-selector li").on("click", function () {
-        $("#" + _preId + "StatusSpan").html($(this).html());
-        $("." + _preId + "-status-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var statusVal = $(this).attr("el-value");
-        $("#" + _preId + "Status").val(statusVal);
-
-        TestItem.searchGrid();
-    });
-
-    /* 排序 */
-    $("." + _preId + "-sort-selector li").on("click", function () {
-        $("#" + _preId + "SortSpan").html($(this).html());
-        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var sortVal = $(this).attr("el-value");
-        $("#" + _preId + "Sort").val(sortVal);
-
-        TestItem.searchGrid();
-    });
-
-    /* search Btn */
-    $("#" + _preId + "SearchBtn").on("click",function() {
-        TestItem.searchGrid();;
-    });
+    ///* 状态搜索 */
+    //$("." + _preId + "-status-selector li").on("click", function () {
+    //    $("#" + _preId + "StatusSpan").html($(this).html());
+    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var statusVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Status").val(statusVal);
+    //
+    //    TestItem.searchGrid();
+    //});
+    //
+    ///* 排序 */
+    //$("." + _preId + "-sort-selector li").on("click", function () {
+    //    $("#" + _preId + "SortSpan").html($(this).html());
+    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var sortVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Sort").val(sortVal);
+    //
+    //    TestItem.searchGrid();
+    //});
+    //
+    ///* search Btn */
+    //$("#" + _preId + "SearchBtn").on("click",function() {
+    //    TestItem.searchGrid();;
+    //});
 
     /*Start add 相关参数设定  */
-    $("#" + _preId + "Add").on("click",function() {
-        var params = {
-            BCB: true
-        };
-        TestItem.addPop(params);
-    });
-
-    // deleteBatch
-    $("#" + _preId + "DeleteBatch").on("click",function() {
-
-        var
-            checkedItems = TestItem.dataGrid.datagrid("getChecked"),
-            ids = [],
-            params;
-
-        $.each(checkedItems,function(index,item){
-            ids.push(item.stringId);
-        });
-
-        params = {
-            data: {testItemid: ids.join(",")}
-        };
-        TestItem.deleteBetch(params);
-    });
+    //$("#" + _preId + "Add").on("click",function() {
+    //    var params = {
+    //        BCB: true
+    //    };
+    //    TestItem.addPop(params);
+    //});
+    //
+    //// deleteBatch
+    //$("#" + _preId + "DeleteBatch").on("click",function() {
+    //
+    //    var params,ids;
+    //    ids = testItemGroupMain.getIds();
+    //    params = {
+    //        data: {testItemid: ids.join(",")}
+    //    };
+    //    TestItem.deleteBetch(params);
+    //
+    //});
 
 
     /*download 相关参数设定  */
@@ -116,6 +110,7 @@ var TestItem = (function($){
     $.extend(TestItem,{
 
         preId:_preId,
+        module:_module,
         //设定pop弹出框的大小
         popArea: _popArea,
         focusId: _focusId,
@@ -368,7 +363,7 @@ var TestItem = (function($){
             params = {
               data: data
             };
-
+            console.log("du");
             this.editDictCode(params);
         },
 
@@ -445,45 +440,16 @@ var TestItem = (function($){
                 });
             }else{
                 //修改数据
-                BasicModule.update();
+               BasicModule.update();
 
-            }
+           }
 
         },
 
         editCallBack: function() {
 
             var rowData = BasicModule.rowData;
-            //console.log(TestItem.rowData);
-            //console.log(rowData);
-            //$("#InfoForm").form('load', {
-	        	//codeNo: rowData.codeNo,
-	        	//name: rowData.name,
-	        	//enName: rowData.enName,
-	        	//enShortName: rowData.enShortName,
-	        	//sexId: rowData.sexId,
-	        	////testMethodId: rowData.testMethodId,
-	         //   memo: rowData.memo,
-	         //   //disciplineId: rowData.disciplineId,
-	         //   sampleType: rowData.sampleType,
-	         //   refMethod:rowData.refMethod,
-	         //   unit:rowData.unit,
-	         //   //resultTypeId:rowData.resultTypeId,
-	         //   resultPrecision:rowData.resultPrecision,
-	         //   fastCode:rowData.fastCode,
-	         //   stdCode:rowData.stdCode,
-	         //   displayOrder:rowData.displayOrder,
-	         //   isFreeze:rowData.isFreeze,
-	         //   opType: 'edit'
-            //});
-            //$("#editName").focus();
-            //TestItem.testMethodGrid.setText(rowData.testMethodName);
-            //TestItem.disciplineGrid.setText(rowData.disciplineName);
-            //TestItem.sampleTypeGrid.setText(rowData.sampleTypeName);
-            //TestItem.unitGrid.setText(rowData.unit);
-            //TestItem.resultTypeGrid.setText(rowData.resultTypeName);
             $("#spanEditCodeNo").html(rowData.codeNo);
-
             newcommonjs.oldName = rowData.name;
 
         }
@@ -497,7 +463,29 @@ var TestItem = (function($){
 }(jQuery));
 
 $(function(){
+    var _preId = CB.PREID.TT;
     TestItem.init();
+
+    $("#" + _preId + "Add").unbind();
+    $("#" + _preId + "Add").on("click",function() {
+        var params = {
+            BCB: true
+        };
+        TestItem.addPop(params);
+    });
+
+    // deleteBatch
+    $("#" + _preId + "DeleteBatch").unbind();
+    $("#" + _preId + "DeleteBatch").on("click",function() {
+
+        var params,ids;
+        ids = testItemGroupMain.getIds();
+        params = {
+            data: {testItemid: ids.join(",")}
+        };
+        TestItem.deleteBetch(params);
+
+    });
 });
 
 //var testMethodGrid;//默认样本类型

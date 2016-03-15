@@ -10,6 +10,7 @@ var PathologyCategory = (function($){
 
     var
         _preId = CB.PREID.PC,
+        _module = "PathologyCategory",
         _tableList =  $("#" + _preId + "List"),
         _typeKey = $("#" + _preId + "TypeKey").val(),
         _exParams = {typeKey: _typeKey},
@@ -20,7 +21,7 @@ var PathologyCategory = (function($){
         _dgParams = {
             url:_pageListUrl,
             data:_data,
-            module:"PathologyCategory",
+            module:_module,
             hideCols:_hideCols,
             tableList:_tableList,
             preId:_preId
@@ -32,6 +33,7 @@ var PathologyCategory = (function($){
 
     $.extend(PathologyCategory,{
         preId: _preId,
+        module: _module,
         tableList: _tableList,
         dataGrid: _dataGrid,
         addParams: PathologyCategory.getAddParams(_exParams),
@@ -39,50 +41,50 @@ var PathologyCategory = (function($){
     })
 
 
-    /* 状态搜索 */
-    $("." + _preId + "-status-selector li").on("click", function () {
-        $("#" + _preId + "StatusSpan").html($(this).html());
-        $("." + _preId + "-status-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
+    ///* 状态搜索 */
+    //$("." + _preId + "-status-selector li").on("click", function () {
+    //    $("#" + _preId + "StatusSpan").html($(this).html());
+    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var statusVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Status").val(statusVal);
+    //
+    //    PathologyCategory.searchGrid();
+    //});
 
-        var statusVal = $(this).attr("el-value");
-        $("#" + _preId + "Status").val(statusVal);
-
-        PathologyCategory.searchGrid();
-    });
-
-    /* 排序 */
-    $("." + _preId + "-sort-selector li").on("click", function () {
-        $("#" + _preId + "SortSpan").html($(this).html());
-        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var sortVal = $(this).attr("el-value");
-        $("#" + _preId + "Sort").val(sortVal);
-
-        PathologyCategory.searchGrid();
-    });
-
-    /* search Btn */
-    $("#" + _preId + "SearchBtn").on("click",function() {
-        PathologyCategory.searchGrid();
-    });
+    ///* 排序 */
+    //$("." + _preId + "-sort-selector li").on("click", function () {
+    //    $("#" + _preId + "SortSpan").html($(this).html());
+    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var sortVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Sort").val(sortVal);
+    //
+    //    PathologyCategory.searchGrid();
+    //});
+    //
+    ///* search Btn */
+    //$("#" + _preId + "SearchBtn").on("click",function() {
+    //    PathologyCategory.searchGrid();
+    //});
 
     /*Start add 相关参数设定  */
-    $("#" + _preId + "Add").on("click",function() {
-        PathologyCategory.addPop();
-    });
-
-    // deleteBatch
-    $("#" + _preId + "DeleteBatch").on("click",function() {
-        PathologyCategory.deleteBetch();
-    });
+    //$("#" + _preId + "Add").on("click",function() {
+    //    PathologyCategory.addPop();
+    //});
+    //
+    //// deleteBatch
+    //$("#" + _preId + "DeleteBatch").on("click",function() {
+    //    PathologyCategory.deleteBetch();
+    //});
 
     return PathologyCategory;
 

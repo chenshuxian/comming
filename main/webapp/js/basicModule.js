@@ -3,11 +3,14 @@
  *@ClassName: basicModule.js
  * @Description: TODO(共用模块-JS)
  * @date 2016年01月27日
- * @author 陈书贤 
+ * @author 陈书贤
+ * @updgradeDate 2016/03/10
  ***/
 var BasicModule;
 
 BasicModule = (function($){
+
+		//BM = Object.create(BasicModule);
 
 		var
 			BM = BasicModule = {},
@@ -87,7 +90,7 @@ BasicModule = (function($){
 							type: METHOD,
 							data: data,
 							success: function (data) {
-								data = CB.DELSUCC;
+								//data = CB.DELSUCC;
 								resolutionData(data);
 								dataGrid.datagrid('reload');
 
@@ -288,8 +291,10 @@ BasicModule = (function($){
 					//BCB 新增和編輯頁面submit驗證成功後所呼叫的function
 					//一般是呼叫editDictCode
 					if(BCB){
-						if(BCB == "resultDescEdit")
-							ResultType.resultDescEdit();
+						//if(BCB == "resultDescEdit")
+							//ResultType.resultDescEdit();
+						//else
+							obj.dataUpgrade();
 
 					}else{
 						obj.editDictCode();
@@ -320,11 +325,11 @@ BasicModule = (function($){
 					beforeCB = params.BCB,
 					obj = this;
 
-				console.log("Dialog:"+params.url);
+				//console.log("Dialog:"+params.url);
 
 				$("#"+POPDIV).load(url, data, function () {
 					dialog(POPDIV, {width: dialogWidth}, callbackFun);
-					validate.validateBox();
+					obj.validateBox();
 					_beforeSubmit(obj,beforeCB);
 					$("#"+focusId).focus();
 				});
@@ -348,6 +353,17 @@ BasicModule = (function($){
 
 				return obj;
 
+			},
+
+			_defaultDialogParams = function(){
+				var obj = {
+					url: this.InfoUrl,
+					focusId: this.focusId,
+					callback: this.addCallBack,
+					popArea: this.popArea,
+					BCB:null
+				};
+				return obj;
 			};
 
 
@@ -358,6 +374,7 @@ BasicModule = (function($){
 
 		dataGrid: {},
 		preId: null,
+		module:null,
 		popArea: 480,
 		//url: null,
 		focusId: null,
@@ -404,24 +421,72 @@ BasicModule = (function($){
 
 		init: function() {
 
-			newcommonjs.pageInit(this.preId);
-			var tableList = this.tableList;
+			var tableList = this.tableList,
+				obj = this,
+				_preId = this.preId;
+
+			newcommonjs.pageInit(_preId);
 			$(window).on('resize', function () {
 				newcommonjs.tableAuto(tableList);
 			});
 
+			/* 状态搜索 */
+			$("." + _preId + "-status-selector li").on("click", function () {
+				$("#" + _preId + "StatusSpan").html($(this).html());
+				$("." + _preId + "-status-selector li.selected").removeClass("selected");
+				var flg = $(this).is('.selected');
+				$(this).addClass(function () {
+					return flg ? '' : 'selected';
+				})
+
+				var statusVal = $(this).attr("el-value");
+				$("#" + _preId + "Status").val(statusVal);
+
+				obj.searchGrid();
+			});
+
+			/* 排序 */
+			$("." + _preId + "-sort-selector li").on("click", function () {
+				$("#" + _preId + "SortSpan").html($(this).html());
+				$("." + _preId + "-sort-selector li.selected").removeClass("selected");
+				var flg = $(this).is('.selected');
+				$(this).addClass(function () {
+					return flg ? '' : 'selected';
+				})
+
+				var sortVal = $(this).attr("el-value");
+				$("#" + _preId + "Sort").val(sortVal);
+
+				obj.searchGrid();
+			});
+
+			/* search Btn */
+			$("#" + _preId + "SearchBtn").on("click",function() {
+				obj.searchGrid();;
+			});
+
+
+			$("#" + _preId + "Add").on("click", function () {
+				obj.addPop();
+			});
+
+			// deleteBatch
+			$("#" + _preId + "DeleteBatch").on("click",function() {
+				obj.deleteBetch();
+			});
+
 		},
 
-		defaultDialogParams: function(){
-			var obj = {
-				url: this.InfoUrl,
-				focusId: this.focusId,
-				callback: this.addCallBack,
-				popArea: this.popArea,
-				BCB:null
-			};
-			return obj;
-		},
+		//defaultDialogParams: function(){
+		//	var obj = {
+		//		url: this.InfoUrl,
+		//		focusId: this.focusId,
+		//		callback: this.addCallBack,
+		//		popArea: this.popArea,
+		//		BCB:null
+		//	};
+		//	return obj;
+		//},
 
 		// Pop Block Start
 
@@ -430,12 +495,13 @@ BasicModule = (function($){
 
 			// update defaultDialogParams
 			var
-				params = this.defaultDialogParams(),
+				params = _defaultDialogParams.call(this),
 				DDP = this.getNewParams(params,newParams);
 
 			if(!DDP.data)
 				DDP.data = this.addParams;
 
+			//设定当前事件状态
 			this.currentEvent = "add";
 			_Dialog.call(this,DDP);
 
@@ -447,7 +513,7 @@ BasicModule = (function($){
 			//var url = this.InfoUrl;
 			var
 				editParams,editStatus,DDP,
-				params = this.defaultDialogParams();
+				params = _defaultDialogParams.call(this);
 				params.callback = this.editCallBack;
 				DDP = this.getNewParams(params,newParams);
 
@@ -457,7 +523,8 @@ BasicModule = (function($){
 			};
 
 			editParams = _getType.call(this,editParams,rowData);
-			DDP.data = editParams;
+			if(!DDP.data)
+				DDP.data = editParams;
 			//如果是用get的方法則將data設為null
 			//if(DDP.isGet){
 			//	DDP.data = null;
@@ -471,7 +538,7 @@ BasicModule = (function($){
 			}
 
 			BM.rowData = rowData;
-
+			this.currentEvent = "edit";
 			_Dialog.call(this,DDP);
 			//_newshowDictCodeEditDialog.call(this,params);
 
@@ -481,7 +548,7 @@ BasicModule = (function($){
 		showDialog: function(rowData,newParams) {
 
 			var
-				params = this.defaultDialogParams(),
+				params = _defaultDialogParams.call(this),
 				newParams = {callback:this.showCallBack},
 				DDP =  this.getNewParams(params,newParams),
 
@@ -492,18 +559,18 @@ BasicModule = (function($){
 
 			showParams = _getType.call(this,showParams,rowData);
 
-			DDP.data = showParams;
-
+			if(!DDP.data)
+				DDP.data = showParams;
 
 			BM.rowData = rowData;
-
+			this.currentEvent = "view";
 			_Dialog.call(this,DDP);
 
 		},
 
 		CommonPop: function(newParams){
 			var
-				params = this.defaultDialogParams(),
+				params = _defaultDialogParams.call(this),
 				DDP =  this.getNewParams(params,newParams);
 
 			_Dialog.call(this,DDP);
@@ -561,6 +628,7 @@ BasicModule = (function($){
 			params = this.getNewParams(params,newParams);
 
 			_changeStatus(params);
+
 		},
 
 		// Data Operation Block End
@@ -590,6 +658,7 @@ BasicModule = (function($){
 			//for add or update success callback reload params
 			_addNewReload = $.extend({},_addreload,this.exParams);
 			_updateNewReload = $.extend({},_updatereload,this.exParams);
+			//console.log(data);
 
 			if(newParams) {
 
@@ -601,8 +670,6 @@ BasicModule = (function($){
 
 			}
 
-
-
 			if(opType == "add"){
 				params.callback = this.addSuccess;
 			}else{
@@ -611,6 +678,8 @@ BasicModule = (function($){
 
 			//if there is newParams then update oldParams
 			params = this.getNewParams(params,newParams);
+			//console.log(data);
+
 			_dataControl(params);
 
 
@@ -718,6 +787,7 @@ BasicModule = (function($){
 			////write from everyobject
 
 		},
+		dataUpgrade: function() { console.log(this.module + "没有dataUpgrade"); },
 
 		// Ajax Callback Block End
 
@@ -745,6 +815,19 @@ BasicModule = (function($){
 
 			 return $.extend({},old,newParams);
 
+		},
+
+		/* 取得checkbox選中的id */
+		getIds: function(){
+			var
+				checkedItems = this.dataGrid.datagrid("getChecked"),
+				ids = [];
+
+			$.each(checkedItems,function(index,item){
+				ids.push(item.stringId);
+			});
+
+			return ids;
 		},
 
 		submit: function() {

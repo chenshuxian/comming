@@ -5,11 +5,12 @@
  */  
 var validate;
 
-validate = (function($){
+validate = (function($,BM){
 		
-	var validate = {};
+	//var validate = {};
 	//var _init = function(){
-		
+
+	//验证清单建立
 	$.extend($.fn.validatebox.defaults.rules,{
 		symbol:{
 			validator: function(value){
@@ -69,8 +70,6 @@ validate = (function($){
 	
 	});
 
-		
-	//};
 	
 	var _default = function () {
 		$("input [type='text']").validatebox({
@@ -78,7 +77,7 @@ validate = (function($){
     	});
 	};
 	
-	
+	//日期格式转换
 	var _DateToUnix = function(string) {
 		
         var f = string.split(' ', 2);
@@ -96,7 +95,7 @@ validate = (function($){
     };
 
 	
-    $.extend(validate,{
+    $.extend(BM,{
     	
     	dateCompare : function(startdate,enddate) {
     		
@@ -244,9 +243,10 @@ validate = (function($){
     	
     });
 
-	return validate;
-	
-}(jQuery));
+	return BM;
+
+
+}(jQuery,BasicModule));
 
 //$(function(){
 //	validate.init();

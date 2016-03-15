@@ -10,6 +10,7 @@ var SpecimenStatus = (function($){
 
     var
         _preId = CB.PREID.SS,
+        _module = "SpecimenStatus",
         _tableList =  $("#" + _preId + "List"),
         _typeKey = $("#" + _preId + "TypeKey").val(),
         _exParams = {typeKey: _typeKey},
@@ -20,7 +21,7 @@ var SpecimenStatus = (function($){
         _dgParams = {
             url:_pageListUrl,
             data:_data,
-            module:"SpecimenStatus",
+            module:_module,
             hideCols:_hideCols,
             tableList:_tableList,
             preId:_preId
@@ -32,56 +33,57 @@ var SpecimenStatus = (function($){
 
     $.extend(SpecimenStatus,{
         preId: _preId,
+        module: _module,
         tableList: _tableList,
         dataGrid: _dataGrid,
         addParams: SpecimenStatus.getAddParams(_exParams),
-        exParams:_exParams
+        exParams: _exParams
     })
 
-    /* 状态搜索 */
-    $("." + _preId + "-status-selector li").on("click", function () {
-        $("#" + _preId + "StatusSpan").html($(this).html());
-        $("." + _preId + "-status-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var statusVal = $(this).attr("el-value");
-        $("#" + _preId + "Status").val(statusVal);
-
-        SpecimenStatus.searchGrid();
-    });
-
-    /* 排序 */
-    $("." + _preId + "-sort-selector li").on("click", function () {
-        $("#" + _preId + "SortSpan").html($(this).html());
-        $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-        var flg = $(this).is('.selected');
-        $(this).addClass(function () {
-            return flg ? '' : 'selected';
-        })
-
-        var sortVal = $(this).attr("el-value");
-        $("#" + _preId + "Sort").val(sortVal);
-
-        SpecimenStatus.searchGrid();
-    });
-
-    /* search Btn */
-    $("#" + _preId + "SearchBtn").on("click",function() {
-        SpecimenStatus.searchGrid();
-    });
+    ///* 状态搜索 */
+    //$("." + _preId + "-status-selector li").on("click", function () {
+    //    $("#" + _preId + "StatusSpan").html($(this).html());
+    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var statusVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Status").val(statusVal);
+    //
+    //    SpecimenStatus.searchGrid();
+    //});
+    //
+    ///* 排序 */
+    //$("." + _preId + "-sort-selector li").on("click", function () {
+    //    $("#" + _preId + "SortSpan").html($(this).html());
+    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
+    //    var flg = $(this).is('.selected');
+    //    $(this).addClass(function () {
+    //        return flg ? '' : 'selected';
+    //    })
+    //
+    //    var sortVal = $(this).attr("el-value");
+    //    $("#" + _preId + "Sort").val(sortVal);
+    //
+    //    SpecimenStatus.searchGrid();
+    //});
+    //
+    ///* search Btn */
+    //$("#" + _preId + "SearchBtn").on("click",function() {
+    //    SpecimenStatus.searchGrid();
+    //});
 
     /*Start add 相关参数设定  */
-    $("#" + _preId + "Add").on("click",function() {
-        SpecimenStatus.addPop();
-    });
-
-    // deleteBatch
-    $("#" + _preId + "DeleteBatch").on("click",function() {
-        SpecimenStatus.deleteBetch();
-    });
+    //$("#" + _preId + "Add").on("click",function() {
+    //    SpecimenStatus.addPop();
+    //});
+    //
+    //// deleteBatch
+    //$("#" + _preId + "DeleteBatch").on("click",function() {
+    //    SpecimenStatus.deleteBetch();
+    //});
 
     return SpecimenStatus;
 

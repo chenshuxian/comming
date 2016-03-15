@@ -208,7 +208,7 @@ var AuthUsers = {
                 });
                 
                 $("#editUserNo").focus();
-                validate.getAuth('AuthUsers');
+                BasicModule.getAuth('AuthUsers');
             });
         });
     },
