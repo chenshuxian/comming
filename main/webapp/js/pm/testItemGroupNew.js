@@ -37,12 +37,8 @@ var testItemGroupMain = (function($){
         _optLeftUrl = ctx + '/pm/testItemGroup/containList',
         _optRightUrl = ctx + '/pm/testItemGroup/notContainList',
 
-        _groupProjectDescription = $('#groupProjectDescription'),
-        _addCheckProjectLeft = $('#addCheckProjectLeft'),
-        _addCheckProjectRight = $('#addCheckProjectRight'),
-        _addCheckProjectBtn = $('#addCheckProjectBtn'),
         _initHeight = ($(window).height() < 810) ? 240 : 300,
-        _initPopHeight = ($(window).height() < 700) ? 400 : 400,
+
 
     /* START dataGrid 生成*/
 
@@ -69,13 +65,14 @@ var testItemGroupMain = (function($){
                 if (data.total == 0) {
                     testItemGroupMain.dataGrid.datagrid('loadData', {total: 0, rows: []});//清空下方DateGrid
                 } else {
-                    testItemGroupMain.typeId = rows[0].stringId;
-                    _loadDataGrid2(testItemGroupMain.typeId);
+                    testItemGroupMain.parentId = rows[0].stringId;
+                    BasicModule.parentStatus = rows[0].status;
+                    _loadDataGrid2(testItemGroupMain.parentId);
                 }
 
             },
             onClickRow: function(index, row) {
-                // 刷新结果描述表
+                // 载入第二支表
                 testItemGroupMain.reloadDG2(row);
 
             },
@@ -127,9 +124,71 @@ var testItemGroupMain = (function($){
                 },
             // render dataGrid
                 _gridObj2 = testItemGroupMain.getNewParams(_gridObj2,_upgradeObj2);//extend({},_gridObj2,_upgradeObj2);
-            console.log("dg2"+_gridObj2);
+            //console.log("dg2"+_gridObj2);
             testItemGroupMain.dataGrid2 = _tableList2.datagrid(_gridObj2);
 
+        },
+
+        _columns = function() {
+            var columns = [[
+                {field: "ck",checkbox: true,width: 30},
+                {title: "达安标准码", field: 'codeNo', width: 50},
+                {title: "项目名称", field: 'name', flex: 1, width: 50},
+                {title: "英文简称", field: 'enName', width: 50},
+                {title: "检验方法", field: 'testMethodName', width: 50},
+                {title: "项目性别", field: 'sexId', width: 50, hidden:true,
+                    formatter : function(value) {
+                        var returnStr = '不限';
+                        if (value == '1') {
+                            returnStr = '男';
+                        }
+                        if (value == '2') {
+                            returnStr = '女';
+                        }
+                        return returnStr;
+                    }
+                }
+            ]];
+
+          return columns;
+        },
+
+        //第二个grid 中新增页面的左datagrid
+        _loadContainList = function() {
+
+            testItemGroupMain.leftDG =   $("#addCheckProjectLeft").datagrid({
+                url: _optLeftUrl,
+                method: CB.METHOD,
+                queryParams: {testItemId: testItemGroupMain.parentId},
+                height: _initHeight,
+                fitColumns: true,
+                striped: true,
+                checkOnSelect: false,
+                fit: false,
+                autoRowHeight: false,
+                pagination: false,
+                columns: _columns(),
+                onLoadSuccess: function (data) {
+                    $("#containSize").html(data.total);
+                }
+            });
+        },
+
+        //第二个grid 中新增页面的右datagrid
+        _loadNoContainList = function() {
+
+          testItemGroupMain.rightDG = $("#addCheckProjectRight").datagrid({
+                url: _optRightUrl,
+                method: CB.METHOD,
+                queryParams: {testitemId: testItemGroupMain.parentId, searchGroupStr:null},
+                height: _initHeight,
+                fitColumns: true,
+                striped: true,
+                fit: false,
+                autoRowHeight: false,
+                pagination: false,
+                columns: _columns()
+            });
         };
 
     ///* 状态搜索 */
@@ -186,12 +245,24 @@ var testItemGroupMain = (function($){
     //});
 
     // delete desc batch
-    $("#" + _preId + "DeleteResultDescBatch").click(function () {
+    $("#" + _preId + "DeleteBatch2").click(function () {
 
-        var params = {
-            dataGrid : testItemGroupMain.dataGrid2,
-            url: testItemGroupMain.delBatUrl2
-        };
+        if (testItemGroupMain.parentStatus == 1) {
+				showMessage("该单项所属的组合是启用状态，不允许删除!");
+				return false;
+        }
+
+        var
+            dgObj= testItemGroupMain.dataGrid2,
+            ids = testItemGroupMain.getIds(dgObj),
+            params = {
+                dataGrid : dgObj,
+                url: testItemGroupMain.delBatUrl2,
+                data:{
+                    testItemid:ids.join(","),
+                    groupItemid:testItemGroupMain.parentId
+                }
+            };
 
         testItemGroupMain.deleteBetch(params);
 
@@ -200,26 +271,25 @@ var testItemGroupMain = (function($){
     /!* 項目列表新增 *!/
     $("#" + _preId + "Add2").click(function () {
 
-        if (RegionalManagement.parentStatus == true) {
-            showMessage("当前选中机构已启用，不允许关联其他机构！");
-            return;
-        }
-        RegionalManagement.currentEvent = "addRegional";
+        //if (RegionalManagement.parentStatus == true) {
+        //    showMessage("当前选中机构已启用，不允许关联其他机构！");
+        //    return;
+        //}
+        //RegionalManagement.currentEvent = "addRegional";
 
         var
             params = {
                 url: _InfoUrl2,
-                data: {parentId: RegionalManagement.parentId},
+                data: {testItemId: testItemGroupMain.parentId},
                 callback: function(){
-                    RegionalManagement.addTestItemIds = [];
-                    RegionalManagement.delTestItemIds = [];
-                    RegionalManagement.loadContainList();
-                    RegionalManagement.loadNoContainList();
-                    RegionalManagement.initTree();
-                }
+                    _loadContainList();
+                    _loadNoContainList();
+                },
+                popArea: 810,
+                focusId: "instrumentSearch"
             };
 
-        RegionalManagement.addPop(params);
+        testItemGroupMain.addPop(params);
 
     });
 
@@ -238,7 +308,7 @@ var testItemGroupMain = (function($){
 
         preId:_preId,
         module:_module,
-        typeId: null,
+        parentId: null,
         //设定pop弹出框的大小
         popArea: 580,
         descSort: 0,
@@ -265,6 +335,10 @@ var testItemGroupMain = (function($){
         pageListUrl2: _pageListUrl2,
         /*END url 定義*/
         dataGrid:_dataGrid,
+        leftDG: null,
+        rightDG: null,
+        addTestItemIds:[],
+        delTestItemIds:[],
 
         //默认标本类型Grid
         sampleTypeParam: {					//下拉Grid参数,所有参数均为必填
@@ -347,86 +421,6 @@ var testItemGroupMain = (function($){
             return true;
         },
 
-        reloadDG2: function(row) {
-
-            this.typeId = row.stringId;
-            testItemGroupMain.dataGrid2.datagrid('reload', {testItemId: row.stringId});
-
-        },
-
-
-        editResultDesc: function (rowData) {
-
-            var url = _InfoUrl2,
-                callback = function(){
-
-                    $("#InfoForm").form("load", {
-                        resultValue: rowData.resultValue,
-                        displayOrder: rowData.displayOrder,
-                        id: rowData.stringId,
-                        fastCode: rowData.fastCode,
-                        opType: 'edit',
-                        typeId: testItemGroupMain.typeId
-                    });
-                    testItemGroupMain.oldResultValue = rowData.resultValue;
-
-                },
-                params = {
-                    url: url,
-                    callback: callback
-                };
-
-            this.editRow(rowData,params);
-
-        },
-
-        deleteResultDesc: function (index, rowData) {
-
-            var
-                params = {
-                    url: this.delUrl2,
-                    dataGrid: this.dataGrid2
-                };
-
-            this.deleteRow(index,rowData,params);
-        },
-
-        editRowEx: function(rowData) {
-
-            var params = {
-                BCB: true
-            };
-            this.editRow(rowData,params);
-        },
-
-        deleteRowEx: function(index,rowData) {
-
-            var params = {
-                data:{testItemid: rowData.stringId}
-            };
-
-            this.deleteRow(index,rowData,params);
-        },
-
-        //修改新增和修改时传送出的data资料
-        dataUpgrade: function(){
-
-            var params,data;
-            data = $("#InfoForm").serialize();
-            if($("#isIndividualStat").prop("checked")){
-                data +="&isIndividualStat=1";
-            }else{
-                data +="&isIndividualStat=0";
-            }
-            data += "&sampleTypeName=" + testItemGroupMain.sampleTypeGrid.getText();
-
-            params = {
-                data: data
-            };
-
-            this.editDictCode(params);
-        },
-
         searchObj: function () {
             return {
                 searchStr: $.trim($("#" + this.preId + "SearchStr").val()),
@@ -498,6 +492,113 @@ var testItemGroupMain = (function($){
                 $("#isIndividualStat").attr("checked", 'true');
             }
 
+        },
+
+        reloadDG2: function(row) {
+
+            this.parentId = row.stringId;
+            BasicModule.parentStatus = row.status;
+            testItemGroupMain.dataGrid2.datagrid('reload', {testItemId: row.stringId});
+
+        },
+
+
+        //editResultDesc: function (rowData) {
+        //
+        //    var url = _InfoUrl2,
+        //        callback = function(){
+        //
+        //            $("#InfoForm").form("load", {
+        //                resultValue: rowData.resultValue,
+        //                displayOrder: rowData.displayOrder,
+        //                id: rowData.stringId,
+        //                fastCode: rowData.fastCode,
+        //                opType: 'edit',
+        //                typeId: testItemGroupMain.typeId
+        //            });
+        //            testItemGroupMain.oldResultValue = rowData.resultValue;
+        //
+        //        },
+        //        params = {
+        //            url: url,
+        //            callback: callback
+        //        };
+        //
+        //    this.editRow(rowData,params);
+        //
+        //},
+
+        editRowEx: function(rowData) {
+
+            var params = {
+                BCB: true
+            };
+            this.editRow(rowData,params);
+        },
+
+        changeStatusEx: function(index,rowData) {
+
+            var type,params;
+            type = rowData.status.toString();
+
+            if(type = "1")
+                type = "0";
+            else
+                type = "1";
+
+            params = {
+                data:
+                {
+                    testItemid: rowData.stringId,
+                    type: type
+                }
+            };
+
+            this.changeStatus(index,rowData,params)
+
+
+        },
+
+        deleteRowEx: function(index,rowData) {
+
+            var params = {
+                data:{testItemid: rowData.stringId}
+            };
+
+            this.deleteRow(index,rowData,params);
+        },
+
+        //第二个grid中的删除钮
+        deleteRowEx2: function(index,rowData) {
+
+            var params = {
+                data:{
+                    testItemid: rowData.stringId,
+                    groupItemid:this.parentId
+                },
+                url:this.delUrl2,
+                dataGrid:this.dataGrid2
+            };
+
+            this.deleteRow(index,rowData,params);
+        },
+        //修改新增和修改时传送出的data资料
+        dataUpgrade: function(){
+
+            var params,data;
+            data = $("#InfoForm").serialize();
+            if($("#isIndividualStat").prop("checked")){
+                data +="&isIndividualStat=1";
+            }else{
+                data +="&isIndividualStat=0";
+            }
+            data += "&sampleTypeName=" + testItemGroupMain.sampleTypeGrid.getText();
+
+            params = {
+                data: data
+            };
+
+            this.editDictCode(params);
         }
 
         /*callback function area end*/

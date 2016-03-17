@@ -2,17 +2,12 @@
  * 2016/1/12
  * easyui dataGrid Module
  * 作者: chenshuxian
- * 回传一个datagrid obj
  */
 
 var dataGridM;
 
 dataGridM = (function($){
-	
-	//var POST = "POST";
-	//var initPopHeight = ($(window).height() < 700) ? 400 : 400;
-	
-	
+
 	/*取得初始化
 	 *return dataGrid init Obj
 	 *_url:網址
@@ -73,7 +68,7 @@ dataGridM = (function($){
 	            pageNumber: 1,
 	            pageSize: 10
 		 };
-		 
+
 
 		 //复写 datagrid view 方法
 		 gridObj.view = $.extend({}, $.fn.datagrid.defaults.view, {onAfterRender: onAfterRender});
@@ -93,10 +88,16 @@ dataGridM = (function($){
 		 
 		 return gridObj;
 	}
+
+	dataGridObj = {
+		init:_initObj,
+		endEditing: function() {
+			if(editIndex == undefined){
+				return true;
+			}
+		}
+	};
 	
-	
-	return{
-		init:_initObj
-	}
+	return dataGridObj;
 	
 }(jQuery));

@@ -61,29 +61,8 @@
     $(function () {
         /*左右数据切换*/
 
-        $("#leftShiftBtn").on('click', function () {
-            var rightProjectData = $("#addCheckProjectRight").datagrid('getSelections');
-            makeToArray(rightProjectData).forEach(function (element, index) {
-                var rowIndex = $("#addCheckProjectRight").datagrid("getRowIndex", element);
-                $("#addCheckProjectRight").datagrid('deleteRow', rowIndex);
-                $("#addCheckProjectLeft").datagrid('appendRow', element);
-                RegionalManagement.addTestItemIds.push(element.stringId);
-            });
-            var rows = $("#addCheckProjectLeft").datagrid("getRows");
-            $("#containSize").html(rows.length);
-
-        });
-        $("#rightShiftBtn").on('click', function () {
-            var leftProjectData = $("#addCheckProjectLeft").datagrid('getSelections');
-            makeToArray(leftProjectData).forEach(function (element, index) {
-                var rowIndex = $("#addCheckProjectLeft").datagrid("getRowIndex", element);
-                $("#addCheckProjectLeft").datagrid('deleteRow', rowIndex);
-                $("#addCheckProjectRight").datagrid('appendRow', element);
-                RegionalManagement.delTestItemIds.push(element.stringId);
-            });
-            var rows = $("#addCheckProjectLeft").datagrid("getRows");
-            $("#containSize").html(rows.length);
-        });
+        $("#leftShiftBtn").on('click',BasicModule.leftShiftBtn);
+        $("#rightShiftBtn").on('click',BasicModule.rightShiftBtn);
 
         $("#relatedSearchBtn").on('click', function () {
             $("#addCheckProjectRight").datagrid("reload", {

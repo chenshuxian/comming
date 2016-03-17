@@ -66,7 +66,7 @@ var RegionalManagement = (function($){
 			} else {
 				//ResultType.resultTypeDataGrid.closest('div.datagrid-wrap').find('div.datagrid-pager').show();
 				RegionalManagement.parentId = rows[0].stringId;
-				RegionalManagement.parentStatus = rows[0].status;
+				BasicModule.parentStatus = rows[0].status;
 				_loadRelatedDataGrid(RegionalManagement.parentId);
 			}
 
@@ -131,7 +131,7 @@ var RegionalManagement = (function($){
 	/!* 关联机构新增 *!/
 	$("#" + _preId + "AddRelated").click(function () {
 
-		if (RegionalManagement.parentStatus == true) {
+		if (RegionalManagement.parentStatus == 1) {
 			showMessage("当前选中机构已启用，不允许关联其他机构！");
 			return;
 		}
@@ -243,7 +243,7 @@ var RegionalManagement = (function($){
 			exParams:_exParams,
 			orgTypeId:_orgTypeId,
 			parentId: undefined,
-			parentStatus: undefined,
+			//parentStatus: undefined,
 			focusId: _focusId,
 			/*START url 定義*/
 			delBatUrl: _delBatUrl,
@@ -273,7 +273,7 @@ var RegionalManagement = (function($){
 						data: data
 					};
 
-				if(RegionalManagement.parentStatus == true) {
+				if(RegionalManagement.parentStatus == 1) {
 					showMessage("当前选中机构已启用，不允许删除!");
 					return;
 				}
@@ -425,7 +425,7 @@ var RegionalManagement = (function($){
 			reloadRelateList: function (row) {
 
 				this.parentId = row.stringId;
-				this.parentStatus = row.status;
+				BasicModule.parentStatus = row.status;
 				RegionalManagement.dataGrid2.datagrid('reload', {
 					parentId: row.stringId
 				});
@@ -499,15 +499,6 @@ var RegionalManagement = (function($){
 				$("form textarea").attr("readonly", "readonly");
 				$("#editBtn").hide();
 				$("#spanEditCodeNo").html(rowData.codeNo);
-
-			},
-
-			changeStatusCallBack: function() {
-
-				if(index == RegionalManagement.index){
-					var rows = RegionalManagement.dataGrid.datagrid('getRows');
-					RegionalManagement.parentStatus =rows[index].status;
-				}
 
 			}
 

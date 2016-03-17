@@ -82,7 +82,9 @@ var CB = ConstBox = (function(){
             //客户盒子登记
             CIB: "cib",
             //组合项目
-            TIG: "tig"
+            TIG: "tig",
+            //中心仪器细菌对照
+            IMR: "imr"
         }
 
     };

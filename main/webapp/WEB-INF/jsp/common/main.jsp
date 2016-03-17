@@ -15,7 +15,8 @@
         $('#toggle-menu').trigger("click");
     });
 </script>
-
+<script src="${ctx}/js/const.js?var=${randomVal}"></script>
+<script src="${ctx}/js/basicModule.js?var=${randomVal}"></script>
 <body>
 
 <!--框架-->
@@ -683,8 +684,6 @@
 
 </html>
 
-<script src="${ctx}/js/const.js?var=${randomVal}"></script>
-<script src="${ctx}/js/basicModule.js?var=${randomVal}"></script>
 <script src="${ctx}/js/basisDict/newCtrDictCodes.js?var=${randomVal}"></script>
 <script src="${ctx}/js/gridColumns.js?var=${randomVal}"></script>
 <script src="${ctx}/js/EasyTree.js?var=${randomVal}"></script>

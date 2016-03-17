@@ -6,30 +6,13 @@
 			<div class="flex-container flex-space-between">
 				<div class="search flex-container flex-space-between">
 					<span class="drop-down-label">仪器:</span>
-					<div class="J_ShowPop J_instrumentList md-size" data-show="imr_instrumentList">
-						<input type="hidden" id="imr_instrumentId" />
-						<span class="selected-items" id="imr_instrumentName" >请选择仪器</span><i class="icon icon-angle-down"></i>
+					<div class="J_ShowPop J_instrumentList md-size" id="imrinstrumentList">
+						<span class="selected-items" id="instrumentName" >请选择仪器</span><i class="icon icon-angle-down"></i>
 					</div>
 				</div>
 			</div>
 		</div>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 		<div class="main-content-header">
 			<div class="flex-container flex-space-between">
 				<div class="search flex-container  flex-space-between">
@@ -49,7 +32,7 @@
 
 		<div class="main-content-body">
 			<form action="" id="imr_itemListForm" method="post" class="easyui-form" data-options="novalidate: false">
-				<table id="imr_instrumentItemList"></table>
+				<table id="imrList"></table>
 			</form>
 		</div>
 	</div>
@@ -72,7 +55,7 @@
 		</div>
 		<div class="main-content-body">
 			<input type="hidden" id=imr_testItemId />
-			<table id="imr_instrumentAntiList"></table>
+			<table id="imrList2"></table>
 		</div>
 	</div>
 
@@ -182,74 +165,74 @@
         </div>
     </div>
 </div>
-	<!--从仪器列表选择-->
-	<div class="pop" id="imr_instrumentList">
-		<div class="pop-inner-wrap">
-			<div class="pop-container">
-				<div class="wrapper-container">
-					 <div class="wrapper-header flex-container flex-space-between">
-						 <div class="flex-container flex-space-between">
-                <div class="search flex-container  flex-space-between">
-                    <div class="form-control-icon icon-right">
-                        <input type="text" class="form-control"  id="imr_instrumentSchStr"  placeholder="搜索内容..."/>
-                        <button class="control-icon text-center"  onclick="imr_queryInstruments();"><i class="icon icon-search"></i></button>
-                    </div>
-                    <span class="symbol"></span>
-                    <span class="drop-down-label">前台通讯类:</span>
-                    <div class="drop-down">
-                        <div class="drop-down-selected">
-                            <span class="selected-items" id="imr_frontClass">全部</span> <i class="icon icon-angle-down"></i>
-                        </div>
-                        <div class="drop-down-menu">
-                            <ul class="list-unstyled" id="imr_ul_frontClass">
-                                <li class="selected" value="2">
-                                   	 全部
-                                </li>
-                                <li value="0">
-                                  	  类名不为空
-                                </li>
-                                <li value="1">
-                                  	  类名为空
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                 <span class="drop-down-label">状态:</span>
-                <div class="option icon-group-inline ">
-                    <div class="drop-down drop-down-icon">
-                        <div class="drop-down-selected">
-                            <i class="icon icon-sort"></i>
-                            <span class="selected-items" id="imr_status">全部</span>
-                        </div>
-                        <div class="drop-down-menu">
-                            <ul class="list-unstyled" id="imr_ul_status"><!-- 换动态迭代样式竟然很丑，暂停找不到原因 -->
-                                <li class="selected" value="2">
-                                  	  全部
-                                </li>
-                                <li value="1">
-                                  	  可用
-                                </li>
-                                <li value="0">
-                                   	 停用
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-				</div> 
-					<div class="wrapper-content">
-						<table id="imr_instrumentSelectList"></table>
-					</div>
-					<div class="wrapper-footer text-center">
-						<button onclick="imr_comfirmInstrumentSlt(this)" class="btn btn-submit sm-size">确定</button>
-						<button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<%--<!--从仪器列表选择-->--%>
+	<%--<div class="pop" id="imr_instrumentList">--%>
+		<%--<div class="pop-inner-wrap">--%>
+			<%--<div class="pop-container">--%>
+				<%--<div class="wrapper-container">--%>
+					 <%--<div class="wrapper-header flex-container flex-space-between">--%>
+						 <%--<div class="flex-container flex-space-between">--%>
+                <%--<div class="search flex-container  flex-space-between">--%>
+                    <%--<div class="form-control-icon icon-right">--%>
+                        <%--<input type="text" class="form-control"  id="imr_instrumentSchStr"  placeholder="搜索内容..."/>--%>
+                        <%--<button class="control-icon text-center"  onclick="imr_queryInstruments();"><i class="icon icon-search"></i></button>--%>
+                    <%--</div>--%>
+                    <%--<span class="symbol"></span>--%>
+                    <%--<span class="drop-down-label">前台通讯类:</span>--%>
+                    <%--<div class="drop-down">--%>
+                        <%--<div class="drop-down-selected">--%>
+                            <%--<span class="selected-items" id="imr_frontClass">全部</span> <i class="icon icon-angle-down"></i>--%>
+                        <%--</div>--%>
+                        <%--<div class="drop-down-menu">--%>
+                            <%--<ul class="list-unstyled" id="imr_ul_frontClass">--%>
+                                <%--<li class="selected" value="2">--%>
+                                   	 <%--全部--%>
+                                <%--</li>--%>
+                                <%--<li value="0">--%>
+                                  	  <%--类名不为空--%>
+                                <%--</li>--%>
+                                <%--<li value="1">--%>
+                                  	  <%--类名为空--%>
+                                <%--</li>--%>
+                            <%--</ul>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+                 <%--<span class="drop-down-label">状态:</span>--%>
+                <%--<div class="option icon-group-inline ">--%>
+                    <%--<div class="drop-down drop-down-icon">--%>
+                        <%--<div class="drop-down-selected">--%>
+                            <%--<i class="icon icon-sort"></i>--%>
+                            <%--<span class="selected-items" id="imr_status">全部</span>--%>
+                        <%--</div>--%>
+                        <%--<div class="drop-down-menu">--%>
+                            <%--<ul class="list-unstyled" id="imr_ul_status"><!-- 换动态迭代样式竟然很丑，暂停找不到原因 -->--%>
+                                <%--<li class="selected" value="2">--%>
+                                  	  <%--全部--%>
+                                <%--</li>--%>
+                                <%--<li value="1">--%>
+                                  	  <%--可用--%>
+                                <%--</li>--%>
+                                <%--<li value="0">--%>
+                                   	 <%--停用--%>
+                                <%--</li>--%>
+                            <%--</ul>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+				<%--</div> --%>
+					<%--<div class="wrapper-content">--%>
+						<%--<table id="imr_instrumentSelectList"></table>--%>
+					<%--</div>--%>
+					<%--<div class="wrapper-footer text-center">--%>
+						<%--<button onclick="imr_comfirmInstrumentSlt(this)" class="btn btn-submit sm-size">确定</button>--%>
+						<%--<button class="btn btn-cancel sm-size J_ClosePop">关闭</button>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+			<%--</div>--%>
+		<%--</div>--%>
+	<%--</div>--%>
 	
 </div>
 <script src="${ctx}/js/inst/ctrInstrMicsDatagridOpts.js?var=1.0.0.78"></script>

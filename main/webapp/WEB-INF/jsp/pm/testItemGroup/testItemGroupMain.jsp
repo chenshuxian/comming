@@ -65,8 +65,8 @@
                 </div>
                 <div class="option icon-group-inline ">
                     <div class="drop-down drop-down-icon"></div>
-                    <span id="${rt}Add2" class="J_ShowPop J_addCheckProject lg-size"  data-show="${tig}addCheckProject"><i class="icon icon-plus-square"></i> 添加</span>
-                    <span id="${rt}DeleteBatch2" onclick="testItemGroupMain.checkedDelSingleItemRow();"><i class="icon icon-trash"></i> 删除选中</span>
+                    <span id="${tig}Add2" class="J_ShowPop J_addCheckProject lg-size" ><i class="icon icon-plus-square"></i> 添加</span>
+                    <span id="${tig}DeleteBatch2"><i class="icon icon-trash"></i> 删除选中</span>
                 </div>
             </div>
         </div>
@@ -194,72 +194,72 @@
 <%--</div>--%>
 
 <!--添加检验项目-->
-<div class="pop" id="${tig}addCheckProject">
-    <div class="pop-inner-wrap">
-        <div class="pop-container">
-            <div class="wrapper-container">
-                <div class="wrapper-header flex-container flex-space-between">
-                    <div>
-                        <strong>已包含项目</strong>
-                        <small>(已包含项目<span id="${tig}containItemCount"></span>)</small>
-                    </div>
-                    <div class="header-right">
-                        <div class="flex-container flex-space-between group-items">
-                            <strong>未包含项目</strong>
-                            <span>仪器过滤</span>
-                            <div class="drop-down">
-                                <div class="drop-down-selected">
-                                    <span class="selected-items"  id="${tig}instrument"></span>
-                                    <i class="icon icon-angle-down"></i>
-                                </div>
-                                <div class="drop-down-menu">
-                                    <ul class="list-unstyled"  id="${tig}ul_instrument">
-                                        <c:forEach items="${ctrInstrumentsList }" var="instrument">
-		                        			 <li onclick="testItemGroupMain.instrumentClick('${instrument.idStr }','${instrument.name }');" value="${instrument.idStr }">${instrument.name }</li>
-		                       		 	</c:forEach>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="form-control-icon icon-right">
-                                <input type="text" class="form-control" id="${tig}instrumentSearch" placeholder="搜索内容...">
-                                <button class="control-icon text-center" onclick="testItemGroupMain.queryNotContain();"><i class="icon icon-search"></i></button>
-                            </div>
-                        </div>
-                    </div>
+<%--<div class="pop" id="${tig}addCheckProject">--%>
+    <%--<div class="pop-inner-wrap">--%>
+        <%--<div class="pop-container">--%>
+            <%--<div class="wrapper-container">--%>
+                <%--<div class="wrapper-header flex-container flex-space-between">--%>
+                    <%--<div>--%>
+                        <%--<strong>已包含项目</strong>--%>
+                        <%--<small>(已包含项目<span id="${tig}containItemCount"></span>)</small>--%>
+                    <%--</div>--%>
+                    <%--<div class="header-right">--%>
+                        <%--<div class="flex-container flex-space-between group-items">--%>
+                            <%--<strong>未包含项目</strong>--%>
+                            <%--<span>仪器过滤</span>--%>
+                            <%--<div class="drop-down">--%>
+                                <%--<div class="drop-down-selected">--%>
+                                    <%--<span class="selected-items"  id="${tig}instrument"></span>--%>
+                                    <%--<i class="icon icon-angle-down"></i>--%>
+                                <%--</div>--%>
+                                <%--<div class="drop-down-menu">--%>
+                                    <%--<ul class="list-unstyled"  id="${tig}ul_instrument">--%>
+                                        <%--<c:forEach items="${ctrInstrumentsList }" var="instrument">--%>
+		                        			 <%--<li onclick="testItemGroupMain.instrumentClick('${instrument.idStr }','${instrument.name }');" value="${instrument.idStr }">${instrument.name }</li>--%>
+		                       		 	<%--</c:forEach>--%>
+                                    <%--</ul>--%>
+                                <%--</div>--%>
+                            <%--</div>--%>
+                            <%--<div class="form-control-icon icon-right">--%>
+                                <%--<input type="text" class="form-control" id="${tig}instrumentSearch" placeholder="搜索内容...">--%>
+                                <%--<button class="control-icon text-center" onclick="testItemGroupMain.queryNotContain();"><i class="icon icon-search"></i></button>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
 
-                </div>
-                <div class="wrapper-content">
-                    <div class="flex-container">
-                        <div class="flex-col-6">
-                            <table id="${tig}addCheckProjectLeft">
+                <%--</div>--%>
+                <%--<div class="wrapper-content">--%>
+                    <%--<div class="flex-container">--%>
+                        <%--<div class="flex-col-6">--%>
+                            <%--<table id="${tig}addCheckProjectLeft">--%>
 
-                            </table>
-                        </div>
-                        <div class="text-center vertical-options flex-container flex-center layout-vertical">
-                            <button class="btn btn-circle" id="${tig}addCheckProjectBtn">
-                                <i class="fa fa-chevron-left"></i>
-                            </button>
-                            <button class="btn btn-circle no-margin-left" id="${tig}removeInstrumentProjectBtn">
-                                <i class="fa fa-chevron-right"></i>
-                            </button>
-                        </div>
-                        <div class="flex-col-6">
-                            <table id="${tig}addCheckProjectRight">
+                            <%--</table>--%>
+                        <%--</div>--%>
+                        <%--<div class="text-center vertical-options flex-container flex-center layout-vertical">--%>
+                            <%--<button class="btn btn-circle" id="${tig}addCheckProjectBtn">--%>
+                                <%--<i class="fa fa-chevron-left"></i>--%>
+                            <%--</button>--%>
+                            <%--<button class="btn btn-circle no-margin-left" id="${tig}removeInstrumentProjectBtn">--%>
+                                <%--<i class="fa fa-chevron-right"></i>--%>
+                            <%--</button>--%>
+                        <%--</div>--%>
+                        <%--<div class="flex-col-6">--%>
+                            <%--<table id="${tig}addCheckProjectRight">--%>
 
-                            </table>
-                        </div>
-                    </div>
+                            <%--</table>--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
 
-                </div>
-                <div class="wrapper-footer text-center">
-                    <button data-show="${tig}addAreaUserSure" onclick="testItemGroupMain.saveSingleItems();" class="btn btn-submit sm-size J_ShowPop">确定</button>
-                    <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
-                </div>
-            </div>
+                <%--</div>--%>
+                <%--<div class="wrapper-footer text-center">--%>
+                    <%--<button data-show="${tig}addAreaUserSure" onclick="testItemGroupMain.saveSingleItems();" class="btn btn-submit sm-size J_ShowPop">确定</button>--%>
+                    <%--<button class="btn btn-cancel sm-size J_ClosePop">关闭</button>--%>
+                <%--</div>--%>
+            <%--</div>--%>
 
-        </div>
-    </div>
-</div>
+        <%--</div>--%>
+    <%--</div>--%>
+<%--</div>--%>
  <!-------------------------------------------------------------------------------- 
 	---------------------------默认标本类型下拉Grid数据源-------------------------------------
 	--------------------------------------------------------------------------------->

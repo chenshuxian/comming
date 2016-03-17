@@ -23,6 +23,7 @@
     <script src="${ctx}/js/newcommon.js?v=1.0.0.1"></script>
     <script src="${ctx}/js/enterToTab.js"></script>
     <script src="${ctx}/js/jquery.slimscroll.min.js"></script>
+    <script src="${ctx}/js/datagrid-cellediting.js"></script>
 
 
     <script type="text/javascript">

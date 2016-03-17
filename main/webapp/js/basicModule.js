@@ -199,6 +199,7 @@ BasicModule = (function($){
 										status: newVal
 									}
 								});
+								BasicModule.parentStatus = newVal;
 								if(callback){
 									callback();
 								}
@@ -375,6 +376,7 @@ BasicModule = (function($){
 		dataGrid: {},
 		preId: null,
 		module:null,
+		parentStatus:null,
 		popArea: 480,
 		//url: null,
 		focusId: null,
@@ -569,6 +571,7 @@ BasicModule = (function($){
 		},
 
 		CommonPop: function(newParams){
+
 			var
 				params = _defaultDialogParams.call(this),
 				DDP =  this.getNewParams(params,newParams);
@@ -708,9 +711,17 @@ BasicModule = (function($){
 
 		},
 
-		searchGrid: function() {
+		searchGrid: function(newParams) {
 			//console.log(this.preId);
-			this.dataGrid.datagrid('load', this.searchObj(this.preId));
+			var params ={
+				dataGrid: this.dataGrid,
+				searchObj: this.searchObj(this.preId)
+			};
+
+			if(newParams)
+				params = this.getNewParams(params,newParams);
+
+			params.dataGrid.datagrid('load', params.searchObj);
 
 		},
 
@@ -818,10 +829,16 @@ BasicModule = (function($){
 		},
 
 		/* 取得checkbox選中的id */
-		getIds: function(){
-			var
-				checkedItems = this.dataGrid.datagrid("getChecked"),
+		getIds: function(dataGrid){
+
+			var _dataGrid = this.dataGrid,
+				checkedItems,
 				ids = [];
+
+			if(dataGrid)
+				_dataGrid = dataGrid;
+
+			checkedItems = _dataGrid.datagrid("getChecked"),
 
 			$.each(checkedItems,function(index,item){
 				ids.push(item.stringId);
@@ -839,7 +856,34 @@ BasicModule = (function($){
 				event.preventDefault();
 			});
 
+		},
+
+		//将右侧的DATA像左侧移的BUTTON
+		leftShiftBtn: function() {
+			var rightProjectData = $("#addCheckProjectRight").datagrid('getSelections');
+			makeToArray(rightProjectData).forEach(function (element, index) {
+				var rowIndex = $("#addCheckProjectRight").datagrid("getRowIndex", element);
+				$("#addCheckProjectRight").datagrid('deleteRow', rowIndex);
+				$("#addCheckProjectLeft").datagrid('appendRow', element);
+				testItemGroupMain.addTestItemIds.push(element.stringId);
+			});
+			var rows = $("#addCheckProjectLeft").datagrid("getRows");
+			$("#containSize").html(rows.length);
+		},
+
+		//将左侧的DATA像右侧移的BUTTON
+		rightShiftBtn: function() {
+			var leftProjectData = $("#addCheckProjectLeft").datagrid('getSelections');
+			makeToArray(leftProjectData).forEach(function (element, index) {
+				var rowIndex = $("#addCheckProjectLeft").datagrid("getRowIndex", element);
+				$("#addCheckProjectLeft").datagrid('deleteRow', rowIndex);
+				$("#addCheckProjectRight").datagrid('appendRow', element);
+				testItemGroupMain.delTestItemIds.push(element.stringId);
+			});
+			var rows = $("#addCheckProjectLeft").datagrid("getRows");
+			$("#containSize").html(rows.length);
 		}
+
 
 	});
 
