@@ -483,7 +483,7 @@ $(function(){
         params = {
             data: {testItemid: ids.join(",")}
         };
-        TestItem.deleteBetch(params);
+        TestItem.deleteBatch(params);
 
     });
 });

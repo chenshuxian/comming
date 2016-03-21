@@ -180,7 +180,7 @@ var RegionalManagement = (function($){
 				data: data
 			};
 
-		RegionalManagement.deleteBetch(params);
+		RegionalManagement.deleteBatch(params);
 
 
 	});

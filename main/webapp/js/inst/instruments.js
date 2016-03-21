@@ -280,7 +280,7 @@ var Inst = (function($){
                 resolutionData(data);
                 var callback;
                 callback = function () {
-                    console.log("showParamsInfo");
+
                     $("#comPort").val($("#comPort").data('val'));
                     $("#transferMode").val($("#transferMode").data('val'));
                     $("#protocol").val($("#protocol").data('val'));

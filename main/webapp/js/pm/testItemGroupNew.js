@@ -264,7 +264,7 @@ var testItemGroupMain = (function($){
                 }
             };
 
-        testItemGroupMain.deleteBetch(params);
+        testItemGroupMain.deleteBatch(params);
 
     });
 
@@ -337,8 +337,6 @@ var testItemGroupMain = (function($){
         dataGrid:_dataGrid,
         leftDG: null,
         rightDG: null,
-        addTestItemIds:[],
-        delTestItemIds:[],
 
         //默认标本类型Grid
         sampleTypeParam: {					//下拉Grid参数,所有参数均为必填
