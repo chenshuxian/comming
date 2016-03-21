@@ -8,16 +8,16 @@
 						<div class="search flex-container  flex-space-between">
 							<div class="form-control-icon icon-right">
 								<input type="text" class="form-control"  id="instrumentSchStr"  placeholder="搜索内容..."/>
-								<button class="control-icon text-center"  onclick="imr_queryInstruments();"><i class="icon icon-search"></i></button>
+								<button class="control-icon text-center" id="SearchBtn"><i class="icon icon-search"></i></button>
 							</div>
 							<span class="symbol"></span>
 							<span class="drop-down-label">前台通讯类:</span>
 							<div class="drop-down">
 								<div class="drop-down-selected">
-									<span class="selected-items" id="imr_frontClass">全部</span> <i class="icon icon-angle-down"></i>
+									<span class="selected-items" id="frontClassStr">全部</span> <i class="icon icon-angle-down"></i>
 								</div>
 								<div class="drop-down-menu">
-									<ul class="list-unstyled" id="imr_ul_frontClass">
+									<ul class="list-unstyled frontClass-selector">
 										<li class="selected" value="2">全部</li>
 										<li value="0">类名不为空</li>
 										<li value="1">类名为空</li>
@@ -29,11 +29,10 @@
 						<div class="option icon-group-inline ">
 							<div class="drop-down drop-down-icon">
 								<div class="drop-down-selected">
-									<i class="icon icon-sort"></i>
-									<span class="selected-items" id="imr_status">全部</span>
+									<i class="icon icon-sort"></i><span class="selected-items" id="StatusSpan">全部</span>
 								</div>
 								<div class="drop-down-menu">
-									<ul class="list-unstyled" id="imr_ul_status"><!-- 换动态迭代样式竟然很丑，暂停找不到原因 -->
+									<ul class="list-unstyled status-selector"><!-- 换动态迭代样式竟然很丑，暂停找不到原因 -->
 										<li class="selected" value="2">全部</li>
 										<li value="1">可用</li>
 										<li value="0">停用</li>
@@ -47,13 +46,89 @@
 					<table id="instrumentSelectList"></table>
 				</div>
 				<div class="wrapper-footer text-center">
-					<button onclick="imr_comfirmInstrumentSlt(this)" class="btn btn-submit sm-size">确定</button>
+					<button class="btn btn-submit sm-size" id="SubmitBtn">确定</button>
 					<button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
 				</div>
+				<input type="hidden" id="frontClass" value="2"/>
+				<input type="hidden" id="status" value="2"/>
 			</div>
 		</div>
-	</div>
+</div>
+<script>
+	$(function(){
+		var _params = {dataGrid: $("#instrumentSelectList")};
 
+		/* 状态搜索 */
+		$(".status-selector li").on("click", function () {
+			var flg,statusVal
+			$("#StatusSpan").html($(this).html());
+			$(".status-selector li.selected").removeClass("selected");
+			flg = $(this).is('.selected');
+			$(this).addClass(function () {
+				return flg ? '' : 'selected';
+			})
+
+			statusVal = $(this).attr("value");
+			$("#status").val(statusVal);
+
+			CtrInstrMics.searchGrid(_params);
+		});
+
+		/* 前台通讯类 */
+		$(".frontClass-selector li").on("click", function () {
+			$("#frontClassStr").html($(this).html());
+			$(".frontClass-selector li.selected").removeClass("selected");
+			var flg = $(this).is('.selected');
+			$(this).addClass(function () {
+				return flg ? '' : 'selected';
+			})
+
+			var sortVal = $(this).attr("value");
+			$("#frontClass").val(sortVal);
+
+			CtrInstrMics.searchGrid(_params);
+		});
+
+		/* search Btn */
+		$("#SearchBtn").on("click",function() {
+			CtrInstrMics.searchGrid(_params);
+		});
+
+		$("#SubmitBtn").on("click",function() {
+			var
+					checkRadio =  $("input[type='radio']:checked"),
+					opts2 = CtrInstrMics.dataGrid2.datagrid("options"),
+					opts1 = CtrInstrMics.dataGrid.datagrid("options");
+					opts1.url = CtrInstrMics.pageListUrl,
+					opts1.queryParams =
+					{
+						instrumentId: CtrInstrMics.instrumentId,
+						itemTypeId: 1
+					};
+
+					opts2.url = CtrInstrMics.pageListUrl;
+					opts2.queryParams =
+					{
+						instrumentId: CtrInstrMics.instrumentId,
+						itemTypeId: 2
+					};
+
+
+			if(!checkRadio){
+				showMessage("请先选择一个仪器");
+				return;
+			}
+			//修改页面仪器名
+			$("#instrumentName").text(CtrInstrMics.instrumentName);
+			$("#" + CB.POPDIV).hide();
+			//DG1 RELOAD
+			CtrInstrMics.dataGrid.datagrid(opts1);
+			//DG2 RELOAD
+			CtrInstrMics.dataGrid2.datagrid(opts2);
+
+		});
+	});
+</script>
 <%--<!DOCTYPE html>--%>
 <%--<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>--%>
 <%--<%@ include file="/WEB-INF/jsp/common/taglibs.jsp"%>--%>

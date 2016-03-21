@@ -77,6 +77,8 @@
 <c:set var="rmm" value="rmm" />
 <%--combindoption--%>
 <c:set var="tig" value="tig" />
+<%--中心仪器细菌对照--%>
+<c:set var="imr" value="imr" />
 
 
 

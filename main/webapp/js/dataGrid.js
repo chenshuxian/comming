@@ -51,6 +51,7 @@ dataGridM = (function($){
 					  }
 
 				  }
+
 			  };
 
 		 var gridObj = {
@@ -71,7 +72,7 @@ dataGridM = (function($){
 
 
 		 //复写 datagrid view 方法
-		 gridObj.view = $.extend({}, $.fn.datagrid.defaults.view, {onAfterRender: onAfterRender});
+		gridObj.view = $.extend({}, $.fn.datagrid.defaults.view, {onAfterRender: onAfterRender});
 
 		 //取得欄位
 		 gridObj.columns = ColCollect.getColumns(_module);
@@ -90,12 +91,7 @@ dataGridM = (function($){
 	}
 
 	dataGridObj = {
-		init:_initObj,
-		endEditing: function() {
-			if(editIndex == undefined){
-				return true;
-			}
-		}
+		init:_initObj
 	};
 	
 	return dataGridObj;

@@ -108,13 +108,13 @@
 			});
 
 			$("#addBtn").on('click', function () {
-
-				if((testItemGroupMain.addTestItemIds.length > 0) || (testItemGroupMain.delTestItemIds.length > 0)){
+				//alert("add");
+				if((BasicModule.addTestItemIds.length > 0) || (BasicModule.delTestItemIds.length > 0)){
 					// 提交
 					var parentId = testItemGroupMain.parentId, //父ID
 						data = {
-							removeItemID: testItemGroupMain.delTestItemIds.join(","),
-							addItemID: testItemGroupMain.addTestItemIds.join(","),
+							removeItemID: BasicModule.delTestItemIds.join(","),
+							addItemID: BasicModule.addTestItemIds.join(","),
 							groupItemID: parentId
 						};
 
@@ -126,8 +126,8 @@
 							resolutionData(data);
 							testItemGroupMain.dataGrid2.datagrid('reload');
 							$("#" + CB.POPDIV).hide();
-							testItemGroupMain.addTestItemIds = [];
-							testItemGroupMain.delTestItemIds = [];
+							BasicModule.addTestItemIds = [];
+							BasicModule.delTestItemIds = [];
 						},
 						"error": function () {
 						}

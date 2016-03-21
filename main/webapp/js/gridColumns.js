@@ -654,8 +654,8 @@ ColCollect = (function($){
 				{field : "idString", checkbox : true, width : 30},
 				{title : "编码", field : 'codeNo', width : 50},
 				{title : "细菌名称", field : 'name', flex : 1, width : 50},
-				{title : "通道码", field : 'channelCode', clickToEdit:true, width : 50, editor : 'text'},
-				{title : '打印次序', field : 'printOrder', clickToEdit:true,  width : 50, editor : 'text'}
+				{title : "通道码", field : 'channelCode',  width : 50, editor : 'text'},
+				{title : '打印次序', field : 'printOrder',  width : 50, editor : 'text'}
 			]];
 
 		return _columns;
@@ -673,8 +673,8 @@ ColCollect = (function($){
 			{field : "idString", checkbox : true, width : 30},
 			{title : "编码", field : 'codeNo', width : 50},
 			{title : "抗生素名称", field : 'name', flex : 1, width : 50},
-			{title : "通道码", field : 'channelCode', clickToEdit:true, width : 50, editor : 'text'},
-			{title : '打印次序', field : 'printOrder', clickToEdit:true,  width : 50, editor : 'text'}
+			{title : "通道码", field : 'channelCode',  width : 50, editor : 'text'},
+			{title : '打印次序', field : 'printOrder',  width : 50, editor : 'text'}
 		]];
 
 		return _columns;

@@ -13,78 +13,70 @@ var CtrInstrMics = (function($){
         _tableList =  $("#" + _preId + "List"),
         _tableList2 = $("#" + _preId + "List2"),
         _hideCols = [],	//要穩藏的欄位
-        _data = null,
+        _data = '',
         _module = "CtrInstrMics",
         _focusId = "name",
         _module2 = "CtrInstrMics2",
-        _delBatUrl = ctx + "/pm/testItem/deleteTestItem",
-        _existUrl = ctx + "/pm/testItem/findCount",
-        _updateUrl =  ctx + "/pm/testItemGroup/saveOrEditTestItemGroup",
-        _addUrl =  ctx + "/pm/testItemGroup/saveOrEditTestItemGroup",
-        _changeStatusUrl = ctx + "/pm/testItem/modifyTestItemStatus",
-        _InfoUrl = ctx + "/pm/testItemGroup/showAddOrEdit",
+        _delBatUrl = ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsDeleteBatch",
+        _addUrl =  ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsSave",
         _pageListUrl = ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsList",
-        //_exParams = {orderType:2},
 
-    //url2
-        _delBatUrl2 = ctx + "/pm/testItemGroup/delSingleItemBatch",
-        _existUrl2 = ctx + "/basisDict/ctrCtrInstrMicsDetail/checkNameExisted",
-        _addUrl2 = ctx + "/pm/testItemGroup/addOrRemoveItem",
-        _InfoUrl2 = ctx + "/pm/testItemGroup/addSingleItemShow",
         _pageListUrl2 = ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsList",
         _instrumentUrl = ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsList",
+        _instrumentsMicsListUrl = ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsListMain",
         _optLeftUrl = ctx + '/inst/ctrInstrumentsMics/ctrInstrumentsMicsAddLeft',
         _optRightUrl = ctx + '/inst/ctrInstrumentsMics/ctrInstrumentsMicsAddRightList',
         _initHeight = ($(window).height() < 810) ? 240 : 300,
-
-
 
 
     /* START dataGrid 生成*/
 
     //first dataGrid
         _dgParams = {
-            url:_pageListUrl,
+            url:'',
             data:_data,
             module:_module,
             hideCols:_hideCols,
             tableList:_tableList,
             preId:_preId,
-            height:_initHeight,
             isSecond:true
         },
         //CtrInstrMics dataGrid obj render
         _gridObj = dataGridM.init(_dgParams),
 
         _upgradeObj = {
-            pagination: false
-        },
+            pagination: false,
+            onLoadSuccess: function(){},
+            onCellEdit: function(index,field,value){
+                //记录最后一个编辑时的index
+                CtrInstrMics.frozeCell = index;
+                CtrInstrMics.frozeField = field;
+            }
+        };
 
-        _gridObj = $.extend({},_gridObj,_upgradeObj),
+        _gridObj = $.extend({},_gridObj,_upgradeObj);
         // render dataGrid
-        _dataGrid = _tableList.datagrid(_gridObj),
 
+        var _dataGrid = _tableList.datagrid(_gridObj).datagrid("enableCellEditing");
 
         /* 加载结果描述 */
+        var
+            _dgParams2 = {
+                url:'',
+                data:_data,
+                module:_module2,
+                hideCols:_hideCols,
+                tableList:_tableList2,
+                preId:_preId,
+                isSecond:true
+            },
 
-        _dgParams2 = {
-            url:_pageListUrl2,
-            data:_data,
-            module:_module2,
-            hideCols:_hideCols,
-            tableList:_tableList2,
-            height:_initHeight,
-            preId:_preId,
-            isSecond:true
-        },
+            //CtrInstrMics dataGrid obj render
+            _gridObj2 = dataGridM.init(_dgParams2);
+            // render dataGrid
+        _gridObj2 = CtrInstrMics.getNewParams(_gridObj2,_upgradeObj);
 
-        //CtrInstrMics dataGrid obj render
-        _gridObj2 = dataGridM.init(_dgParams2),
-        _upgradeObj2 = {pagination: false};
-        // render dataGrid
-        _gridObj2 = CtrInstrMics.getNewParams(_gridObj2,_upgradeObj2);
-
-        CtrInstrMics.dataGrid2 = _tableList2.datagrid(_gridObj2);
+        var _dataGrid2 = _tableList2.datagrid(_gridObj2).datagrid("enableCellEditing");
 
     var _columns = function() {
 
@@ -104,7 +96,7 @@ var CtrInstrMics = (function($){
             CtrInstrMics.leftDG =   $("#addCheckProjectLeft").datagrid({
                 url: _optLeftUrl,
                 method: CB.METHOD,
-                queryParams: {instrumentId: '',itemTypeId: 1},
+                queryParams: {instrumentId: CtrInstrMics.instrumentId,itemTypeId: 1},
                 height: _initHeight,
                 fitColumns: true,
                 striped: true,
@@ -125,7 +117,7 @@ var CtrInstrMics = (function($){
             CtrInstrMics.rightDG = $("#addCheckProjectRight").datagrid({
                 url: _optRightUrl,
                 method: CB.METHOD,
-                queryParams: {instrumentId: '',itemTypeId: 1},
+                queryParams: {instrumentId: CtrInstrMics.instrumentId,itemTypeId: 1},
                 height: _initHeight,
                 fitColumns: true,
                 striped: true,
@@ -142,7 +134,7 @@ var CtrInstrMics = (function($){
             CtrInstrMics.leftDG =   $("#addCheckProjectLeft").datagrid({
                 url: _optLeftUrl,
                 method: CB.METHOD,
-                queryParams: {instrumentId: '',itemTypeId: 2},
+                queryParams: {instrumentId: CtrInstrMics.instrumentId,itemTypeId: 2},
                 height: _initHeight,
                 fitColumns: true,
                 striped: true,
@@ -163,7 +155,7 @@ var CtrInstrMics = (function($){
             CtrInstrMics.rightDG = $("#addCheckProjectRight").datagrid({
                 url: _optRightUrl,
                 method: CB.METHOD,
-                queryParams: {instrumentId: '',itemTypeId: 2},
+                queryParams: {instrumentId: CtrInstrMics.instrumentId,itemTypeId: 2},
                 height: _initHeight,
                 fitColumns: true,
                 striped: true,
@@ -175,11 +167,12 @@ var CtrInstrMics = (function($){
         },
 
         //仪器 dataGrid
-        _loadInsList = function() {
-           $("#instrumentSelectList").datagrid({
+        _loadInsList = function(data) {
+           CtrInstrMics.instDG = $("#instrumentSelectList").datagrid({
                url: ctx + '/inst/ctrInstrumentsItem/ctrInstrumentsPageList',
                method: CB.METHOD,
                height: _initHeight,
+               queryParams:data,
                fitColumns: true,
                striped: true,
                checkOnSelect: false,
@@ -200,17 +193,117 @@ var CtrInstrMics = (function($){
                        instrumentId = rowData.idString,
                        instrumentName = rowData.name;
                    CtrInstrMics.instrumentId = instrumentId;
-                   $("#instrumentName").text(instrumentName);
+                   //$("#instrumentName").text(instrumentName);
+                   CtrInstrMics.instrumentName = instrumentName;
                    if (field == 'idString') {
                        return;
                    }
-                   $("#imr_instrumentList input[type='radio']:eq(" + index + ")").click();
+                   $("input[type='radio']:eq(" + index + ")").click();
                },
                pagination: true,
                pageNumber: 1,
                pageSize: 10
            });
-        };
+        },
+
+        //保存修改
+        _saveCommon = function(params) {
+
+            var
+                data = params.data,
+                dataGrid = params.dataGrid,
+                itemTypeId = params.itemTypeId,
+                formData = [],channelCode = [], channelCodePre,
+                flag = true;
+
+            if(data.length > 0){
+                $.each(data,function(i,item){
+                    //验证打印次数不可为空
+                    if(!item.printOrder){
+                        showMessage("第"+ (i+1) +"行的打印次序为空，请重新输入！");
+                        flag = false;
+                        return false;
+                    }
+                    //验证仪器通道码不可重覆
+                    if(item.channelCode){
+                        channelCodePre = channelCode[item.channelCode];
+                        if(channelCodePre){
+                            showMessage("第"+(+i+1)+"行的仪器通道码["+item.channelCode+"]有重复，请重新输入");
+                            flag = false;
+                            return;
+                        }else{
+                            channelCode[item.channelCode] = item.channelCode;
+                        }
+                    }
+                    if(itemTypeId == 1) {                //细菌
+                        formData.push({name: "txtIdGerm", value: item.id});
+                        formData.push({name: "txtChannelCodeGerm", value: item.channelCode});
+                        formData.push({name: "txtPrintOrderGerm", value: item.printOrder});
+                    }else{                              //抗生素
+                        formData.push({name: "txtIdAnti", value: item.id});
+                        formData.push({name: "txtChannelCodeAnti", value: item.channelCode});
+                        formData.push({name: "txtPrintOrderAnti", value: item.printOrder});
+                    }
+                })
+            }else{
+                showMessage("没有可保持的数据");
+                flag = false;
+                return false;
+            }
+
+            formData.push({name: "itemTypeId", value: itemTypeId});
+            formData.push({name: "instrumentId", value: CtrInstrMics.instrumentId});
+
+            if(flag){
+                $.ajax({
+                    "url" : _addUrl,
+                    "type" : "POST",
+                    data : formData,
+                    "success" : function(data) {
+                        resolutionData(data);
+                        dataGrid.datagrid("reload");
+                    }
+                });
+            }
+
+
+        }
+
+
+    $("#" + _preId + "Add2").click(function () {
+
+        if(!CtrInstrMics.instrumentId){
+            showMessage("请选择仪器");
+            return;
+        }
+
+        var
+            params = {
+                url: CtrInstrMics.instrumentsMicsListUrl,
+                data: {itemTypeId: 2},
+                callback: function(){
+                    _loadContainList2();
+                    _loadNoContainList2();
+                },
+                popArea: 720,
+                focusId: "searchStr"
+            };
+
+        CtrInstrMics.addPop(params);
+
+    });
+
+    $("#" + _preId + "DeleteBatch2").click(function () {
+
+        var
+            params = {
+                url: _delBatUrl,
+                dataGrid: CtrInstrMics.dataGrid2
+            };
+
+        CtrInstrMics.deleteBatch(params);
+
+    });
 
     /* 仪器列表 */
     $("#" + _preId + "instrumentList").click(function () {
@@ -220,9 +313,10 @@ var CtrInstrMics = (function($){
                 url: _instrumentUrl,
                 data: {},
                 callback: function(){
-                    _loadInsList();
+                    var data = CtrInstrMics.searchObj();
+                    _loadInsList(data);
                 },
-                //popArea: _initHeight,
+               // popArea: 720,
                 focusId: "instrumentSchStr"
             };
 
@@ -230,65 +324,48 @@ var CtrInstrMics = (function($){
 
     });
 
-    // delete desc batch
-    $("#" + _preId + "DeleteBatch2").click(function () {
 
-        if (CtrInstrMics.parentStatus == 1) {
-            showMessage("该单项所属的组合是启用状态，不允许删除!");
-            return false;
+    /* 细菌保存 */
+    $("#" + _preId + "Save").click(function () {
+
+        var
+            dataGrid = CtrInstrMics.dataGrid,
+            data = dataGrid.datagrid("getRows"),
+            itemTypeId = 1,
+            params = {
+                data: data,
+                dataGrid: dataGrid,
+                itemTypeId: itemTypeId
+            };
+
+        //将编辑栏位栋结
+        if(CtrInstrMics.frozeCell >= 0) {
+            dataGrid.datagrid("endEdit", CtrInstrMics.frozeCell);
         }
 
-        var
-            dgObj= CtrInstrMics.dataGrid2,
-            ids = CtrInstrMics.getIds(dgObj),
+        _saveCommon(params);
+
+    });
+
+    /* 抗生素保存 */
+    $("#" + _preId + "Save2").click(function () {
+        var dataGrid = CtrInstrMics.dataGrid2,
+            data = dataGrid.datagrid("getRows"),
+            itemTypeId = 1,
             params = {
-                dataGrid : dgObj,
-                url: CtrInstrMics.delBatUrl2,
-                data:{
-                    testItemid:ids.join(","),
-                    groupItemid:CtrInstrMics.parentId
-                }
+                data: data,
+                dataGrid: dataGrid,
+                itemTypeId: itemTypeId
             };
-
-        CtrInstrMics.deleteBetch(params);
-
-    });
-
-    /!* 項目列表新增 *!/
-    $("#" + _preId + "Add2").click(function () {
-
-        //if (RegionalManagement.parentStatus == true) {
-        //    showMessage("当前选中机构已启用，不允许关联其他机构！");
-        //    return;
-        //}
-        //RegionalManagement.currentEvent = "addRegional";
-
-        var
-            params = {
-                url: _InfoUrl2,
-                data: {testItemId: CtrInstrMics.parentId},
-                callback: function(){
-                    _loadContainList();
-                    _loadNoContainList();
-                },
-                popArea: 810,
-                focusId: "instrumentSearch"
-            };
-
-        CtrInstrMics.addPop(params);
+        //将编辑栏位栋结
+        if(CtrInstrMics.frozeCell >= 0) {
+            dataGrid.datagrid("endEdit", CtrInstrMics.frozeCell);
+        }
+        _saveCommon(params);
 
     });
 
-    $(window).on('resize', function () {
-        //newcommonjs.tableAuto(CtrInstrMics.CtrInstrMicsTableList);
-        var width = CtrInstrMics.tableList.parents('.tabs-panels').width() - 40;
-        CtrInstrMics.tableList.datagrid('resize', {
-            width: width
-        });
-        CtrInstrMics.tableList2.datagrid('resize', {
-            width: width
-        });
-    });
+
 
     $.extend(CtrInstrMics,{
 
@@ -303,287 +380,32 @@ var CtrInstrMics = (function($){
         tableList2:_tableList2,
         /*START url 定義*/
         delBatUrl: _delBatUrl,
-        existUrl: _existUrl,
-        updateUrl: _updateUrl,
         addUrl: _addUrl,
-        changeStatusUrl: _changeStatusUrl,
-        InfoUrl: _InfoUrl,
         pageListUrl: _pageListUrl,
+        instrumentsMicsListUrl:_instrumentsMicsListUrl,
         //exParams: _exParams,
 
         //dataGrid2 of Url
-        delBatUrl2: _delBatUrl2,
-        existUrl2: _existUrl2,
-        addUrl2: _addUrl2,
-        InfoUrl2: _InfoUrl2,
         pageListUrl2: _pageListUrl2,
         /*END url 定義*/
         dataGrid:_dataGrid,
+        dataGrid2:_dataGrid2,
         leftDG: null,
         rightDG: null,
+        instDG: null,
         instrumentId: null,
-        addTestItemIds:[],
-        delTestItemIds:[],
-
-        //默认标本类型Grid
-        sampleTypeParam: {					//下拉Grid参数,所有参数均为必填
-            div_id:"sampleType", 				//对应表单DIV的id
-            grid_id:"gridSampleType", 			//对应数据源Grid的Id
-            name:"sampleTypeId",				//在表单中对应的提交name
-            columnShow:1,						//将要在文本框中显示的列序号
-            width : 180, 					    //Combo的宽度
-            clearOff:false,						//是否禁用clear按钮
-            searchColumn:[1],					//要搜索的列下标以及顺序，[2,1]就是优先搜索第3列，然后搜索第2列
-            lockBy:[26,471],					//锁定Grid，传入数组[top,left]
-            onEnter:function(){
-            }
-        },
-
-
-
-        validateSave: function() {
-
-            var name = $.trim($("#name").val()); //组合名称
-            //var sampleTypeId = $.trim($("#sampleTypeId option:selected").val());//默认样本类型
-            var sampleTypeId = CtrInstrMics.sampleTypeGrid.getValue();
-            var displayOrderId = "displayOrder";
-            var regExp = /^[A-Z]+$/;
-            var enShortName = $("#enShortName").val();//英文简称
-            var enName = $("#enName").val();//英文名称
-            var fastCode = $("#fastCode").val();//英文简称
-            var displayOrder = $.trim($("#displayOrder").val()); //顺序號
-
-            if(name == ""){
-                showMessage("组合名称为空，请重新输入！",function(){
-                    $("#name").focus();
-                });
-                return false;
-            }
-            if(sampleTypeId == ""){
-                showMessage("默认标本类型为空，请重新输入！",function(){
-                });
-                return false;
-            }
-
-            if(validateDisplayOrder(displayOrderId)){
-                return false;
-            }
-            if(displayOrder.length > 6){
-                showMessage("顺序号最大长度为6位，请重新输入！",function(){
-                    $("#displayOrder").focus();
-                });
-                return false;
-            }
-
-            if(enShortName != ""){
-                if(!regExp.test(enShortName)){
-                    showMessage("英文简称只能是大写字母，请重新输入！",function(){
-                        $("#enShortName").focus();
-                    });
-                    return false;
-                }
-            }
-
-            if(enName != ""){
-                regExp = /^[a-z|A-Z|0-9]+$/;
-                if(!regExp.test(enName)){
-                    showMessage("英文名称只能是字母和数字，请重新输入！",function(){
-                        $("#enName").focus();
-                    });
-                    return false;
-                }
-            }
-
-            if(fastCode != ""){
-                regExp = /^[A-Z|0-9]+$/;
-                if(!regExp.test(fastCode)){
-                    showMessage("助记符只能是大写字母和数字，请重新输入！",function(){
-                        $("#fastCode").focus();
-                    });
-                    return false;
-                }
-            }
-            return true;
-        },
+        instrumentName: null,
+        loadContainList: _loadContainList,
+        loadNoContainList: _loadNoContainList,
+        frozeCell: null,
 
         searchObj: function () {
             return {
-                searchStr: $.trim($("#" + this.preId + "SearchStr").val()),
-                status: $("#" + this.preId + "Status").val(),
-                orderType: $("#" + this.preId + "Sort").val()
+                searchStr: $.trim($("#instrumentSchStr").val()),
+                status: $("#status").val(),
+                frontClassName: $("#frontClass").val(),
+                typeId: 1
             };
-        },
-
-        addSuccess: function(data) {
-            //console.log(data);
-            var count = data.substring(5);
-            if (count > 0) {
-                //提示项目名称重复是否继续
-                showConfirm("组合名称重复，是否继续？", function () {
-                    BasicModule.add();
-                });
-                //项目名称没有重复，不提示直接保存
-            } else {
-                BasicModule.add();
-            }
-
-        },
-
-        editSuccess: function(data) {
-            var
-                nameValidation = $.trim($("#oldName").val()),
-                name = $.trim($("#name").val());
-
-            if(nameValidation != name){
-                //判断项目名称是否重复
-                count = data.substring(5);
-                if(count > 0){
-                    //提示项目名称重复是否继续
-                    showConfirm("组合名称重复，是否继续？",function(){
-                        BasicModule.update();
-                    });
-                }else{
-                    //修改数据
-                    BasicModule.update();
-
-                }
-            }else{
-                //修改数据
-                BasicModule.update();
-            }
-
-        },
-
-
-        editCallBack: function() {
-
-            var rowData = BasicModule.rowData;
-            //console.log(CtrInstrMics.rowData);
-            $("#InfoForm").form("load", {
-                /* input's name attr : data */
-                id: rowData.stringId,
-                name: rowData.name,
-                oldName: rowData.name,
-                enShortName: rowData.enShortName,
-                enName: rowData.enName,
-                fastCode: rowData.fastCode,
-                displayOrder: rowData.displayOrder,
-                codeNo: rowData.codeNo,
-                opType: 'edit'
-            });
-            $("#spanEditCodeNo").html(rowData.codeNo);
-            newcommonjs.oldName = rowData.name;
-            if (rowData.isIndividualStat == '1') {
-                $("#isIndividualStat").attr("checked", 'true');
-            }
-
-        },
-
-        reloadDG2: function(row) {
-
-            this.parentId = row.stringId;
-            BasicModule.parentStatus = row.status;
-            CtrInstrMics.dataGrid2.datagrid('reload', {testItemId: row.stringId});
-
-        },
-
-
-        //editResultDesc: function (rowData) {
-        //
-        //    var url = _InfoUrl2,
-        //        callback = function(){
-        //
-        //            $("#InfoForm").form("load", {
-        //                resultValue: rowData.resultValue,
-        //                displayOrder: rowData.displayOrder,
-        //                id: rowData.stringId,
-        //                fastCode: rowData.fastCode,
-        //                opType: 'edit',
-        //                typeId: CtrInstrMics.typeId
-        //            });
-        //            CtrInstrMics.oldResultValue = rowData.resultValue;
-        //
-        //        },
-        //        params = {
-        //            url: url,
-        //            callback: callback
-        //        };
-        //
-        //    this.editRow(rowData,params);
-        //
-        //},
-
-        editRowEx: function(rowData) {
-
-            var params = {
-                BCB: true
-            };
-            this.editRow(rowData,params);
-        },
-
-        changeStatusEx: function(index,rowData) {
-
-            var type,params;
-            type = rowData.status.toString();
-
-            if(type = "1")
-                type = "0";
-            else
-                type = "1";
-
-            params = {
-                data:
-                {
-                    testItemid: rowData.stringId,
-                    type: type
-                }
-            };
-
-            this.changeStatus(index,rowData,params)
-
-
-        },
-
-        deleteRowEx: function(index,rowData) {
-
-            var params = {
-                data:{testItemid: rowData.stringId}
-            };
-
-            this.deleteRow(index,rowData,params);
-        },
-
-        //第二个grid中的删除钮
-        deleteRowEx2: function(index,rowData) {
-
-            var params = {
-                data:{
-                    testItemid: rowData.stringId,
-                    groupItemid:this.parentId
-                },
-                url:this.delUrl2,
-                dataGrid:this.dataGrid2
-            };
-
-            this.deleteRow(index,rowData,params);
-        },
-        //修改新增和修改时传送出的data资料
-        dataUpgrade: function(){
-
-            var params,data;
-            data = $("#InfoForm").serialize();
-            if($("#isIndividualStat").prop("checked")){
-                data +="&isIndividualStat=1";
-            }else{
-                data +="&isIndividualStat=0";
-            }
-            data += "&sampleTypeName=" + CtrInstrMics.sampleTypeGrid.getText();
-
-            params = {
-                data: data
-            };
-
-            this.editDictCode(params);
         }
 
         /*callback function area end*/
@@ -596,27 +418,31 @@ var CtrInstrMics = (function($){
 }(jQuery));
 
 $(function(){
-
-    var _preId = CB.PREID.TIG;
+    var _preId = CB.PREID.IMR;
     CtrInstrMics.init();
-    //删除预设事件
     $("#" + _preId + "Add").unbind();
-    $("#" + _preId + "Add").on("click",function() {
-        var params = {
-            BCB: true
-        };
-        CtrInstrMics.addPop(params);
-    });
+    /* 细菌列表 */
+    $("#" + _preId + "Add").click(function () {
 
-    // deleteBatch
-    $("#" + _preId + "DeleteBatch").unbind();
-    $("#" + _preId + "DeleteBatch").on("click",function() {
-        var params,ids;
-        ids = CtrInstrMics.getIds();
-        params = {
-            data: {testItemid: ids.join(",")}
+        if(!CtrInstrMics.instrumentId){
+            showMessage("请选择仪器");
+            return;
         }
-        CtrInstrMics.deleteBetch(params);
+
+        var
+            params = {
+                url: CtrInstrMics.instrumentsMicsListUrl,
+                data: {itemTypeId: 1},
+                callback: function(){
+                    CtrInstrMics.loadContainList();
+                    CtrInstrMics.loadNoContainList();
+                },
+                popArea: 720,
+                focusId: "searchStr"
+            };
+
+        CtrInstrMics.addPop(params);
+
     });
 });
 //var imr_canStore = true;

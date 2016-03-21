@@ -69,6 +69,7 @@ var newcommonjs = {
 
     /* 自适应表格 */
     tableAuto: function (tableList) {
+
         var width = tableList.parents('.tabs-panels').width() - 40;
         var height = tableList.parents('.tabs-panels').height() - 70;
         tableList.datagrid('resize', {
