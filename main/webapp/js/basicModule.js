@@ -368,9 +368,6 @@ BasicModule = (function($){
 			};
 
 
-
-
-
 	$.extend(BM,{
 
 		dataGrid: {},
@@ -389,6 +386,8 @@ BasicModule = (function($){
 		changeStatusUrl: null,
 		InfoUrl: null,
 		pageListUrl: null,
+		addTestItemIds: [],
+		delTestItemIds: [],
 		//params:{},
 		addParams: {
 			id:'',
@@ -474,7 +473,7 @@ BasicModule = (function($){
 
 			// deleteBatch
 			$("#" + _preId + "DeleteBatch").on("click",function() {
-				obj.deleteBetch();
+				obj.deleteBatch();
 			});
 
 		},
@@ -586,7 +585,7 @@ BasicModule = (function($){
 		// Data Operation Block
 
 		/* 批量删除 */
-		deleteBetch: function(newParams){
+		deleteBatch: function(newParams){
 
 			var
 				params = {
@@ -860,28 +859,48 @@ BasicModule = (function($){
 
 		//将右侧的DATA像左侧移的BUTTON
 		leftShiftBtn: function() {
-			var rightProjectData = $("#addCheckProjectRight").datagrid('getSelections');
-			makeToArray(rightProjectData).forEach(function (element, index) {
-				var rowIndex = $("#addCheckProjectRight").datagrid("getRowIndex", element);
-				$("#addCheckProjectRight").datagrid('deleteRow', rowIndex);
-				$("#addCheckProjectLeft").datagrid('appendRow', element);
-				testItemGroupMain.addTestItemIds.push(element.stringId);
-			});
-			var rows = $("#addCheckProjectLeft").datagrid("getRows");
-			$("#containSize").html(rows.length);
+			var rightProjectData = $("#addCheckProjectRight").datagrid('getSelections'),
+				stringId,rowIndex,rows;
+			if(rightProjectData.length > 0) {
+
+				makeToArray(rightProjectData).forEach(function (element, index) {
+					rowIndex = $("#addCheckProjectRight").datagrid("getRowIndex", element);
+					$("#addCheckProjectRight").datagrid('deleteRow', rowIndex);
+					$("#addCheckProjectLeft").datagrid('appendRow', element);
+					stringId = element.idString;
+					if (element.stringId)
+						stringId = element.stringId;
+					BasicModule.addTestItemIds.push(stringId);
+				});
+				rows = $("#addCheckProjectLeft").datagrid("getRows");
+				$("#containSize").html(rows.length);
+			}else{
+				//alert("ring2");
+				showMessage('请选择要添加的项目！');
+				return;
+			}
 		},
 
 		//将左侧的DATA像右侧移的BUTTON
 		rightShiftBtn: function() {
-			var leftProjectData = $("#addCheckProjectLeft").datagrid('getSelections');
-			makeToArray(leftProjectData).forEach(function (element, index) {
-				var rowIndex = $("#addCheckProjectLeft").datagrid("getRowIndex", element);
-				$("#addCheckProjectLeft").datagrid('deleteRow', rowIndex);
-				$("#addCheckProjectRight").datagrid('appendRow', element);
-				testItemGroupMain.delTestItemIds.push(element.stringId);
-			});
-			var rows = $("#addCheckProjectLeft").datagrid("getRows");
-			$("#containSize").html(rows.length);
+			var leftProjectData = $("#addCheckProjectLeft").datagrid('getSelections'),
+				stringId,rowIndex,rows;
+			if(leftProjectData.length > 0) {
+				makeToArray(leftProjectData).forEach(function (element, index) {
+					rowIndex = $("#addCheckProjectLeft").datagrid("getRowIndex", element);
+					$("#addCheckProjectLeft").datagrid('deleteRow', rowIndex);
+					$("#addCheckProjectRight").datagrid('appendRow', element);
+					stringId = element.idString;
+					if (element.stringId)
+						stringId = element.stringId;
+					BasicModule.delTestItemIds.push(stringId);
+				});
+				rows = $("#addCheckProjectLeft").datagrid("getRows");
+				$("#containSize").html(rows.length);
+			}else{
+				showMessage('请选择要移除的项目！');
+				return;
+			}
 		}
 
 
