@@ -295,7 +295,8 @@ BasicModule = (function($){
 						//if(BCB == "resultDescEdit")
 							//ResultType.resultDescEdit();
 						//else
-							obj.dataUpgrade();
+							//obj.dataUpgrade();
+						obj.beforeSubmit();
 
 					}else{
 						obj.editDictCode();
@@ -549,8 +550,9 @@ BasicModule = (function($){
 		showDialog: function(rowData,newParams) {
 
 			var
-				params = _defaultDialogParams.call(this),
-				newParams = {callback:this.showCallBack},
+				DDP,showParams,
+				params = _defaultDialogParams.call(this);
+				params.callback = this.showCallBack;
 				DDP =  this.getNewParams(params,newParams),
 
 				showParams = {
@@ -797,7 +799,7 @@ BasicModule = (function($){
 			////write from everyobject
 
 		},
-		dataUpgrade: function() { console.log(this.module + "没有dataUpgrade"); },
+		beforeSubmit: function() { console.log(this.module + "没有dataUpgrade"); },
 
 		// Ajax Callback Block End
 
@@ -848,7 +850,6 @@ BasicModule = (function($){
 
 		submit: function() {
 
-			console.log("submit");
 			$('form').submit(function(event){
 				//避免重复提交
 				console.log("sumbit1");

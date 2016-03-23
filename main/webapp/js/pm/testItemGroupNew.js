@@ -581,7 +581,7 @@ var testItemGroupMain = (function($){
             this.deleteRow(index,rowData,params);
         },
         //修改新增和修改时传送出的data资料
-        dataUpgrade: function(){
+        beforeSubmit: function(){
 
             var params,data;
             data = $("#InfoForm").serialize();

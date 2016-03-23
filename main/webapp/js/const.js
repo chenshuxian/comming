@@ -84,7 +84,9 @@ var CB = ConstBox = (function(){
             //组合项目
             TIG: "tig",
             //中心仪器细菌对照
-            IMR: "imr"
+            IMR: "imr",
+            //中心仪器项目对照
+            IRR: "irr"
         }
 
     };

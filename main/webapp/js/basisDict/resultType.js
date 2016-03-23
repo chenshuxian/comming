@@ -220,7 +220,7 @@ var ResultType = (function($){
         },
 
         /* 结果描述判断新增还是修改 */
-        dataUpgrade: function (opType) {
+        beforeSubmit: function (opType) {
 
             var
                 params = {
