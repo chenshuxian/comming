@@ -43,8 +43,7 @@
 					<span class="J_instAntiDescAdd lg-size" id="${imr}Add2">
 						<i class="icon icon-plus-square"></i> 添加抗生素</span>
 					<span id="${imr}Save2"><i class="icon icon-plus-square"></i> 保存修改</span>
-					<span id="${imr}DeleteBatch2">
-						<i class="icon icon-trash"></i> 删除选中</span>
+					<span id="${imr}DeleteBatch2"><i class="icon icon-trash"></i> 删除选中</span>
 				</div>
 			</div>
 		</div>

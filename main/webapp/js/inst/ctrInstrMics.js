@@ -18,7 +18,8 @@ var CtrInstrMics = (function($){
         _focusId = "name",
         _module2 = "CtrInstrMics2",
         _delBatUrl = ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsDeleteBatch",
-        _addUrl =  ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsSave",
+        _addUrl =  ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsAddBatch",
+        _saveUrl =  ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsSave",
         _pageListUrl = ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsList",
 
         _pageListUrl2 = ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsList",
@@ -39,6 +40,7 @@ var CtrInstrMics = (function($){
             hideCols:_hideCols,
             tableList:_tableList,
             preId:_preId,
+            height:_initHeight,
             isSecond:true
         },
         //CtrInstrMics dataGrid obj render
@@ -68,6 +70,7 @@ var CtrInstrMics = (function($){
                 hideCols:_hideCols,
                 tableList:_tableList2,
                 preId:_preId,
+                height:_initHeight,
                 isSecond:true
             },
 
@@ -168,6 +171,7 @@ var CtrInstrMics = (function($){
 
         //仪器 dataGrid
         _loadInsList = function(data) {
+            console.log("loadINstLIst");
            CtrInstrMics.instDG = $("#instrumentSelectList").datagrid({
                url: ctx + '/inst/ctrInstrumentsItem/ctrInstrumentsPageList',
                method: CB.METHOD,
@@ -256,7 +260,7 @@ var CtrInstrMics = (function($){
 
             if(flag){
                 $.ajax({
-                    "url" : _addUrl,
+                    "url" : _saveUrl,
                     "type" : "POST",
                     data : formData,
                     "success" : function(data) {
@@ -399,13 +403,47 @@ var CtrInstrMics = (function($){
         loadNoContainList: _loadNoContainList,
         frozeCell: null,
 
-        searchObj: function () {
+        searchObj: function() {
             return {
                 searchStr: $.trim($("#instrumentSchStr").val()),
                 status: $("#status").val(),
                 frontClassName: $("#frontClass").val(),
                 typeId: 1
             };
+        },
+
+        popSubmit: function() {
+
+            var
+                checkRadio =  $("input[type='radio']:checked"),
+                opts2 = CtrInstrMics.dataGrid2.datagrid("options"),
+                opts1 = CtrInstrMics.dataGrid.datagrid("options");
+                opts1.url = CtrInstrMics.pageListUrl,
+                opts1.queryParams =
+                {
+                    instrumentId: CtrInstrMics.instrumentId,
+                    itemTypeId: 1
+                };
+
+            opts2.url = CtrInstrMics.pageListUrl;
+            opts2.queryParams =
+            {
+                instrumentId: CtrInstrMics.instrumentId,
+                itemTypeId: 2
+            };
+
+
+            if(!checkRadio){
+                showMessage("请先选择一个仪器");
+                return;
+            }
+            //修改页面仪器名
+            $("#instrumentName").text(CtrInstrMics.instrumentName);
+            $("#" + CB.POPDIV).hide();
+            //DG1 RELOAD
+            CtrInstrMics.dataGrid.datagrid(opts1);
+            //DG2 RELOAD
+            CtrInstrMics.dataGrid2.datagrid(opts2);
         }
 
         /*callback function area end*/

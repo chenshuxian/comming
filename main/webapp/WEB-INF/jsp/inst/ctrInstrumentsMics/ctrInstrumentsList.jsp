@@ -94,39 +94,7 @@
 			CtrInstrMics.searchGrid(_params);
 		});
 
-		$("#SubmitBtn").on("click",function() {
-			var
-					checkRadio =  $("input[type='radio']:checked"),
-					opts2 = CtrInstrMics.dataGrid2.datagrid("options"),
-					opts1 = CtrInstrMics.dataGrid.datagrid("options");
-					opts1.url = CtrInstrMics.pageListUrl,
-					opts1.queryParams =
-					{
-						instrumentId: CtrInstrMics.instrumentId,
-						itemTypeId: 1
-					};
-
-					opts2.url = CtrInstrMics.pageListUrl;
-					opts2.queryParams =
-					{
-						instrumentId: CtrInstrMics.instrumentId,
-						itemTypeId: 2
-					};
-
-
-			if(!checkRadio){
-				showMessage("请先选择一个仪器");
-				return;
-			}
-			//修改页面仪器名
-			$("#instrumentName").text(CtrInstrMics.instrumentName);
-			$("#" + CB.POPDIV).hide();
-			//DG1 RELOAD
-			CtrInstrMics.dataGrid.datagrid(opts1);
-			//DG2 RELOAD
-			CtrInstrMics.dataGrid2.datagrid(opts2);
-
-		});
+		$("#SubmitBtn").on("click",CtrInstrMics.popSubmit);
 	});
 </script>
 <%--<!DOCTYPE html>--%>

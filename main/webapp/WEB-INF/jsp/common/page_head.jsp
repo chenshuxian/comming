@@ -72,7 +72,7 @@
                 if (err == 0) {
                     showMessage(msg.substring(4));
                     $("#editBtn").attr("disabled", false);
-                    return;
+                    return false;
                 }
                 if (info == 0) {
                     var mess = msg.substring(5);

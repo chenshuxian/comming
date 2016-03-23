@@ -681,6 +681,77 @@ ColCollect = (function($){
 
 	}
 
+	/***
+	 * 中心仪器项目对照
+	 * date:2016/03/22
+	 * author:chenshuxian
+	 */
+	var _getCtrInstrItem = function(obj){
+
+		var _columns =[[
+				{field : "idString", checkbox : true, width : 30},
+				{title : "达安标准码", field : 'codeNo', width : 50},
+				{title : "项目名称", field : 'name', flex : 1, width : 50},
+				{title : "英文简称", field : 'enShortName', width : 50},
+				{title : "通道码", field : 'channelCode', width : 50, editor : 'text'},
+				{title : '转换系数', field : 'factor', width : 50, editor : 'text'},
+				{title : '打印次序', field : 'printOrder', width : 50, editor : 'text'},
+				{title : '单位', field : 'unit', width : 50, editor : 'text'},
+				{title : '默认标本类型', field : 'sampleTypeName', width : 50}
+			]];
+
+		return _columns;
+
+	}
+
+	/***
+	 * 中心仪器项目对照2
+	 * date:2016/03/22
+	 * author:chenshuxian
+	 */
+	var _getCtrInstrItem2 = function(obj){
+
+		var _columns = [[
+				{field : "idString", checkbox : true, width : 30},
+				{title : "标本类型", field : 'sampleTypeName', width : 50},
+				{title : "性别", field : 'sexName', flex : 1, width : 50},
+				{title : '年龄单位', field : 'ageUnitName', width : 50},
+				{title : '起始年龄', field : 'ageMin', width : 50},
+				{title : '结束年龄', field : 'ageMax', width : 50},
+				{title : '参考下限', field : 'refLow', width : 50},
+				{title : '参考上限', field : 'refHigh', width : 50},
+				{title : '危急下限', field : 'panicLow', width : 50},
+				{title : '危急上限', field : 'panicHigh', width : 50},
+				{title : '警告上限', field : 'alarmHigh', width : 50},
+				{title : '警告下限', field : 'alarmLow', width : 50},
+				{
+					title : "操作", field : 'opt', width : 50, align : 'center',
+					formatter : function(value, row, index) {
+
+						var rowData = JSON.stringify(row),
+							str = "";
+						str += "<a class='icon icon-edit' onclick=CtrInstrItem.editRow(" + rowData + ")></a>";
+						str += "<a class=\"icon icon-trash\" onclick=CtrInstrItem.deleteRow(" + index + "," + rowData + ")></a>";
+						str += "<a class=\"icon icon-copy\" onclick=CtrInstrItem.copy(" + rowData + ")></a>";
+						//var row,str = "";
+						//str += '<span class="help-tips"><a class="icon icon-edit" onclick="iir_editRefrange('
+						//+ index
+						//+ ',this)"></a><i class="help-tips-content">编辑</i></span>';
+						//str += '<span class="help-tips danger-tips"><a class="icon icon-trash" onclick="CtrInstrItem.deleteRow('
+						//+ index
+						//+ ',this)"></a><i class="help-tips-content">删除</i></span>';
+						//str += '<span class="help-tips"><a class="icon icon-copy" onclick="iir_copyRefrange('
+						//+ index
+						//+ ',this)"></a><i class="help-tips-content">复制</i></span>';
+						return str;
+					}
+				}
+			]];
+
+		return _columns;
+
+	}
+
 
 
 	var _getColumns = function(table){
@@ -736,6 +807,12 @@ ColCollect = (function($){
 				break;
 			case "CtrInstrMics2" :
 				return _getCtrInstrMics2(table);
+				break;
+			case "CtrInstrItem" :
+				return _getCtrInstrItem(table);
+				break;
+			case "CtrInstrItem2" :
+				return _getCtrInstrItem2(table);
 				break;
 			default:
 				return _getCtrTubeType(table);

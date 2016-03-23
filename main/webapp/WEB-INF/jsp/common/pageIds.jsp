@@ -79,6 +79,8 @@
 <c:set var="tig" value="tig" />
 <%--中心仪器细菌对照--%>
 <c:set var="imr" value="imr" />
+<%--中心仪器项目对照--%>
+<c:set var="iir" value="iir" />
 
 
 
