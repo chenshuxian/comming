@@ -3,7 +3,7 @@
 dataGrid 用来设定 dataGrid Obj，并返回一个dataGrid Obj
 
 ###使用方法:
-1. Obj._initObj(params)
+1. Obj.init(params)
   * params 包括以下参数
     * _url:網址
   	* _data:传递到服务器參數
@@ -33,3 +33,12 @@ dataGrid 用来设定 dataGrid Obj，并返回一个dataGrid Obj
         _gridObj = dataGridM.init(_dgParams),
         
         _dataGrid = _tableList.datagrid(_gridObj);
+
+----
+### clickRow 单高亮方法
+
+使用方法:
+
+于事件 onClickRow 中加入此方法就可以有高弹亮的效果了
+
+dataGridObj.clickRow.call(this,index,row);
