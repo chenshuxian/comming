@@ -5,3 +5,5 @@
 ### datagrid rowData 中有空格时，无法正常开启问题
 
 __解决:__ 将字串中的空白以\&nbsp;字符取代
+
+ str.replace(/\s/g,"&nbsp;");
