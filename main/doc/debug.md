@@ -11,7 +11,9 @@ __解决:__ 将字串中的空白以\&nbsp;字符取代
 0414 表单载入成功后高度一直跑掉
 原因: dataGrid.js 预设有一个 loadSuccess event 会调整 grid 的高和宽
 __解决:__ 
+
 1.加一个控制参数，如果为两个grid不进行 loadSuccess event 的继承。
-2.在前端加一个 loadSuccess overwrite. 
+
+2.在前端加一个 loadSuccess overwrite。
 -----
 
