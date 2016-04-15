@@ -206,6 +206,20 @@
                 </div>
             </div>
         </div>
+
+        <%--<div class="flex-container vertical-space flex-space-between flex-space-20">--%>
+            <%--<div class="flex-col-12">--%>
+                <%--<div class="flex-container label-inline">--%>
+                    <%--<div class="form-combo block-show">--%>
+                        <%--<div class=" flex-container  flex-space-between">--%>
+                            <%--<label for="">质控样本号:</label>--%>
+                            <%--<input type="text" id="qcCode" name="qcCode" value="${entity.qcCode }"  maxlength="30" class="form-control block-show" >--%>
+                        <%--</div>--%>
+                        <%--<span class="required-icon">(多个样本号以英文逗号隔开，如:90001,90002)</span>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
         
         <div class="flex-container vertical-space flex-space-between flex-space-20">
          

@@ -11,7 +11,7 @@ EasyTree = (function($){
 		var zTree = $.fn.zTree.getZTreeObj("treeDemo");
 		var treeNodes = zTree.getSelectedNodes();
 		if (treeNodes == null || treeNodes.length == 0) {
-			showMessage("请选择节点！");
+			BM.showMessage("请选择节点！");
 			return ;
 		}
 		treeNode = treeNodes[0];
@@ -69,7 +69,7 @@ EasyTree = (function($){
 		var zTree = $.fn.zTree.getZTreeObj("treeDemo");
 		var treeNodes = zTree.getSelectedNodes();
 		if (treeNodes == null || treeNodes.length == 0) {
-			showMessage("请选择节点！");
+			BM.showMessage("请选择节点！");
 			return ;
 		}
 		treeNode = treeNodes[0];
@@ -100,7 +100,7 @@ EasyTree = (function($){
 		var name = $("#name").val();
 		var oldName = $("#oldName").val();
 		if (name == '') {
-			showMessage('中文名称为空，请重新输入！',function(){
+			BM.showMessage('中文名称为空，请重新输入！',function(){
 				$("#name").focus();
 			});
 			return;
@@ -167,13 +167,13 @@ EasyTree = (function($){
 		var zTree = $.fn.zTree.getZTreeObj("treeDemo");
 		var treeNodes = zTree.getSelectedNodes();
 		if (treeNodes == null || treeNodes.length == 0) {
-			showMessage("请选择节点！");
+			BM.showMessage("请选择节点！");
 			return ;
 		}
 		treeNode = treeNodes[0];
 		var id = treeNode.id;
 		if (id == CHINAID){
-			showMessage("中国节点不能删除！");
+			BM.showMessage("中国节点不能删除！");
 			return ;
 		}
 		showConfirm(("是否删除此节点"),function() {// 确认提示：是否删除此节点。

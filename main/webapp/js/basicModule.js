@@ -6,9 +6,9 @@
  * @author 陈书贤
  * @updgradeDate 2016/03/10
  ***/
-var BasicModule;
+var BasicModule,BM;
 
-BasicModule = (function($){
+BM = BasicModule = (function($){
 
 		//BM = Object.create(BasicModule);
 
@@ -18,18 +18,9 @@ BasicModule = (function($){
 			POPDIV = CB.POPDIV,
 			_dataStore = {},
 			_dataGrid = {},
-			_addreload = {
-				searchStr:"",
-				status:"",
-				sort:"2"
-			},
-			_updatereload = {
-				searchStr:"",
-				status:"",
-				sort:""
-			},
 			_addUrl,_updateUrl,_exParams,
 			_addNewReload,_updateNewReload,
+
 
 			/* 批量删除
 			* params includes
@@ -53,7 +44,7 @@ BasicModule = (function($){
 				checkedItems = dataGrid.datagrid("getChecked");
 
 				if (checkedItems.length == 0) {
-					showMessage('请选择要删除的数据!');
+					BM.showMessage("请选择要删除的数据!");
 					return false;
 				}
 
@@ -74,7 +65,7 @@ BasicModule = (function($){
 				});
 
 				if (names.length > 0) {
-					showMessage("名称" + _getItemsMsg(names) + "启用状态，不允许删除!");
+					BM.showMessage("名称" + _getItemsMsg(names) + "启用状态，不允许删除!");
 					return false;
 				}
 
@@ -83,7 +74,7 @@ BasicModule = (function($){
 					data = params.data;
 				}
 
-				$.messager.confirm("提示", "是否删除所选中的记录？", function (r) {
+				$.alerts.confirm("是否删除所选中的记录？","提示", function (r) {
 					if (r) {
 						$.ajax({
 							url: url,
@@ -119,17 +110,22 @@ BasicModule = (function($){
 
 
 				if (status == true) {
-					showMessage('当前选中记录已启用，不允许删除！');
+					BM.showMessage("当前选中记录已启用，不允许删除!");
 					return;
 				}
-				$.messager.confirm("提示", "你确定要删除吗?", function (r) {
+				//$.messager.confirm("提示", "是否删除当前记录？ ", function (r) {
+				$.alerts.confirm( "是否删除当前记录？ ","提示", function (r) {
 					if (r) {
 						$.ajax({
 							url: url,
 							type: METHOD,
 							data: data,
 							success: function (data) {
-								data = CB.DELSUCC;
+
+								if(data.indexOf("succ|") == 0){
+									data = CB.DELSUCC;
+								}
+
 								resolutionData(data);
 								dataGrid.datagrid('reload');
 							},
@@ -161,11 +157,12 @@ BasicModule = (function($){
 					val = params.val,
 					index = params.index,
 					callback = params.callback,
+					logParent = params.logParent,
 					confirmMeg,operatioType,newVal,data;
 
 
 				if (id == '' || val == '') {
-					showMessage('请选择操作记录!');
+					BM.showMessage('请选择操作记录!');
 					return;
 				}
 
@@ -185,7 +182,8 @@ BasicModule = (function($){
 					data = params.data;
 				}
 
-				$.messager.confirm("提示", confirmMeg, function (r) {
+				$.alerts.confirm(confirmMeg, "提示",  function (r) {
+
 					if (r) {
 						$.ajax({
 							url: url,
@@ -199,7 +197,10 @@ BasicModule = (function($){
 										status: newVal
 									}
 								});
-								BasicModule.parentStatus = newVal;
+								//若为父grid需要记录状态时
+								if(logParent) {
+									BasicModule.parentStatus = newVal;
+								}
 								if(callback){
 									callback();
 								}
@@ -218,11 +219,13 @@ BasicModule = (function($){
 			},
 
 			_dataControl= function(params) {
-				//防止重复提交
-				//var obj = this;
+
+
 				_dataStore = params.data;
 				_dataGrid = params.dataGrid;
+				BM.currentEvent = params.opType;
 				//_exParams = params.exParams;
+
 
 
 				$("#editBtn").attr("disabled", true);
@@ -263,20 +266,33 @@ BasicModule = (function($){
 				var
 					url = params.url,
 					rd = params.rd,
-					dataGrid = _dataGrid;
+					dataGrid = params.dataGrid,
+					data = params.data,
+					currentEvent = BM.currentEvent,
+					dgAction;
 
+				if(currentEvent == "add"){
+					dgAction = "load";
+				}else{
+					dgAction = "reload";
+				}
 
 				$.ajax({
 					url: url,
 					type: METHOD,
-					data: _dataStore,
+					data: data,
 					success: function (response) {
 
-						var err = response.indexOf("err|");
+						var err = response.indexOf("err|"),
+							info = response.indexOf("info|");
+
 						resolutionData(response);
-						if(err != 0) {
-							dataGrid.datagrid('reload', rd);
+
+						if(err != 0 && info != 0) {
+							dataGrid.datagrid(dgAction, rd);
 							$("#" + POPDIV).hide();
+						}else{
+							$("#editBtn").attr("disabled", false);
 						}
 
 					},
@@ -292,10 +308,6 @@ BasicModule = (function($){
 					//BCB 新增和編輯頁面submit驗證成功後所呼叫的function
 					//一般是呼叫editDictCode
 					if(BCB){
-						//if(BCB == "resultDescEdit")
-							//ResultType.resultDescEdit();
-						//else
-							//obj.dataUpgrade();
 						obj.beforeSubmit();
 
 					}else{
@@ -303,7 +315,6 @@ BasicModule = (function($){
 					}
 
 				};
-
 
 
 				$('form').form({
@@ -325,13 +336,13 @@ BasicModule = (function($){
 					focusId = params.focusId,
 					dialogWidth = params.popArea,
 					beforeCB = params.BCB,
+					vbFunc = params.vbFunc,
 					obj = this;
 
-				//console.log("Dialog:"+params.url);
 
 				$("#"+POPDIV).load(url, data, function () {
 					dialog(POPDIV, {width: dialogWidth}, callbackFun);
-					obj.validateBox();
+					obj[vbFunc]();
 					_beforeSubmit(obj,beforeCB);
 					$("#"+focusId).focus();
 				});
@@ -363,11 +374,11 @@ BasicModule = (function($){
 					focusId: this.focusId,
 					callback: this.addCallBack,
 					popArea: this.popArea,
-					BCB:null
+					BCB:null,
+					vbFunc:"validateBox"
 				};
 				return obj;
 			};
-
 
 	$.extend(BM,{
 
@@ -389,10 +400,21 @@ BasicModule = (function($){
 		pageListUrl: null,
 		addTestItemIds: [],
 		delTestItemIds: [],
+		checkStatus:true,
 		//params:{},
 		addParams: {
 			id:'',
 			opType:'add'
+		},
+		addreload: {
+			searchStr:"",
+			status:"",
+			sort:"2"
+		},
+		updatereload: {
+			searchStr:"",
+			status:"",
+			sort:""
 		},
 		/*editParams:{
 			id:'',
@@ -420,13 +442,14 @@ BasicModule = (function($){
 			return true;
 		},
 
-
 		init: function() {
 
 			var tableList = this.tableList,
 				obj = this,
 				_preId = this.preId;
 
+			//初始时发状态设为undefined;
+			//this.currentEvent = undefined;
 			newcommonjs.pageInit(_preId);
 			$(window).on('resize', function () {
 				newcommonjs.tableAuto(tableList);
@@ -477,18 +500,18 @@ BasicModule = (function($){
 				obj.deleteBatch();
 			});
 
-		},
+			//导行栏收缩时进行DG宽度的设定
+			//$("#site-menu").on("mresize",function(){
+			//	var width =  $(".tabs-container").width(),
+			//		vt = $(".datagrid:visible").find("table.datagrid-f");
+			//
+			//		$(".tabs-panels").width(width);
+			//		$(".tabs-header").width(width);
+			//		vt.datagrid("resize", {width: width - 40});
+			//	//}
+			//});
 
-		//defaultDialogParams: function(){
-		//	var obj = {
-		//		url: this.InfoUrl,
-		//		focusId: this.focusId,
-		//		callback: this.addCallBack,
-		//		popArea: this.popArea,
-		//		BCB:null
-		//	};
-		//	return obj;
-		//},
+		},
 
 		// Pop Block Start
 
@@ -516,8 +539,9 @@ BasicModule = (function($){
 			var
 				editParams,editStatus,DDP,
 				params = _defaultDialogParams.call(this);
-				params.callback = this.editCallBack;
-				DDP = this.getNewParams(params,newParams);
+
+			params.callback = this.editCallBack;
+			DDP = this.getNewParams(params,newParams);
 
 			editParams = {
 				id:rowData.stringId,
@@ -527,15 +551,11 @@ BasicModule = (function($){
 			editParams = _getType.call(this,editParams,rowData);
 			if(!DDP.data)
 				DDP.data = editParams;
-			//如果是用get的方法則將data設為null
-			//if(DDP.isGet){
-			//	DDP.data = null;
-			//}
+
 			editStatus = rowData.status;
 			//console.log("DDP"+DDP.InfoUrl);
-
-			if (editStatus == true) {
-				showMessage('当前选中记录已启用，不允许修改！');
+			if (this.checkStatus && editStatus == true) {
+				BM.showMessage('当前选中记录已启用，不允许修改！');
 				return;
 			}
 
@@ -571,11 +591,37 @@ BasicModule = (function($){
 
 		},
 
-		CommonPop: function(newParams){
+		/* 弹出详情信息框 */
+		copyDialog: function(rowData,newParams) {
+
+			var
+				DDP,copyParams,
+				params = _defaultDialogParams.call(this);
+			params.callback = this.copyCallBack;
+			DDP =  this.getNewParams(params,newParams);
+			copyParams = {
+				id:rowData.stringId,
+				opType:'copy'
+			};
+
+			copyParams = _getType.call(this,copyParams,rowData);
+
+			if(!DDP.data)
+				DDP.data = copyParams;
+
+			BM.rowData = rowData;
+			this.currentEvent = "copy";
+			_Dialog.call(this,DDP);
+
+		},
+
+		commonPop: function(newParams){
 
 			var
 				params = _defaultDialogParams.call(this),
 				DDP =  this.getNewParams(params,newParams);
+
+			this.currentEvent = "add";
 
 			_Dialog.call(this,DDP);
 		},
@@ -620,12 +666,14 @@ BasicModule = (function($){
 		/* 启用、停用状态 */
 		changeStatus: function(index, rowData,newParams) {
 
-			var params = {
+			var id = rowData.stringId ? rowData.stringId : rowData.idString,
+				params = {
 				url: this.changeStatusUrl,
 				dataGrid: this.dataGrid,
-				id: rowData.stringId,
+				id: id,
 				val: rowData.status.toString(),
 				index: index,
+				logParent:false,
 				callback: this.changeStatusCallBack
 			}
 
@@ -635,17 +683,26 @@ BasicModule = (function($){
 
 		},
 
-		// Data Operation Block End
+		trimFromData: function(data) {
+
+			$.each(data,function(i,item){
+				data[i].value = $.trim(item.value);
+			});
+
+			return data;
+		},
 
 		editDictCode: function(newParams) {
 
 			var
-				opType = $("#opType").val(),
-				data = $("#InfoForm").serialize(),
+				opType = this.currentEvent,
+				//data = $("#InfoForm").serialize(),
+				data = $("#InfoForm").serializeArray(),
 				existUrl = this.existUrl,
 				validate = this.validateSave,
 				dataGrid = this.dataGrid,
 				//exParams = this.exParams,
+
 
 				params ={
 					existUrl: existUrl,
@@ -660,8 +717,8 @@ BasicModule = (function($){
 			_updateUrl = this.updateUrl;
 			_addUrl = this.addUrl;
 			//for add or update success callback reload params
-			_addNewReload = $.extend({},_addreload,this.exParams);
-			_updateNewReload = $.extend({},_updatereload,this.exParams);
+			_addNewReload = $.extend({},this.addreload,this.exParams);
+			_updateNewReload = $.extend({},this.searchObj(this.preId),this.exParams);
 			//console.log(data);
 
 			if(newParams) {
@@ -674,7 +731,7 @@ BasicModule = (function($){
 
 			}
 
-			if(opType == "add"){
+			if(opType == "add" || opType == "copy"){
 				params.callback = this.addSuccess;
 			}else{
 				params.callback = this.editSuccess;
@@ -683,6 +740,9 @@ BasicModule = (function($){
 			//if there is newParams then update oldParams
 			params = this.getNewParams(params,newParams);
 			//console.log(data);
+
+			//进行form表单前后空白清除
+			params.data = this.trimFromData(params.data);
 
 			_dataControl(params);
 
@@ -694,7 +754,9 @@ BasicModule = (function($){
 			var
 				params = {
 					rd: _addNewReload,//$.extend(_addreload,_exParams),
-					url: _addUrl
+					url: _addUrl,
+					dataGrid: _dataGrid,
+					data: _dataStore
 				};
 
 			_commonAjax(params);
@@ -705,24 +767,39 @@ BasicModule = (function($){
 			var
 				params = {
 					rd: _updateNewReload,//$.extend(_updatereload,_exParams),
-					url: _updateUrl
+					url: _updateUrl,
+					dataGrid: _dataGrid,
+					data: _dataStore
 				};
 
 			_commonAjax(params);
 
 		},
 
+		commonAdd: function(params) {
+			_commonAjax(params);
+		},
+
 		searchGrid: function(newParams) {
 			//console.log(this.preId);
-			var params ={
-				dataGrid: this.dataGrid,
-				searchObj: this.searchObj(this.preId)
-			};
+
+			var
+				searchObj =this.searchObj(this.preId),
+				params ={
+					dataGrid: this.dataGrid,
+					searchObj: searchObj
+				};
+
 
 			if(newParams)
 				params = this.getNewParams(params,newParams);
 
-			params.dataGrid.datagrid('load', params.searchObj);
+			if(searchObj.searchStr.indexOf("$") >= 0){
+				BM.showMessage("查询字串中不可以有 $ 符号");
+			}else{
+				params.dataGrid.datagrid('load', params.searchObj);
+			}
+
 
 		},
 
@@ -739,8 +816,8 @@ BasicModule = (function($){
 		// Ajax Callback Block Start
 
 		addSuccess: function(data) {
-			//console.log("successcallback");
-
+			console.log("successcallback");
+			console.log(data);
 			$("#editBtn").attr("disable", false);
 			if (data.indexOf("confirm|") == 0) {
 				// 有同名
@@ -751,7 +828,9 @@ BasicModule = (function($){
 				})
 			} else {
 				// 无同名，确认继续
-				BasicModule.add();
+				if(BM.resolutionData(data)){
+					BasicModule.add();
+				}
 				//_add();
 			}
 
@@ -769,8 +848,12 @@ BasicModule = (function($){
 				});
 			} else {
 				// 无同名，确认继续
-				BasicModule.update();
+				if(BM.resolutionData(data)){
+					BasicModule.update();
+				}
 				//_update();
+				// 无同名，确认继续
+				
 			}
 
 		},
@@ -799,6 +882,7 @@ BasicModule = (function($){
 			////write from everyobject
 
 		},
+		copyCallBack: function(){},
 		beforeSubmit: function() { console.log(this.module + "没有dataUpgrade"); },
 
 		// Ajax Callback Block End
@@ -839,10 +923,13 @@ BasicModule = (function($){
 			if(dataGrid)
 				_dataGrid = dataGrid;
 
-			checkedItems = _dataGrid.datagrid("getChecked"),
+			checkedItems = _dataGrid.datagrid("getChecked");
 
 			$.each(checkedItems,function(index,item){
-				ids.push(item.stringId);
+				if(item.stringId)
+					ids.push(item.stringId);
+				else
+					ids.push(item.idString);
 			});
 
 			return ids;
@@ -865,9 +952,13 @@ BasicModule = (function($){
 			if(rightProjectData.length > 0) {
 
 				makeToArray(rightProjectData).forEach(function (element, index) {
+					var newrow = {
+						index:0,
+						row: element
+					}
 					rowIndex = $("#addCheckProjectRight").datagrid("getRowIndex", element);
 					$("#addCheckProjectRight").datagrid('deleteRow', rowIndex);
-					$("#addCheckProjectLeft").datagrid('appendRow', element);
+					$("#addCheckProjectLeft").datagrid('insertRow', newrow);
 					stringId = element.idString;
 					if (element.stringId)
 						stringId = element.stringId;
@@ -877,7 +968,7 @@ BasicModule = (function($){
 				$("#containSize").html(rows.length);
 			}else{
 				//alert("ring2");
-				showMessage('请选择要添加的项目！');
+				BM.showMessage('请选择要添加的项目！');
 				return;
 			}
 		},
@@ -888,9 +979,13 @@ BasicModule = (function($){
 				stringId,rowIndex,rows;
 			if(leftProjectData.length > 0) {
 				makeToArray(leftProjectData).forEach(function (element, index) {
+					var newrow = {
+						index:0,
+						row: element
+					}
 					rowIndex = $("#addCheckProjectLeft").datagrid("getRowIndex", element);
 					$("#addCheckProjectLeft").datagrid('deleteRow', rowIndex);
-					$("#addCheckProjectRight").datagrid('appendRow', element);
+					$("#addCheckProjectRight").datagrid('insertRow', newrow);
 					stringId = element.idString;
 					if (element.stringId)
 						stringId = element.stringId;
@@ -899,7 +994,7 @@ BasicModule = (function($){
 				rows = $("#addCheckProjectLeft").datagrid("getRows");
 				$("#containSize").html(rows.length);
 			}else{
-				showMessage('请选择要移除的项目！');
+				BM.showMessage('请选择要移除的项目！');
 				return;
 			}
 		}

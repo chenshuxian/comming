@@ -16,7 +16,7 @@ var Indenpent = (function($){
 		_tableList =  $("#" + _preId + "List"),
 		_orgTypeId = $("#" + _preId + "orgTypeId").val(),
 		_exParams = {orgTypeId: _orgTypeId},
-		_hideCols = [],	//要穩藏的欄位
+		_hideCols = ["nacaoId"],	//要穩藏的欄位
 		_data = Indenpent.searchObj(_preId),
 		_pageListUrl = Indenpent.pageListUrl,
 
@@ -50,51 +50,6 @@ var Indenpent = (function($){
 		exParams:_exParams,
 		orgTypeId:_orgTypeId
 	})
-
-	///* 状态搜索 */
-	//$("." + _preId + "-status-selector li").on("click", function () {
-	//	$("#" + _preId + "StatusSpan").html($(this).html());
-	//	$("." + _preId + "-status-selector li.selected").removeClass("selected");
-	//	var flg = $(this).is('.selected');
-	//	$(this).addClass(function () {
-	//		return flg ? '' : 'selected';
-	//	})
-    //
-	//	var statusVal = $(this).attr("el-value");
-	//	$("#" + _preId + "Status").val(statusVal);
-    //
-	//	Indenpent.searchGrid();
-	//});
-    //
-	///* 排序 */
-	//$("." + _preId + "-sort-selector li").on("click", function () {
-	//	$("#" + _preId + "SortSpan").html($(this).html());
-	//	$("." + _preId + "-sort-selector li.selected").removeClass("selected");
-	//	var flg = $(this).is('.selected');
-	//	$(this).addClass(function () {
-	//		return flg ? '' : 'selected';
-	//	})
-    //
-	//	var sortVal = $(this).attr("el-value");
-	//	$("#" + _preId + "Sort").val(sortVal);
-    //
-	//	Indenpent.searchGrid();
-	//});
-    //
-	///* search Btn */
-	//$("#" + _preId + "SearchBtn").on("click",function() {
-	//	Indenpent.searchGrid();
-	//});
-
-	/*Start add 相关参数设定  */
-	//$("#" + _preId + "Add").on("click",function() {
-	//	Indenpent.addPop();
-	//});
-    //
-	//// deleteBatch
-	//$("#" + _preId + "DeleteBatch").on("click",function() {
-	//	Indenpent.deleteBetch();
-	//});
 
 	return Indenpent;
 

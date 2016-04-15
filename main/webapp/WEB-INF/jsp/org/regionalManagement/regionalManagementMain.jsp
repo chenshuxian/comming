@@ -57,7 +57,10 @@
 
     <div class="flex-container layout-vertical main-content-bottom">
         <div class="main-content-header">
-            <div class="flex-container flex-space-between" style="float: right">
+            <div class="flex-container flex-space-between">
+                <div class="search flex-container flex-space-between">
+                    <h5 class="tips">关联机构列表</h5>
+                </div>
                 <div class="option icon-group-inline ">
                     <span id="${rmm}AddRelated"><i class="icon icon-plus-square"></i>添加</span>
                     <span id="${rmm}DeleteRelatedBatch"><i class="icon icon-trash"></i>删除选中</span>
@@ -66,7 +69,7 @@
         </div>
 
         <div class="main-content-body">
-            <table id="${rmm}RelatedList">
+            <table id="${rmm}List2">
             </table>
         </div>
     </div>

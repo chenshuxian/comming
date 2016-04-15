@@ -10,7 +10,9 @@
 <title>设置密码</title>
 </head>
 <body>
-    <div class="panel-main">
+<div class="panel-main">
+<form id="setPasswordForm" class="form-signin" action="${ctx}/sys/user/setPassWord" method="POST">
+    
         <div class="panel-container">
             <div class="panel-main-header">
                 <h1 class="text-center color-green"><i class="icon icon-lock-g"></i> 设置密码</h1>
@@ -22,7 +24,7 @@
                         	<strong>密码</strong>
                             <small>(6-20个字符，字母、数字和符号的组合)</small>
                         </label>
-                        <input type="password" class="form-control block-show" id="password"/>
+                        <input type="password" class="form-control block-show" id="password" name="password"/>
                     </div>
                     <div class="form-group">
                         <label for="">
@@ -32,11 +34,15 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-main-footer text-center">
-                <button class="btn btn-submit middle-size" onclick="ui_message.setPassword();">提交</button>
-            </div>
+          
         </div>
-    </div>
+  
+    </form>
+     <div class="panel-main-footer text-center">
+                <button class="btn middle-size" onclick="ui_message.setPassword();">提交</button>
+     </div>
+       </div>
+     
      <script src="${ctx}/js/auth/user.js?var=v1.0.0.1"></script>
 <style>
 	.panel-main{

@@ -16,7 +16,7 @@
 	function setParentValue() {
 		if (!orgId) {
 			//alert("请选择数据！");
-			showMessage('请选择数据！');
+			BM.showMessage('请选择数据！');
 			return;
 		}
 		$("#orgId").val(orgId);

@@ -35,7 +35,7 @@ var CtrDictCodes = (function($){
 
             if (name == '') {
 
-                showMessage('中文名称为空，请重新输入！');
+                BM.showMessage('中文名称为空，请重新输入！');
                 $("#editName").focus();
                 return false;
 
@@ -46,6 +46,43 @@ var CtrDictCodes = (function($){
 
             }
             return true;
+        },
+
+        validateBox: function() {
+            //中文名长度
+            $("input[name='name']").validatebox({
+                required:true,
+                validType:  ['symbol','length[0,30]','space'],
+                missingMessage: "中文名称为空，请重新输入！"
+            });
+            $("input[name='name']").attr('maxlength','30');
+            //英文名长度
+            $("input[name='enShortName']").validatebox({
+                validType:  ['symbol','length[0,20]']
+            });
+            $("input[name='enShortName']").attr('maxlength','20');
+            //英文名长度
+            $("input[name='enName']").validatebox({
+                validType:  ['symbol','length[0,55]']
+            });
+            $("input[name='enName']").attr('maxlength','55');
+            //whonetCode长度
+            $("input[name='whonetCode']").validatebox({
+                validType:  ['symbol','length[0,15]']
+            });
+            $("input[name='whonetCode']").attr('maxlength','15');
+            //fastCode长度
+            $("input[name='fastCode']").validatebox({
+                validType:  ['symbol','length[0,9]']
+            });
+            $("input[name='fastCode']").attr('maxlength','9');
+            //displayOrder长度
+            $("input[name='displayOrder']").validatebox({
+                validType:  ['symbol','length[0,11]']
+            });
+            $("input[name='displayOrder']").attr('maxlength','11');
+
+
         },
 
         /*callback function area*/

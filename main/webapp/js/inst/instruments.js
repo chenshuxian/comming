@@ -1,5 +1,4 @@
 /**
- * 标本类型js
  * Created by chenshuxian on 2016/03/02
  * ModuleName 中心仪器信息
  */
@@ -15,7 +14,7 @@ var Inst = (function($){
         _hideCols = [],	//要穩藏的欄位
         _data = Inst.searchObj(_preId),
         _module = "Inst",
-        _focusId = "editName",
+        _focusId = "name",
         _popArea = 720,
         _delBatUrl = ctx + "/inst/ctrInstruments/ctrInstrumentsDeleteBatch",
         _existUrl = ctx + "/inst/ctrInstruments/ctrInstrumentsIfExisted",
@@ -70,40 +69,7 @@ var Inst = (function($){
     // render dataGrid
         _dataGrid = _tableList.datagrid(_gridObj);
 
-    ///* 状态搜索 */
-    //$("." + _preId + "-status-selector li").on("click", function () {
-    //    $("#" + _preId + "StatusSpan").html($(this).html());
-    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var statusVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Status").val(statusVal);
-    //
-    //    Inst.searchGrid();
-    //});
-    //
-    ///* 排序 */
-    //$("." + _preId + "-sort-selector li").on("click", function () {
-    //    $("#" + _preId + "SortSpan").html($(this).html());
-    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var sortVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Sort").val(sortVal);
-    //
-    //    Inst.searchGrid();
-    //});
 
-    ///* search Btn */
-    //$("#" + _preId + "SearchBtn").on("click",function() {
-    //    Inst.searchGrid();;
-    //});
 
     /* 前台通讯类 */
     $("." + _preId + "-frontClass-selector").on("click", "li", function () {
@@ -119,16 +85,6 @@ var Inst = (function($){
 
         Inst.searchGrid();
     });
-
-    /*Start add 相关参数设定  */
-    //$("#" + _preId + "Add").on("click",function() {
-    //    Inst.addPop();
-    //});
-    //
-    //// deleteBatch
-    //$("#" + _preId + "DeleteBatch").on("click",function() {
-    //    Inst.deleteBetch();
-    //});
 
 
     $.extend(Inst,{
@@ -158,28 +114,13 @@ var Inst = (function($){
         validateSave: function() {
 
             var
-                name = $("#name").val(),
-                model = $("#model").val(),
-                producer = $("#producer").val(),
-                fastCode = $("#fastCode").val(),
+
                 displayOrder = $("#displayOrder").val(),
-                sampleTypeId = sampleTypeGrid.getValue(),
+                sampleTypeId = Inst.sampleTypeGrid.getValue(),
                 typeId = $("#typeId").val();
 
-            if(name == ''){
-                showMessage('仪器名称为空，请重新输入！',function(){
-                    $("#name").focus();
-                });
-                return false;
-            }
-            if(model == ''){
-                showMessage('仪器型号为空，请重新输入！',function(){
-                    $("#model").focus();
-                });
-                return false;
-            }
             if(sampleTypeId == ''){
-                showMessage('默认标本类型为空，请重新输入！',function(){
+                BM.showMessage('默认标本类型为空，请重新输入！',function(){
                     //$("#sampleTypeId").focus();
                 });
                 return false;
@@ -187,14 +128,48 @@ var Inst = (function($){
             if(validateDisplayOrder("displayOrder")){
                 return false;
             }
-            if(typeId == ''){
-                showMessage('仪器类型为空，请重新输入！',function(){
-                    $("#typeId").focus();
-                });
-                return false;
-            }
 
             return true;
+        },
+
+        validateBox: function() {
+
+            $("input[name='name']").validatebox({
+                required:true,
+                validType:  ['symbol','length[0,30]','space'],
+                missingMessage: "仪器名称为空，请重新输入！"
+            });
+            $("input[name='name']").attr('maxlength','30');
+            $("#model").validatebox({
+                required:true,
+                validType:  ['symbol','length[0,50]','space'],
+                missingMessage: "仪器型号为空，请重新输入！"
+            });
+            $("#model").attr('maxlength','50');
+            $("#typeId").validatebox({
+                required:true,
+                validType: 'selectValueRequired["#typeId"]',
+                missingMessage: "仪器类型为空，请重新输入！"
+            });
+
+            //fastCode长度
+            $("input[name='fastCode']").validatebox({
+                validType:  ['symbol','length[0,9]']
+            });
+            $("input[name='fastCode']").attr('maxlength','9');
+
+            //生产厂家
+            $("input[name='producer']").validatebox({
+                validType:  ['symbol','length[0,20]']
+            });
+            $("input[name='producer']").attr('maxlength','20');
+
+            //displayOrder长度
+            $("input[name='displayOrder']").validatebox({
+                validType:  ['digits','length[0,11]']
+            });
+            $("input[name='displayOrder']").attr('maxlength','6');
+
         },
 
         editCallBack: function() {
@@ -202,7 +177,7 @@ var Inst = (function($){
             var rowData = BasicModule.rowData;
             //console.log(Inst.rowData);
             Inst.sampleTypeGrid = new TextCombo(_sampleTypeParam);
-    		reportTemplateGrid = new TextCombo(_reportTemplateParam);
+            Inst.reportTemplateGrid = new TextCombo(_reportTemplateParam);
 
             $("#InfoForm").form("load", {
                 /* input's name attr : data */
@@ -225,7 +200,7 @@ var Inst = (function($){
             setTimeout(function() {
                 //alert(rowData.sampleTypeName);
                 Inst.sampleTypeGrid.setValue(rowData.sampleTypeSId, rowData.sampleTypeName);
-                reportTemplateGrid.setValue(rowData.reportTemplateSId, rowData.reportTemplateName);
+                Inst.reportTemplateGrid.setValue(rowData.reportTemplateSId, rowData.reportTemplateName);
             },500);
 
         },
@@ -257,7 +232,7 @@ var Inst = (function($){
 
         addCallBack: function() {
             Inst.sampleTypeGrid = new TextCombo(_sampleTypeParam);
-      		reportTemplateGrid = new TextCombo(_reportTemplateParam);
+            Inst.reportTemplateGrid = new TextCombo(_reportTemplateParam);
         },
 
         searchObj: function(preId) {
@@ -304,9 +279,7 @@ var Inst = (function($){
                 };
 
                 if(data.indexOf("err|") != 0){
-                    //alert('parInfo');
-                    //url = Inst.InfoUrl2;
-                    //data = {instrumentId:id};
+
                     var
                         params = {
                             url: Inst.InfoUrl2,
@@ -314,7 +287,7 @@ var Inst = (function($){
                             callback: callback
                         };
 
-                    Inst.CommonPop(params);
+                    Inst.commonPop(params);
                     //newcommonjs.newshowDictCodeEditDialog(data,callback,url,720);
                 }
             };
@@ -608,7 +581,7 @@ $(function(){
 //    
 //        var id = rowData.stringId;
 //        if (rowData.status == true) {
-//            showMessage('当前选中记录已启用，不允许修改！');
+//            BM.showMessage('当前选中记录已启用，不允许修改！');
 //            return;
 //        }
 //        var url = this.tubeInfoUrl;
@@ -760,19 +733,19 @@ $(function(){
 //		var typeId = $("#typeId").val();
 //		
 //		if(name == ''){
-//			showMessage('仪器名称为空，请重新输入！',function(){
+//			BM.showMessage('仪器名称为空，请重新输入！',function(){
 //				$("#name").focus();
 //			});
 //			return false;
 //		}
 //		if(model == ''){
-//			showMessage('仪器型号为空，请重新输入！',function(){
+//			BM.showMessage('仪器型号为空，请重新输入！',function(){
 //				$("#model").focus();
 //			});
 //			return false;
 //		}
 //		if(sampleTypeId == ''){
-//			showMessage('默认标本类型为空，请重新输入！',function(){
+//			BM.showMessage('默认标本类型为空，请重新输入！',function(){
 //				//$("#sampleTypeId").focus();
 //			});
 //			return false;
@@ -781,7 +754,7 @@ $(function(){
 //			return false; 
 //		}
 //		if(typeId == ''){
-//			showMessage('仪器类型为空，请重新输入！',function(){
+//			BM.showMessage('仪器类型为空，请重新输入！',function(){
 //				$("#typeId").focus();
 //			});
 //			return false;
@@ -1075,7 +1048,7 @@ $(function(){
 //// 启用
 //function enableIt(id, index,sampleTypeName){
 //	if(sampleTypeName==""||sampleTypeName==null){
-//		showMessage('当前选中记录默认标本类型为空，不允许启用！');
+//		BM.showMessage('当前选中记录默认标本类型为空，不允许启用！');
 //		return;
 //	}
 //	showConfirm('是否启用当前记录？',function(){
@@ -1124,19 +1097,19 @@ $(function(){
 //	var typeId = $("#typeId").val();
 //	
 //	if(name == ''){
-//		showMessage('仪器名称为空，请重新输入！',function(){
+//		BM.showMessage('仪器名称为空，请重新输入！',function(){
 //			$("#name").focus();
 //		});
 //		return false;
 //	}
 //	if(model == ''){
-//		showMessage('仪器型号为空，请重新输入！',function(){
+//		BM.showMessage('仪器型号为空，请重新输入！',function(){
 //			$("#model").focus();
 //		});
 //		return false;
 //	}
 //	if(sampleTypeId == ''){
-//		showMessage('默认标本类型为空，请重新输入！',function(){
+//		BM.showMessage('默认标本类型为空，请重新输入！',function(){
 //			//$("#sampleTypeId").focus();
 //		});
 //		return false;
@@ -1145,7 +1118,7 @@ $(function(){
 //		return false; 
 //	}
 //	if(typeId == ''){
-//		showMessage('仪器类型为空，请重新输入！',function(){
+//		BM.showMessage('仪器类型为空，请重新输入！',function(){
 //			$("#typeId").focus();
 //		});
 //		return false;
@@ -1324,7 +1297,7 @@ $(function(){
 //	//判断检验项目是否停用，可用状态不可修改数据 1启用 0停用
 //	var status = $("#status_" + id).val();
 //	if(status == 1){
-//		showMessage("当前选中记录状态为可用，不允许删除！");
+//		BM.showMessage("当前选中记录状态为可用，不允许删除！");
 //		return;
 //	}
 //	showConfirm('是否删除当前记录？',function(){
@@ -1356,7 +1329,7 @@ $(function(){
 //			//判断选择的数据是否是停用数据
 //			var status = $("#status_" + $(this).attr("value")).val();
 //			if(status == 1){
-//				showMessage("第" + i + "条记录状态为可用，不允许删除！");
+//				BM.showMessage("第" + i + "条记录状态为可用，不允许删除！");
 //				flag = true;
 //				return false;//跳出所有循环；相当于 java中的 break 效果。反之 continue 效果
 //			}
@@ -1372,7 +1345,7 @@ $(function(){
 //	}
 //	
 //	if(ids == ''){
-//		showMessage("请选择要删除的仪器！");
+//		BM.showMessage("请选择要删除的仪器！");
 //		return false;
 //	}
 //	

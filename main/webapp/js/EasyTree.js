@@ -32,7 +32,7 @@ EasyTree = (function($){
 		var treeNodes = _treeObj.tree('getSelected');
 		
 		if (treeNodes == null || treeNodes.length == 0) {
-			showMessage("请选择节点！");
+			BM.showMessage("请选择节点！");
 			return ;
 		}
 
@@ -43,9 +43,9 @@ EasyTree = (function($){
 	
 	var loadPop = function(url,data,callback){
 		$("#ctrDictInfoModal").load(url, data, function () {
-            dialog("ctrDictInfoModal", {
-                width: 480
-            },callback);
+            dialog("ctrDictInfoModal", {width: 480},callback);
+			$("#name").attr('maxlength','30');
+			$("#name").focus();
      });
 	
 		
@@ -97,47 +97,54 @@ EasyTree = (function($){
 	 * 名字重复提示
 	 */
 	var _save = function() {
-		 //防止重复提交
+		//防止重复提交
 		$("#editBtn").attr("disabled", true);
 		//var zTree = $.fn.zTree.getZTreeObj("treeDemo");
 		formTextTrim("editForm");
-		var name = $("#name").val();
-		var oldName = $("#oldName").val();
+		var
+			name = $("#name").val(),
+			oldName = $("#oldName").val(),
+			id = $("#id").val();
+
 		if (name == '') {
-			
-			showMessage('中文名称为空，请重新输入！',function(){
+
+			BM.showMessage('中文名称为空，请重新输入！', function () {
 				$("#name").focus();
 			});
 			$("#editBtn").attr("disabled", false);
-			return;
-		}
-		var id = $("#id").val();
-		//前后一样不做验证处理
-		if(oldName==name){
-			_addCtrRegions(name,id);
+			console.log("ch1");
 		}else{
-			$.ajax({
-				url : _nameRepeatUrl,
-				type : "POST",
-				data : {
-					"name" : name
-				},
-				success : function(data) {
-					if (data.indexOf("confirm|") == 0) {
-						data = data.substring(8);
-						showConfirm((data),function(){
-							_addCtrRegions(name,id);
-						})
-					} else {
-						_addCtrRegions(name,id);
-					}
+			//前后一样不做验证处理
+			console.log("ch2");
+			if (oldName == name) {
+				_addCtrRegions(name, id);
+			} else {
+				$.ajax({
+					url: _nameRepeatUrl,
+					type: "POST",
+					data: {
+						"name": name
+					},
+					success: function (data) {
+						if (data.indexOf("confirm|") == 0) {
+							data = data.substring(8);
+							showConfirm((data), function () {
+								_addCtrRegions(name, id);
+							})
+						} else {
+							_addCtrRegions(name, id);
+						}
 
-				},
-				"error" : function() {
-					//canStore = true;
-				}
-			});
+					},
+					"error": function () {
+						//canStore = true;
+					}
+				});
+			}
+
 		}
+
+
 	}
 	// 保存提交，写库
 	var _addCtrRegions = function(name,id) {
@@ -199,7 +206,7 @@ EasyTree = (function($){
 		
 		var id = treeNode.id;
 		if (id == rootNode.id){ //根节点不可删除
-			showMessage(rootNode.text+"节点不能删除！");
+			BM.showMessage(rootNode.text+"节点不能删除！");
 			return ;
 		}
 		showConfirm(("是否删除此节点"),function() {// 确认提示：是否删除此节点。

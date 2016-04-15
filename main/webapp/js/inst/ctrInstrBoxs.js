@@ -151,7 +151,7 @@ var CtrInstrBoxs = (function($){
                     focusId:_preId + "OrgSearchStr"
                 };
 
-            CtrInstrBoxs.CommonPop(params);
+            CtrInstrBoxs.commonPop(params);
             //newcommonjs.newshowDictCodeEditDialog(null, , url, 600);
         });
 
@@ -186,13 +186,13 @@ var CtrInstrBoxs = (function($){
                 displayOrderId = "editDisplayOrder";
 
             if (name == '') {
-                showMessage('盒子条码为空，请重新输入！');
+                BM.showMessage('盒子条码为空，请重新输入！');
                 $("#editBoxBarcode").focus();
                 return false;
             }
 
             if (boxIp == '') {
-                showMessage('盒子IP为空，请重新输入！');
+                BM.showMessage('盒子IP为空，请重新输入！');
                 $("#editBoxIp").focus();
                 return false;
             }
@@ -290,7 +290,7 @@ $(function(){
     $("#" + _preId + "Add").on("click",function() {
         //未选择机构
         if(!CtrInstrBoxs.orgId){
-            showMessage("请选择机构");
+            BM.showMessage("请选择机构");
             return;
         }
         CtrInstrBoxs.addPop();

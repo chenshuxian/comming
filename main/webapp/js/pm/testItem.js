@@ -1,3 +1,7 @@
+/**
+ * 检验项目
+ * Created by chenshuxian on 2016/03/24
+ */
 var TestItem = (function($){
 
     /* START render basicModule */
@@ -9,7 +13,7 @@ var TestItem = (function($){
         _hideCols = [],	//要穩藏的欄位
         _data = TestItem.searchObj(_preId),
         _module = "TestItem",
-        _focusId = "testItem_name",
+        _focusId = "testItem_codeNo",
         _popArea = 750,
         _delBatUrl = ctx+"/pm/testItem/deleteTestItem",
         _existUrl = ctx+"/pm/testItem/findCount",
@@ -19,7 +23,7 @@ var TestItem = (function($){
         _changeStatusUrl = ctx+"/pm/testItem/modifyTestItemStatus",
         _InfoUrl = ctx + "/pm/testItem/queryTestItemToID",
         _pageListUrl =  ctx +'/pm/testItem/testItemList',
-        _exParams = {orderType:2},
+        //_exParams = {orderType:2},
 
     /* START dataGrid 生成*/
         _dgParams = {
@@ -34,62 +38,6 @@ var TestItem = (function($){
         _gridObj = dataGridM.init(_dgParams),
     // render dataGrid
         _dataGrid = _tableList.datagrid(_gridObj);
-
-    ///* 状态搜索 */
-    //$("." + _preId + "-status-selector li").on("click", function () {
-    //    $("#" + _preId + "StatusSpan").html($(this).html());
-    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var statusVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Status").val(statusVal);
-    //
-    //    TestItem.searchGrid();
-    //});
-    //
-    ///* 排序 */
-    //$("." + _preId + "-sort-selector li").on("click", function () {
-    //    $("#" + _preId + "SortSpan").html($(this).html());
-    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var sortVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Sort").val(sortVal);
-    //
-    //    TestItem.searchGrid();
-    //});
-    //
-    ///* search Btn */
-    //$("#" + _preId + "SearchBtn").on("click",function() {
-    //    TestItem.searchGrid();;
-    //});
-
-    /*Start add 相关参数设定  */
-    //$("#" + _preId + "Add").on("click",function() {
-    //    var params = {
-    //        BCB: true
-    //    };
-    //    TestItem.addPop(params);
-    //});
-    //
-    //// deleteBatch
-    //$("#" + _preId + "DeleteBatch").on("click",function() {
-    //
-    //    var params,ids;
-    //    ids = testItemGroupMain.getIds();
-    //    params = {
-    //        data: {testItemid: ids.join(",")}
-    //    };
-    //    TestItem.deleteBetch(params);
-    //
-    //});
-
 
     /*download 相关参数设定  */
     $("#" + _preId + "download").on("click",function() {
@@ -124,9 +72,14 @@ var TestItem = (function($){
         changeStatusUrl: _changeStatusUrl,
         InfoUrl: _InfoUrl,
         pageListUrl: _pageListUrl,
-        exParams: _exParams,
+       //exParams: _exParams,
         /*END url 定義*/
         dataGrid:_dataGrid,
+        addreload:{
+            searchStr:"",
+            status:"",
+            orderType:"2"
+        },
         testMethodParam: {					//下拉Grid参数,所有参数均为必填
             div_id:"testItem_testMethod", 				//对应表单DIV的id
             grid_id:"testItem_gridTestMethod", 			//对应数据源Grid的Id
@@ -192,6 +145,58 @@ var TestItem = (function($){
             }
         },
 
+        validateBox: function() {
+            $("#testItem_codeNo").validatebox({
+                required: true,
+                validType:  ['numAndLetters','length[0,15]','space'],
+                missingMessage: "达安标准码为空，请重新输入！"
+            });
+            $("#testItem_codeNo").attr('maxlength','15');
+
+            $("#testItem_name").validatebox({
+                required: true,
+                validType:  ['symbol','length[0,50]','space'],
+                missingMessage: "项目名字为空，请重新输入！"
+            });
+            $("#testItem_name").attr('maxlength','50');
+
+            $("#testItem_enName").validatebox({
+                required: true,
+                validType:  ['symbol','length[0,55]','space'],
+                missingMessage: "英文名称为空，请重新输入！"
+            });
+            $("#testItem_enName").attr('maxlength','55');
+            $("#testItem_enShortName").validatebox({
+                required: true,
+                validType:  ['symbol','length[0,20]','space'],
+                missingMessage: "英文简称为空，请重新输入！"
+            });
+            $("#testItem_enShortName").attr('maxlength','20');
+            $("#testItem_resultPrecision").validatebox({
+                validType:  ['symbol','length[0,9]']
+            });
+            $("#testItem_resultPrecision").attr('maxlength','9');
+            $("#testItem_fastCode").validatebox({
+                validType:  ['symbol','length[0,9]']
+            });
+            $("#testItem_fastCode").attr('maxlength','9');
+            $("#testItem_stdCode").validatebox({
+                validType:  ['symbol','length[0,15]']
+            });
+            $("#testItem_stdCode").attr('maxlength','15');
+
+            $("#testItem_displayOrder").validatebox({
+                validType:  ['digits','length[0,6]']
+            });
+            $("#testItem_displayOrder").attr('maxlength','6');
+
+            $("#testItem_memo").validatebox({
+                validType:  ['symbol','length[0,150]']
+            });
+            $("#testItem_memo").attr('maxlength','150');
+
+        },
+
         validateSave: function() {
 
             var
@@ -209,59 +214,35 @@ var TestItem = (function($){
                 resultPrecision = $.trim($("#testItem_resultPrecision").val()),
                 displayOrder = $.trim($("#testItem_displayOrder").val());
 
-            if(codeNo == ""){
-                showMessage("达安标准码为空，请重新输入！",function(){
-                    $("#testItem_codeNo").focus();
-                });
-                return false;
-            }
-            if(name == ""){
-                showMessage("项目名字为空，请重新输入！",function(){
-                    $("#testItem_name").focus();
-                });
-                return false;
-            }
-            if(enName == ""){
-                showMessage("英文名称为空，请重新输入！",function(){
-                    $("#testItem_enName").focus();
-                });
-                return false;
-            }
-            if(enShortName == ""){
-                showMessage("英文简称为空，请重新输入！",function(){
-                    $("#testItem_enShortName").focus();
-                });
-                return false;
-            }
             if(sexId == ""){
-                showMessage("请选择性别！",function(){
+                BM.showMessage("请选择性别！",function(){
                 });
                 return false;
             }
             if(testMethodId == ""){
-                showMessage("检验方法为空，请重新输入！",function(){
+                BM.showMessage("检验方法为空，请重新输入！",function(){
                 });
                 return false;
             }
             if(disciplineId == ""){
-                showMessage("医学专业组为空，请重新输入！",function(){
+                BM.showMessage("医学专业组为空，请重新输入！",function(){
                 });
                 return false;
             }
             if(sampleTypeId == ""){
-                showMessage("默认标本类型为空，请重新输入！",function(){
+                BM.showMessage("默认标本类型为空，请重新输入！",function(){
                 });
                 return false;
             }
             var re = /^[0-9]*[1-9][0-9]*$/;
             if (resultPrecision != '' && (isNaN(resultPrecision) || !re.test(resultPrecision))) {
-                showMessage('小数位数必须为大于0的整数，请重新输入！', function() {
+                BM.showMessage('小数位数必须为大于0的整数，请重新输入！', function() {
                     $("#testItem_resultPrecision").focus();
                 });
                 return false;
             }
             /*if(isNaN(resultPrecision)){
-                showMessage("小数位数只能是数字",function(){
+                BM.showMessage("小数位数只能是数字",function(){
                     $("#testItem_resultPrecision").focus();
                 });
                 return false;
@@ -269,14 +250,14 @@ var TestItem = (function($){
             var regEx = new RegExp(/^(([^\^\.<>%&',;=?$"':#testItem_@!~\]\[{}\\`\|])*)$/);
             if(unit != null){
                 if(!regEx.test(unit)){
-                    showMessage("单位有特殊字符，请重新输入!",function(){
+                    BM.showMessage("单位有特殊字符，请重新输入!",function(){
                         $("#testItem_units").focus();
                     });
                     return false;
                 }
             }
             if(isNaN(displayOrder)){
-                showMessage("顺序号只能是数字，请重新输入！",function(){
+                BM.showMessage("顺序号只能是数字，请重新输入！",function(){
                     $("#testItem_displayOrder").focus();
                 });
                 return false;
@@ -286,29 +267,13 @@ var TestItem = (function($){
                 return false;
             }
             if(displayOrder.length > 6){
-                showMessage("顺序号最大长度为6位，请重新输入！",function(){
+                BM.showMessage("顺序号最大长度为6位，请重新输入！",function(){
                     $("#testItem_displayOrder").focus();
                 });
                 return false;
             }
-            //regEx = new RegExp(/^(([^\^\.<>%&',;=?$"':#testItem_@!~\]\[{}\\/`\|])*)$/);
-            //var result = codeNo.match(regEx);
-            regEx = /^[A-Za-z0-9]+$/;
-            if(!regEx.test(codeNo)){
-                showMessage("达安标准码只能输入纯字母、纯数字，或字母+数字组合，请重新输入！",function(){
-                    $("#testItem_codeNo").focus();
-                });
-                return false;
-            }
 
-            var patrn = /[0-9a-zA-Z]/;
 
-            if (!patrn.exec(codeNo)){
-                showMessage("达安标准码只能由数字或字母组成，请重新输入！",function(){
-                    $("#testItem_codeNo").focus();
-                });
-                return false;
-            }
             return true;
         },
 
@@ -333,7 +298,8 @@ var TestItem = (function($){
 
             var type,params;
             type = rowData.status.toString();
-            if(type = "1")
+
+            if(type == "1")
                 type = "0";
             else
                 type = "1";
@@ -351,19 +317,23 @@ var TestItem = (function($){
 
         //修改新增和修改时传送出的data资料
         beforeSubmit: function(){
-
+            console.log("testItem");
             var params,data;
-            data = $("#InfoForm").serialize();
-            data +="&unit="+encodeURIComponent(TestItem.unitGrid.getText())+
-                    "&disciplineName="+TestItem.disciplineGrid.getText()+
-                    "&sampleTypeName="+TestItem.sampleTypeGrid.getText()+
-                    "&testMethodName="+TestItem.testMethodGrid.getText()+
-                    "&resultTypeName="+TestItem.resultTypeGrid.getText();
+            data = $("#InfoForm").serializeArray();
+            data.push(
+                {name: 'unit', value: TestItem.unitGrid.getText()},
+                {name: 'disciplineName', value: TestItem.disciplineGrid.getText()},
+                {name: 'sampleTypeName', value: TestItem.sampleTypeGrid.getText()},
+                {name: 'testMethodName', value: TestItem.testMethodGrid.getText()},
+                {name: 'resultTypeName', value: TestItem.resultTypeGrid.getText()}
+            );
+
+            console.log(data);
 
             params = {
               data: data
             };
-            console.log("du");
+
             this.editDictCode(params);
         },
 
@@ -384,7 +354,7 @@ var TestItem = (function($){
                 name = $.trim($("#testItem_name").val());
 
             if(count > 0){
-					showMessage("达安标准码已存在，请重新输入！",function(){
+					BM.showMessage("达安标准码已存在，请重新输入！",function(){
 						count = 0;
                         $("#editBtn").attr("disable", false);
 					});

@@ -55,11 +55,11 @@
 					<input type="hidden" name="regoldName" id="regoldName" value="${formdata.name}" />
 					<input type="hidden" name="regpid" id="regpid" value="" />
 					<input type="hidden" name="eidtType" id="editType" value="" />
-					<div class="wrapper-footer text-center">
-	                    <button id="editBtn" class="btn btn-submit sm-size" onclick="EasyTree.save();">确定</button>
-	                    <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
-                	</div>
                 </form>
+                <div class="wrapper-footer text-center">
+                    <button id="editBtn" class="btn btn-submit sm-size" onclick="EasyTree.save();">确定</button>
+                    <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
+                </div>
 
             </div>
         </div>

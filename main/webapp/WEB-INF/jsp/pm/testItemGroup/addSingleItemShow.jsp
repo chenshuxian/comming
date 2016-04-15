@@ -13,18 +13,18 @@
 							<strong>未包含项目</strong>
 							<span>仪器过滤</span>
 							<div class="drop-down">
-								<div class="drop-down-selected">
-									<span class="selected-items"  id="instrument"></span>
-									<i class="icon icon-angle-down"></i>
-								</div>
-								<div class="drop-down-menu">
-									<ul class="list-unstyled ul_instrument">
+								<%--<div class="drop-down-selected">--%>
+									<%--<span class="selected-items"  id="instrument"></span>--%>
+									<%--<i class="icon icon-angle-down"></i>--%>
+								<%--</div>--%>
+								<%--<div class="drop-down-menu">--%>
+									<select  class="list-unstyled ul_instrument">
 										<c:forEach items="${ctrInstrumentsList}" var="instrument">
 											<%--<li onclick="testItemGroupMain.instrumentClick('${instrument.idStr }','${instrument.name }');" value="${instrument.idStr }">${instrument.name }</li>--%>
-											<li selected="selected" el-value="${instrument.idStr}" >${instrument.name}</li>
+											<option selected="selected" value="${instrument.idStr}" >${instrument.name}</option>
 										</c:forEach>
-									</ul>
-								</div>
+									</select>
+								<%--</div>--%>
 							</div>
 							<div class="form-control-icon icon-right">
 								<input type="text" class="form-control" id="instrumentSearch" placeholder="搜索内容...">
@@ -76,13 +76,12 @@
 				};
 			};
 			/* 仪器过滤 */
-			$(".ul_instrument li").on("click", function () {
+			$(".ul_instrument").on("change", function () {
 				var
 						dataGrid = testItemGroupMain.rightDG,
-						flg = $(this).is('.selected'),
-						sortVal = $(this).attr("el-value"),
+						sortVal = $(this).val(),
 						searchObj,params;
-						$("#instrumentId").val(sortVal);
+				$("#instrumentId").val(sortVal);
 
 				searchObj = getSearchObj();
 				params = {
@@ -90,18 +89,67 @@
 					searchObj: searchObj
 				};
 
-				$("#instrument").html($(this).html());
-				$(".ul_instrument li.selected").removeClass("selected");
-				$(this).addClass(function () {
-					return flg ? '' : 'selected';
-				})
-
 				testItemGroupMain.searchGrid(params);
 			});
 
 			/*左右数据切换*/
 
-			$("#leftShiftBtn").on('click',BasicModule.leftShiftBtn);
+			$("#leftShiftBtn").on('click',function(){
+				var rightProjectData = $("#addCheckProjectRight").datagrid('getSelections'),
+				stringId,rowIndex,rows;
+				var leftProjectData = $("#addCheckProjectLeft").datagrid('getData');
+				var sexId = 3;
+				if(leftProjectData && leftProjectData.total > 0) {
+					makeToArray(leftProjectData.rows).forEach(function (element, index) {
+						if(element.sexId!=3){
+							sexId = element.sexId;
+							return false;
+						}
+					});
+				}
+			if(rightProjectData.length > 0) {
+				var msg='', sex='',rightSex=3;
+				makeToArray(rightProjectData).forEach(function (element, index) {
+					var newrow = {
+						index:0,
+						row: element
+					};
+					if(sexId == 1){
+						sex = "男";
+					}else if(sexId == 2){
+						sex = "女";
+					}
+					if(element.sexId == 3 || element.sexId == sexId || sexId == 3){
+						rowIndex = $("#addCheckProjectRight").datagrid("getRowIndex", element);
+						$("#addCheckProjectRight").datagrid('deleteRow', rowIndex);
+						$("#addCheckProjectLeft").datagrid('insertRow', newrow);
+						stringId = element.idString;
+						if (element.stringId)
+							stringId = element.stringId;
+						BasicModule.addTestItemIds.push(stringId);
+					}else if(rightSex!=3 && rightSex!=element.sexId){
+						msg += element.name+"、";
+					}
+					else{
+						msg += element.name+"、";
+					}
+					rightSex = element.sexId;
+					if(sexId==3)
+						sexId = element.sexId;
+				});
+				rows = $("#addCheckProjectLeft").datagrid("getRows");
+				$("#containSize").html(rows.length);
+				if(msg!=''){
+					BM.showMessage('只允许添加性别为'+sex+"和不限的项目,"+msg.substring(0,msg.length-1)+"添加失败！");
+				}
+			}else{
+				//alert("ring2");
+				BM.showMessage('请选择要添加的项目！');
+				return;
+			}
+			});
+			
+			
 			$("#rightShiftBtn").on('click',BasicModule.rightShiftBtn);
 			$("#searchBtn2").on('click', function () {
 				$("#addCheckProjectRight").datagrid("reload", getSearchObj());

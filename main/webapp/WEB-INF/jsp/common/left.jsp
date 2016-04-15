@@ -99,7 +99,7 @@
 					<li><a href="javascript:menuLink('${ctx}/sys/logQuery/logQueryMain');" >日志查询</a></li>
 					<li><a href="javascript:menuLink('${ctx}/sys/user/userMain');" >用户管理</a></li>
 					<li><a href="javascript:menuLink('${ctx}/sys/user/userInfo');" >个人信息</a></li>
-					<li><a href="javascript:menuLink('${ctx}/sys/user/setPassWord');" >设置密码</a></li>
+				<%-- 	<li><a href="javascript:menuLink('${ctx}/sys/user/setPassWord');" >设置密码</a></li> --%>
 					<li><a href="javascript:menuLink('${ctx}/sys/user/updatePassWord');" >修改密码</a></li>
 				</ul>
 			</li>

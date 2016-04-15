@@ -174,7 +174,7 @@ function closeEdit(){
 	<!-------------------------------------------------------------------------------- 
 	---------------------------医学专业组下拉Grid数据源--------------------------------------
 	--------------------------------------------------------------------------------->
-	<div id="gridDiscipline" class="tablebox_02" style="width: 200px; height: 205px; display: none;">
+	<div id="gridDiscipline" class="tablebox_02" style="width: 180px; height: 211px; display: none;">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr class="tablehead">
 				<td style="width: 15px;">&nbsp;</td>
@@ -196,7 +196,7 @@ function closeEdit(){
 	<!-------------------------------------------------------------------------------- 
 	---------------------------默认标本类型下拉Grid数据源-------------------------------------
 	--------------------------------------------------------------------------------->
-	<div id="gridSampleType" class="tablebox_02" style="width: 200px; height: 205px; display: none;">
+	<div id="gridSampleType" class="tablebox_02" style="width: 180px; height: 205px; display: none;">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr class="tablehead">
 				<td style="width: 15px;">&nbsp;</td>
@@ -218,7 +218,7 @@ function closeEdit(){
 	<!-------------------------------------------------------------------------------- 
 	---------------------------单位Grid数据源--------------------------------------------
 	--------------------------------------------------------------------------------->
-	<div id="gridUnit" class="tablebox_02" style="width: 200px; height: 205px; display: none;">
+	<div id="gridUnit" class="tablebox_02" style="width: 180px; height: 205px; display: none;">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr class="tablehead">
 				<td style="width: 15px;">&nbsp;</td>
@@ -240,7 +240,7 @@ function closeEdit(){
 	<!-------------------------------------------------------------------------------- 
 	---------------------------结果类型下拉Grid数据源--------------------------------------
 	--------------------------------------------------------------------------------->
-	<div id="gridResultType" class="tablebox_02" style="width: 200px; height: 205px; display: none;">
+	<div id="gridResultType" class="tablebox_02" style="width: 180px; height: 205px; display: none;">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tr class="tablehead">
 				<td style="width: 15px;">&nbsp;</td>

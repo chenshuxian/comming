@@ -142,7 +142,7 @@ var logQuery = {
 	    	var module = $("#logQStatus").val();
 	    	
 	    	if(logQuery.validateDate(beginTime,endTime)){
-	    		showMessage("起始日期和结束日期相差不能超过15天！");
+	    		BM.showMessage("起始日期和结束日期相差不能超过15天！");
 				return ;
 	    	}else{
 	    		return {

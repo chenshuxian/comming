@@ -18,7 +18,7 @@
             </div>
 
             <div class="wrapper-footer text-center">
-                <button data-show="addAreaUserSure" id="authUser_btnSave" class="btn btn-submit sm-size J_ShowPop" onclick="authUsers_saveUserGroup()">确定</button>
+                <button id="authUser_btnSave" class="btn btn-submit sm-size J_ShowPop" onclick="authUsers_saveUserGroup()">确定</button>
                 <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
             </div>
             <input type="hidden" id="userGroup_userId">

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/common/pageIds.jsp" %>
-<script src="${ctx}/js/basisDict/newctrTubeTypes.js?var=${randomVal}"></script>
+
 <div class="flex-container layout-vertical main-content-container" id="${tt}MainContentContainer">
     <div class="main-content-header">
         <div class="flex-container flex-space-between">
@@ -57,6 +57,7 @@
     <input type="hidden" id="${tt}Sort"/>
 
 </div>
+<script src="${ctx}/js/basisDict/newctrTubeTypes.js?var=${randomVal}"></script>
 
 
 

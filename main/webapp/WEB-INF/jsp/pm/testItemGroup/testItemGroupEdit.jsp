@@ -27,7 +27,7 @@
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container  flex-space-between">
-										<label for="name"><span class="required-icon">*</span>中文名称:</label>
+										<label for="name"><span class="required-icon">*</span>组合项目:</label>
 										<input type="text" class="form-control block-show" id="name" name="name"/>
 									</div>
 								</div>
@@ -61,7 +61,7 @@
 								<div class="form-combo block-show">
 									<div class=" flex-container  flex-space-between">
 										<label for="sampleType"><span class="required-icon">*</span>默认标本类型:</label>
-										<div id="sampleType" style="width: 187px"></div>
+										<div id="sampleType" style="width: 197px"></div>
 									</div>
 								</div>
 							</div>
@@ -92,12 +92,11 @@
 					</div>
 
 					<div class="flex-container flex-space-between flex-space-10">
-						<div class="flex-col-6">
+						<div class="flex-col-12">
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container ">
-										<label for="isIndividualStat">按单项统计监
-											测工作量:</label>
+										<span style="padding-right: 5px;" for="isIndividualStat">按单项统计检测工作量 :</span>
 										<input type="checkbox"  id="isIndividualStat" />
 									</div>
 								</div>
@@ -118,7 +117,7 @@
 <!--------------------------------------------------------------------------------
 ---------------------------默认标本类型下拉Grid数据源-------------------------------------
 --------------------------------------------------------------------------------->
-<div id="gridSampleType" class="tablebox_02" style="width: 200px; height: 205px; display: none;">
+<div id="gridSampleType" class="tablebox_02" style="width: 180px; height: 211px; display: none;">
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr class="tablehead">
 			<td style="width: 15px;">&nbsp;</td>

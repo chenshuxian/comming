@@ -1,12 +1,14 @@
 /**
  * Created by jacky on 2016/2/7.
  */
-var CB = ConstBox = (function(){
+var CB = ConstBox = (function($){
 
     const ConstBox = {
         METHOD: "POST",
         POPDIV: "ctrDictInfoModal",
         DELSUCC: "succ|刪除成功!",
+        COLMAXLEN: 15,
+        HEIGHT:($(window).height() < 810) ? 220 : 300,
 
         PREID:{
             //就诊类型
@@ -64,7 +66,7 @@ var CB = ConstBox = (function(){
             //中心仪器信息
             INS: "ins",
             //用户管理
-            AU: "au",
+            AU: "authUsers",
             //角色管理
             RM: "rm",
             //细菌字典
@@ -86,11 +88,19 @@ var CB = ConstBox = (function(){
             //中心仪器细菌对照
             IMR: "imr",
             //中心仪器项目对照
-            IRR: "irr"
+            IRR: "irr",
+            //客户仪器信息
+            II: "ii",
+            //机构系统初始化
+            OI: "oi",
+            //中心报表模板
+            CT: "ct",
+            //客户报表模板
+            CST: "cst"
         }
 
     };
 
     return ConstBox;
 
-}());
+}(jQuery));

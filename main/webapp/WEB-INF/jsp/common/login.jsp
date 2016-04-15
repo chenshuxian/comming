@@ -115,13 +115,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 <button class="control-icon">
                     <i class="icon icon-user"></i>
                 </button>
-                <input type="text" class="form-control block-show" placeholder="输入账户/手机号" id="user_name" name="user_name" value="${user_name}"/>
+                <input type="text" class="form-control block-show" placeholder="输入账户/手机号" id="user_name" name="user_name" value="${user_name}" tabindex="1"/>
             </div>
             <div class="form-control-icon block-show">
                 <button class="control-icon">
                     <i class="icon icon-lock"></i>
                 </button>
-                <input type="password" class="form-control block-show" placeholder="输入密码" id="password" name="password"/>
+                <input type="password" class="form-control block-show" placeholder="输入密码" id="password" name="password" tabindex="2"/>
             </div>
 			<div class="error-tips">
 				<c:if test='${errorMSG!=""}'>${fn:substring(errorMSG,4,200)}</c:if>

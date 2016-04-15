@@ -37,52 +37,6 @@ var TubeTypes = (function($){
         _gridObj = dataGridM.init(_dgParams),                   //取得 datagrid 物件参数
         // render dataGrid
         _dataGrid = _tableList.datagrid(_gridObj);
-    //
-    ///* 状态搜索 */
-    //$("." + _preId + "-status-selector li").on("click", function () {
-    //    $("#" + _preId + "StatusSpan").html($(this).html());
-    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var statusVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Status").val(statusVal);
-    //
-    //    TubeTypes.searchGrid();
-    //});
-
-    ///* 排序 */
-    //$("." + _preId + "-sort-selector li").on("click", function () {
-    //    $("#" + _preId + "SortSpan").html($(this).html());
-    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var sortVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Sort").val(sortVal);
-    //
-    //    TubeTypes.searchGrid();
-    //});
-
-    ///* search Btn */
-    //$("#" + _preId + "SearchBtn").on("click",function() {
-    //    TubeTypes.searchGrid();
-    //});
-    /*Start add 相关参数设定  */
-    //$("#" + _preId + "Add").on("click",function() {
-    //    console.log("clieck");
-    //    //TubeTypes.addPop();
-    //});
-    //
-    //// deleteBatch
-    //$("#" + _preId + "DeleteBatch").on("click",function() {
-    //    TubeTypes.deleteBetch();
-    //});
-
 
     $.extend(TubeTypes,{
 
@@ -112,7 +66,7 @@ var TubeTypes = (function($){
 
             if (name == '') {
 
-                showMessage('中文名称为空，请重新输入！');
+                BM.showMessage('中文名称为空，请重新输入！');
                 $("#editName").focus();
                 return false;
 

@@ -15,6 +15,7 @@
         $('#toggle-menu').trigger("click");
     });
 </script>
+<script src="${ctx}/js/mresize.js?var=${randomVal}"></script>
 <script src="${ctx}/js/const.js?var=${randomVal}"></script>
 <script src="${ctx}/js/basicModule.js?var=${randomVal}"></script>
 <body>
@@ -320,6 +321,24 @@
                                                 </div>
                                             </div>
                                         </local:ifAuthrized>
+                                        <!-----------------报告模板----------------->
+                                        <div class="items">
+                                            <div class="toggle-show">
+                                                <div class="toggle-show-title">
+                                                    <i class="fa fa-caret-right"></i>报告模版
+                                                </div>
+                                                <div class="toggle-show-menu">
+                                                    <ul class="list-unstyled">
+                                                        <li><a href="javascript:void(0)" class="easyui-linkbutton"
+                                                               onclick="addTab('中心报表模板维护','${ctx}/ctrTemplate/ctrTemplateMain');">中心报表模板维护</a>
+                                                        </li>
+                                                        <li><a href="javascript:void(0)" class="easyui-linkbutton"
+                                                               onclick="addTab('客户报表模板维护','${ctx}/cusTemplate/cusTemplateMain');">客户报表模板维护</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </local:ifAuthrized>
@@ -348,6 +367,26 @@
                                 <div id="sysSubMenu" class="drop-down-menu">
                                     <div class="drop-down-menu-title">系统管理</div>
                                     <div class="flex-container">
+                                        <%--------------中心配置---------------%>
+                                            <local:ifAuthrized value="02020000">
+                                                <div class="items">
+                                                    <div class="toggle-show">
+                                                        <div class="toggle-show-title">
+                                                            <i class="fa fa-caret-right"></i>中心配置
+                                                        </div>
+                                                        <div class="toggle-show-menu">
+                                                            <ul class="list-unstyled">
+                                                                <local:ifAuthrized value="01050100">
+                                                                    <li><a href="javascript:void(0)"
+                                                                           class="easyui-linkbutton"
+                                                                           onclick="addTab('机构系统管理','${ctx}/sys/systemInit/systemInitMain');">机构系统管理</a>
+                                                                    </li>
+                                                                </local:ifAuthrized>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </local:ifAuthrized>
                                         <!-- -------------用户设置------------------ -->
                                         <local:ifAuthrized value="02020000">
                                             <div class="items">
@@ -369,12 +408,12 @@
                                                                        onclick="addTab('个人信息','${ctx}/auth/user/doUserInfo');">个人信息</a>
                                                                 </li>
                                                             </local:ifAuthrized>
-                                                            <local:ifAuthrized value="01050100">
+                                                          <%--   <local:ifAuthrized value="01050100">
                                                                 <li><a href="javascript:void(0)"
                                                                        class="easyui-linkbutton"
                                                                        onclick="addTab('设置密码','${ctx}/sys/users/setPassWord');">设置密码</a>
                                                                 </li>
-                                                            </local:ifAuthrized>
+                                                            </local:ifAuthrized> --%>
                                                             <local:ifAuthrized value="01050100">
                                                                 <li><a href="javascript:void(0)"
                                                                        class="easyui-linkbutton"
@@ -676,7 +715,7 @@
         <!--end-->
 
         <!-- 基础字典信息编辑/展示框 -->
-        <div class="pop" id="ctrDictInfoModal"></div>
+        <div class="pop" id="ctrDictInfoModal" style="z-index: 8999;" ></div>
         <!-- 信息编辑 end -->
     </div>
 </div>
@@ -689,6 +728,7 @@
 <script src="${ctx}/js/EasyTree.js?var=${randomVal}"></script>
 <script src="${ctx}/js/dataGrid.js?var=${randomVal}"></script>
 <script src="${ctx}/js/validatebox.js?var=${randomVal}"></script>
+<script src="${ctx}/js/message.js?var=${randomVal}"></script>
 <script src="${ctx}/js/org/centerOrg.js?var=${randomVal}"></script>
 <script src="${ctx}/js/pm/microorganism.js?var=${randomVal}"></script>
 

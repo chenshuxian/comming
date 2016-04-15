@@ -1,6 +1,6 @@
 /**
- * 结果类型js
- * Created by subanmiao on 2016/1/11.
+ * 组合项目
+ * Created by chenshuxian on 2016/1/11.
  */
 var testItemGroupMain = (function($){
 
@@ -9,6 +9,7 @@ var testItemGroupMain = (function($){
     /* END render basicModule */
     var
         _preId = CB.PREID.TIG,
+        _popArea= 580,
         _tableList =  $("#" + _preId + "List"),
         _tableList2 = $("#" + _preId + "groupProjectDescription"),
         _hideCols = [],	//要穩藏的欄位
@@ -37,7 +38,7 @@ var testItemGroupMain = (function($){
         _optLeftUrl = ctx + '/pm/testItemGroup/containList',
         _optRightUrl = ctx + '/pm/testItemGroup/notContainList',
 
-        _initHeight = ($(window).height() < 810) ? 240 : 300,
+        _initHeight = CB.HEIGHT,
 
 
     /* START dataGrid 生成*/
@@ -56,8 +57,7 @@ var testItemGroupMain = (function($){
         _gridObj = dataGridM.init(_dgParams),
 
         _upgradeObj = {
-            pagination: false,
-
+            //pagination: false,
             onLoadSuccess: function(data) {
 
                 var rows = testItemGroupMain.dataGrid.datagrid("getRows");
@@ -73,6 +73,7 @@ var testItemGroupMain = (function($){
             },
             onClickRow: function(index, row) {
                 // 载入第二支表
+                dataGridM.clickRow.call(this, index,row);
                 testItemGroupMain.reloadDG2(row);
 
             },
@@ -100,6 +101,7 @@ var testItemGroupMain = (function($){
                     hideCols:_hideCols,
                     tableList:_tableList2,
                     preId:_preId,
+                    height:_initHeight,
                     isSecond:true
                 },
 
@@ -108,18 +110,12 @@ var testItemGroupMain = (function($){
 
                 _upgradeObj2 = {
 
-                    pagination: false,
-
+                    //pagination: false,
                     onLoadSuccess: function(data) {
 
                         var columns = testItemGroupMain.dataGrid2.datagrid('getColumnFields');
 
                     }
-                    //onClickRow: function(index, row) {
-                    //    // 刷新结果描述表
-                    //    newcommonjs.rowClickStyle(testItemGroupMain.dataGrid, this);
-                    //
-                    //}
 
                 },
             // render dataGrid
@@ -136,7 +132,7 @@ var testItemGroupMain = (function($){
                 {title: "项目名称", field: 'name', flex: 1, width: 50},
                 {title: "英文简称", field: 'enName', width: 50},
                 {title: "检验方法", field: 'testMethodName', width: 50},
-                {title: "项目性别", field: 'sexId', width: 50, hidden:true,
+                {title: "项目性别", field: 'sexId', width: 50, hidden:false,
                     formatter : function(value) {
                         var returnStr = '不限';
                         if (value == '1') {
@@ -191,64 +187,11 @@ var testItemGroupMain = (function($){
             });
         };
 
-    ///* 状态搜索 */
-    //$("." + _preId + "-status-selector li").on("click", function () {
-    //    $("#" + _preId + "StatusSpan").html($(this).html());
-    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var statusVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Status").val(statusVal);
-    //
-    //    testItemGroupMain.searchGrid();
-    //});
-    //
-    ///* 排序 */
-    //$("." + _preId + "-sort-selector li").on("click", function () {
-    //    $("#" + _preId + "SortSpan").html($(this).html());
-    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var sortVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Sort").val(sortVal);
-    //
-    //    testItemGroupMain.searchGrid();
-    //});
-    //
-    ///* search Btn */
-    //$("#" + _preId + "SearchBtn").on("click",function() {
-    //    testItemGroupMain.searchGrid();
-    //});
-
-    /*Start add 相关参数设定  */
-    //$("#" + _preId + "Add").on("click",function() {
-    //    var params = {
-    //        BCB: true
-    //    };
-    //    testItemGroupMain.addPop(params);
-    //});
-    //
-    //// deleteBatch
-    //$("#" + _preId + "DeleteBatch").on("click",function() {
-    //    var params,ids;
-    //    ids = testItemGroupMain.getIds();
-    //    params = {
-    //        data: {testItemid: ids.join(",")}
-    //    }
-    //    testItemGroupMain.deleteBetch(params);
-    //});
-
     // delete desc batch
     $("#" + _preId + "DeleteBatch2").click(function () {
 
         if (testItemGroupMain.parentStatus == 1) {
-				showMessage("该单项所属的组合是启用状态，不允许删除!");
+				BM.showMessage("该单项所属的组合是启用状态，不允许删除!");
 				return false;
         }
 
@@ -270,13 +213,11 @@ var testItemGroupMain = (function($){
 
     /!* 項目列表新增 *!/
     $("#" + _preId + "Add2").click(function () {
-
-        //if (RegionalManagement.parentStatus == true) {
-        //    showMessage("当前选中机构已启用，不允许关联其他机构！");
-        //    return;
-        //}
-        //RegionalManagement.currentEvent = "addRegional";
-
+    	 if (testItemGroupMain.parentStatus == true) {
+             showMessage("当前选中组合已启用，不允许添加项目！");
+             return;
+         }
+    	
         var
             params = {
                 url: _InfoUrl2,
@@ -288,7 +229,7 @@ var testItemGroupMain = (function($){
                 popArea: 810,
                 focusId: "instrumentSearch"
             };
-
+        console.log(params)
         testItemGroupMain.addPop(params);
 
     });
@@ -310,7 +251,7 @@ var testItemGroupMain = (function($){
         module:_module,
         parentId: null,
         //设定pop弹出框的大小
-        popArea: 580,
+        popArea: _popArea,
         descSort: 0,
         focusId: _focusId,
         tableList:_tableList,
@@ -360,20 +301,9 @@ var testItemGroupMain = (function($){
             //var sampleTypeId = $.trim($("#sampleTypeId option:selected").val());//默认样本类型
             var sampleTypeId = testItemGroupMain.sampleTypeGrid.getValue();
             var displayOrderId = "displayOrder";
-            var regExp = /^[A-Z]+$/;
-            var enShortName = $("#enShortName").val();//英文简称
-            var enName = $("#enName").val();//英文名称
-            var fastCode = $("#fastCode").val();//英文简称
-            var displayOrder = $.trim($("#displayOrder").val()); //顺序號
 
-            if(name == ""){
-                showMessage("组合名称为空，请重新输入！",function(){
-                    $("#name").focus();
-                });
-                return false;
-            }
             if(sampleTypeId == ""){
-                showMessage("默认标本类型为空，请重新输入！",function(){
+                BM.showMessage("默认标本类型为空，请重新输入！",function(){
                 });
                 return false;
             }
@@ -381,42 +311,42 @@ var testItemGroupMain = (function($){
             if(validateDisplayOrder(displayOrderId)){
                 return false;
             }
-            if(displayOrder.length > 6){
-                showMessage("顺序号最大长度为6位，请重新输入！",function(){
-                    $("#displayOrder").focus();
-                });
-                return false;
-            }
 
-            if(enShortName != ""){
-                if(!regExp.test(enShortName)){
-                    showMessage("英文简称只能是大写字母，请重新输入！",function(){
-                        $("#enShortName").focus();
-                    });
-                    return false;
-                }
-            }
-
-            if(enName != ""){
-                regExp = /^[a-z|A-Z|0-9]+$/;
-                if(!regExp.test(enName)){
-                    showMessage("英文名称只能是字母和数字，请重新输入！",function(){
-                        $("#enName").focus();
-                    });
-                    return false;
-                }
-            }
-
-            if(fastCode != ""){
-                regExp = /^[A-Z|0-9]+$/;
-                if(!regExp.test(fastCode)){
-                    showMessage("助记符只能是大写字母和数字，请重新输入！",function(){
-                        $("#fastCode").focus();
-                    });
-                    return false;
-                }
-            }
             return true;
+        },
+
+        validateBox: function() {
+
+            $("input[name='name']").validatebox({
+                required:true,
+                validType:  ['symbol','length[0,50]','space'],
+                missingMessage: "组合项目为空，请重新输入！"
+            });
+            $("input[name='name']").attr('maxlength','50');
+
+            $("input[name='enShortName']").validatebox({
+                validType:  ['upperCase','length[0,20]']
+            });
+            $("input[name='enShortName']").attr('maxlength','20');
+
+            //displayOrder长度
+            $("input[name='displayOrder']").validatebox({
+                validType:  ['digits','length[0,6]']
+            });
+            $("input[name='displayOrder']").attr('maxlength','6');
+
+            //英文名长度
+            $("input[name='enName']").validatebox({
+                validType:  ['numAndLetters','length[0,55]']
+            });
+            $("input[name='enName']").attr('maxlength','55');
+
+            //fastCode长度
+            $("input[name='fastCode']").validatebox({
+                validType:  ['upperNum','length[0,9]']
+            });
+            $("input[name='fastCode']").attr('maxlength','9');
+
         },
 
         searchObj: function () {
@@ -492,6 +422,34 @@ var testItemGroupMain = (function($){
 
         },
 
+        showCallBack: function() {
+
+            var rowData = BasicModule.rowData;
+            //console.log(testItemGroupMain.rowData);
+            $("#InfoForm").form("load", {
+                /* input's name attr : data */
+                id: rowData.stringId,
+                name: rowData.name,
+                oldName: rowData.name,
+                enShortName: rowData.enShortName,
+                enName: rowData.enName,
+                fastCode: rowData.fastCode,
+                displayOrder: rowData.displayOrder,
+                codeNo: rowData.codeNo,
+                opType: 'edit'
+            });
+            $("#spanEditCodeNo").html(rowData.codeNo);
+            newcommonjs.oldName = rowData.name;
+            if (rowData.isIndividualStat == '1') {
+                $("#isIndividualStat").attr("checked", 'true');
+            }
+            $("form input").attr("readonly","readonly");
+            $("form textarea").attr("readonly","readonly");
+            $("select").attr("disabled","disabled");
+            $("#editBtn").hide();
+
+        },
+
         reloadDG2: function(row) {
 
             this.parentId = row.stringId;
@@ -500,31 +458,6 @@ var testItemGroupMain = (function($){
 
         },
 
-
-        //editResultDesc: function (rowData) {
-        //
-        //    var url = _InfoUrl2,
-        //        callback = function(){
-        //
-        //            $("#InfoForm").form("load", {
-        //                resultValue: rowData.resultValue,
-        //                displayOrder: rowData.displayOrder,
-        //                id: rowData.stringId,
-        //                fastCode: rowData.fastCode,
-        //                opType: 'edit',
-        //                typeId: testItemGroupMain.typeId
-        //            });
-        //            testItemGroupMain.oldResultValue = rowData.resultValue;
-        //
-        //        },
-        //        params = {
-        //            url: url,
-        //            callback: callback
-        //        };
-        //
-        //    this.editRow(rowData,params);
-        //
-        //},
 
         editRowEx: function(rowData) {
 
@@ -539,7 +472,7 @@ var testItemGroupMain = (function($){
             var type,params;
             type = rowData.status.toString();
 
-            if(type = "1")
+            if(type == "1")
                 type = "0";
             else
                 type = "1";
@@ -549,7 +482,8 @@ var testItemGroupMain = (function($){
                 {
                     testItemid: rowData.stringId,
                     type: type
-                }
+                },
+                logParent: true
             };
 
             this.changeStatus(index,rowData,params)
@@ -584,13 +518,25 @@ var testItemGroupMain = (function($){
         beforeSubmit: function(){
 
             var params,data;
-            data = $("#InfoForm").serialize();
+            data = $("#InfoForm").serializeArray();
             if($("#isIndividualStat").prop("checked")){
-                data +="&isIndividualStat=1";
+                //data +="&isIndividualStat=1";
+                data.push({
+                    name:'isIndividualStat',
+                    value:1
+                });
             }else{
-                data +="&isIndividualStat=0";
+                //data +="&isIndividualStat=0";
+                data.push({
+                    name:'isIndividualStat',
+                    value:0
+                });
             }
-            data += "&sampleTypeName=" + testItemGroupMain.sampleTypeGrid.getText();
+            //data += "&sampleTypeName=" + testItemGroupMain.sampleTypeGrid.getText();
+            data.push({
+                name:'sampleTypeName',
+                value:testItemGroupMain.sampleTypeGrid.getText()
+            });
 
             params = {
                 data: data
@@ -622,15 +568,15 @@ $(function(){
     });
 
     // deleteBatch
-    $("#" + _preId + "DeleteBatch").unbind();
-    $("#" + _preId + "DeleteBatch").on("click",function() {
-        var params,ids;
-        ids = testItemGroupMain.getIds();
-        params = {
-            data: {testItemid: ids.join(",")}
-        }
-        testItemGroupMain.deleteBetch(params);
-    });
+    //$("#" + _preId + "DeleteBatch").unbind();
+    //$("#" + _preId + "DeleteBatch").on("click",function() {
+    //    var params,ids;
+    //    ids = testItemGroupMain.getIds();
+    //    params = {
+    //        data: {testItemid: ids.join(",")}
+    //    }
+    //    testItemGroupMain.deleteBatch(params);
+    //});
 });
 // var testItemGroupMain={
 //		 	canStore : true,     // 控制重复提交

@@ -207,7 +207,7 @@ $(document).ready(function() {
 		</div>
 		
 		<div>
-			<span><i>*</i>时间特性</span>
+			<span><i>*</i>时间特征</span>
             <div class="selectstyle">
             	<div id="timeAspect" style="width: 480px"></div>
                 <%--  <select name="timeAspectId" style="width:480px;" id="timeAspectId" class="select_box">

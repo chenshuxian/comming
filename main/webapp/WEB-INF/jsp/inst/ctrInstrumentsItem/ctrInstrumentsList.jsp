@@ -1,3 +1,4 @@
+<%--选择仪器--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" import="com.daan.enums.*" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/jsp/common/taglibs.jsp"%>
 <div class="pop-inner-wrap">
@@ -27,7 +28,7 @@
 					</div>
 					<span class="drop-down-label">状态:</span>
 					<div class="option icon-group-inline ">
-						<div class="drop-down drop-down-icon">
+						<div class="drop-down">
 							<div class="drop-down-selected">
 								<i class="icon icon-sort"></i><span class="selected-items" id="StatusSpan">全部</span>
 							</div>

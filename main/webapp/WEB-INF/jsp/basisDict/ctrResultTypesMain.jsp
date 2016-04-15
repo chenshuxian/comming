@@ -3,72 +3,71 @@
 <script src="${ctx}/js/basisDict/resultType.js?var=${randomVal}"></script>
 <div class="flex-container layout-vertical main-content-container" id="${rt}MainContentContainer">
 	<div class="flex-container layout-vertical main-content-top">
-	<div class="main-content-header">
-		<div class="flex-container flex-space-between">
-			<div class="search flex-container  flex-space-between">
-				<div class="form-control-icon icon-right">
-					<input type="text" id="${rt}SearchStr" class="form-control" placeholder="搜索内容..."/>
-					<button class="control-icon text-center" id="${rt}SearchBtn">
-						<i class="icon icon-search"></i>
-					</button>
-				</div>
-				<span class="symbol"></span> <span>状态:</span>
+		<div class="main-content-header">
+			<div class="flex-container flex-space-between">
+				<div class="search flex-container  flex-space-between">
+					<div class="form-control-icon icon-right">
+						<input type="text" id="${rt}SearchStr" class="form-control" placeholder="搜索内容..."/>
+						<button class="control-icon text-center" id="${rt}SearchBtn">
+							<i class="icon icon-search"></i>
+						</button>
+					</div>
+					<span class="symbol"></span> <span>状态:</span>
 
-				<div class="drop-down">
-					<div class="drop-down-selected">
-						<span class="selected-items" id="${rt}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
-					</div>
-					<div class="drop-down-menu">
-						<ul class="list-unstyled ${rt}-status-selector">
-							<c:forEach items="${isAbleList}" var="isAble">
-								<li <c:if test="${isAble.index == 2}">selected="selected" el-value=""</c:if>
-									<c:if test="${isAble.index != 2}">selected="selected" el-value="${isAble.index}"</c:if> >${isAble.text}</li>
-							</c:forEach>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="option icon-group-inline ">
-				<div class="drop-down drop-down-icon">
-					<div class="drop-down-selected">
-						<i class="icon icon-sort"></i><span class="selected-items" id="${rt}SortSpan">排序</span>
-					</div>
-					<div class="drop-down-menu">
-						<ul class="list-unstyled ${rt}-sort-selector">
-							<li class="selected" el-value="0">按顺序号升序</li>
-							<li el-value="1">按名称升序</li>
-							<li el-value="2">按录入顺序降序</li>
-						</ul>
+					<div class="drop-down">
+						<div class="drop-down-selected">
+							<span class="selected-items" id="${rt}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
+						</div>
+						<div class="drop-down-menu">
+							<ul class="list-unstyled ${rt}-status-selector">
+								<c:forEach items="${isAbleList}" var="isAble">
+									<li <c:if test="${isAble.index == 2}">selected="selected" el-value=""</c:if>
+										<c:if test="${isAble.index != 2}">selected="selected" el-value="${isAble.index}"</c:if> >${isAble.text}</li>
+								</c:forEach>
+							</ul>
+						</div>
 					</div>
 				</div>
+				<div class="option icon-group-inline ">
+					<div class="drop-down drop-down-icon">
+						<div class="drop-down-selected">
+							<i class="icon icon-sort"></i><span class="selected-items" id="${rt}SortSpan">排序</span>
+						</div>
+						<div class="drop-down-menu">
+							<ul class="list-unstyled ${rt}-sort-selector">
+								<li class="selected" el-value="0">按顺序号升序</li>
+								<li el-value="1">按名称升序</li>
+								<li el-value="2">按录入顺序降序</li>
+							</ul>
+						</div>
+					</div>
 
-				<span class="symbol">|</span>
+					<span class="symbol">|</span>
 
-				<span id="${rt}Add"><i class="icon icon-plus-square"></i>添加</span>
-				<span id="${rt}DeleteBatch"><i class="icon icon-trash"></i>删除选中</span>
+					<span id="${rt}Add"><i class="icon icon-plus-square"></i>添加</span>
+					<span id="${rt}DeleteBatch"><i class="icon icon-trash"></i>删除选中</span>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="main-content-body">
-		<table id="${rt}ResultTypeList"></table>
-	</div>
+		<div class="main-content-body">
+			<table id="${rt}List"></table>
+		</div>
 	</div>
 
 	<div class="flex-container layout-vertical main-content-bottom">
-	<div class="main-content-header">
-		<div class="flex-container flex-space-between" style="float: right">
-			<div class="option icon-group-inline ">
-				<span id="${rt}AddResultDesc"><i class="icon icon-plus-square"></i>添加</span>
-				<span id="${rt}DeleteResultDescBatch"><i class="icon icon-trash"></i>删除选中</span>
+		<div class="main-content-header">
+			<div class="flex-container flex-space-between" style="float: right">
+				<div class="option icon-group-inline ">
+					<span id="${rt}AddResultDesc"><i class="icon icon-plus-square"></i>添加</span>
+					<span id="${rt}DeleteResultDescBatch"><i class="icon icon-trash"></i>删除选中</span>
+				</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="main-content-body">
-		<table id="${rt}ResultDescList">
-		</table>
-	</div>
+		<div class="main-content-body">
+			<table id="${rt}List2"></table>
+		</div>
 	</div>
 
 	<input type="hidden" id="${rt}Status"/>

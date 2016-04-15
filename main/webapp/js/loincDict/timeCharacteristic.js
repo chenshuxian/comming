@@ -14,7 +14,7 @@ var TimeCharacteristic = (function($){
         _tableList =  $("#" + _preId + "List"),
         _typeKey = $("#" + _preId + "TypeKey").val(),
         _exParams = {typeKey: _typeKey},
-        _hideCols = [],	//要穩藏的欄位
+        _hideCols = ["whonetCode"],	//要穩藏的欄位
         _data = TimeCharacteristic.searchObj(_preId),
         _pageListUrl = TimeCharacteristic.pageListUrl,
 

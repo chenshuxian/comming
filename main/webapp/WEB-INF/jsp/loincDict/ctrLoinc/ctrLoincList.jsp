@@ -27,7 +27,7 @@
                     <th style="width: 8%">受检属性</th>
                     <th style="width: 8%">检验方法</th>
                     <th style="width: 8%">样本标识</th>
-                    <th style="width: 8%">时间特性</th>
+                    <th style="width: 8%">时间特征</th>
                     <th style="width: 8%">标本类型</th>
                     <th style="width: 7%">助记符</th>
                     <th style="width: 6%">顺序号</th>

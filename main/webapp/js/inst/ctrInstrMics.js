@@ -27,14 +27,14 @@ var CtrInstrMics = (function($){
         _instrumentsMicsListUrl = ctx + "/inst/ctrInstrumentsMics/ctrInstrumentsMicsListMain",
         _optLeftUrl = ctx + '/inst/ctrInstrumentsMics/ctrInstrumentsMicsAddLeft',
         _optRightUrl = ctx + '/inst/ctrInstrumentsMics/ctrInstrumentsMicsAddRightList',
-        _initHeight = ($(window).height() < 810) ? 240 : 300,
+        _initHeight = CB.HEIGHT,
 
 
     /* START dataGrid 生成*/
 
     //first dataGrid
         _dgParams = {
-            url:'',
+            url:_pageListUrl,
             data:_data,
             module:_module,
             hideCols:_hideCols,
@@ -47,12 +47,19 @@ var CtrInstrMics = (function($){
         _gridObj = dataGridM.init(_dgParams),
 
         _upgradeObj = {
-            pagination: false,
+           // pagination: false,
             onLoadSuccess: function(){},
             onCellEdit: function(index,field,value){
                 //记录最后一个编辑时的index
                 CtrInstrMics.frozeCell = index;
                 CtrInstrMics.frozeField = field;
+            },
+            loadFilter: function(data){
+                var params = {total:0,rows:[]};
+                if(data.rows)
+                    return data;
+                else
+                    return params;
             }
         };
 
@@ -64,7 +71,7 @@ var CtrInstrMics = (function($){
         /* 加载结果描述 */
         var
             _dgParams2 = {
-                url:'',
+                url:_pageListUrl,
                 data:_data,
                 module:_module2,
                 hideCols:_hideCols,
@@ -193,7 +200,7 @@ var CtrInstrMics = (function($){
                    {title: "仪器型号", field: 'model', width: 100}
                ]],
                onClickCell: function (index, field) {
-                   var rowData = $("#instrumentSelectList").datagrid('getData').rows[index],
+                   var rowData = $(this).datagrid('getData').rows[index],
                        instrumentId = rowData.idString,
                        instrumentName = rowData.name;
                    CtrInstrMics.instrumentId = instrumentId;
@@ -218,26 +225,44 @@ var CtrInstrMics = (function($){
                 dataGrid = params.dataGrid,
                 itemTypeId = params.itemTypeId,
                 formData = [],channelCode = [], channelCodePre,
-                flag = true;
+                flag = true,
+                reg = /[<>|$]/;
+
+            console.log(data.length);
 
             if(data.length > 0){
                 $.each(data,function(i,item){
                     //验证打印次数不可为空
                     if(!item.printOrder){
-                        showMessage("第"+ (i+1) +"行的打印次序为空，请重新输入！");
+                        BM.showMessage("第"+ (i+1) +"行的打印次序为空，请重新输入！");
+                        dataGrid.datagrid("editCell",{index:i,field:'printOrder'});
                         flag = false;
                         return false;
                     }
                     //验证仪器通道码不可重覆
                     if(item.channelCode){
+                        if(reg.test(item.channelCode)){
+                            BM.showMessage("第"+(+i+1)+"行的仪器通道码有特殊符号，请重新输入");
+                            dataGrid.datagrid("editCell",{index:i,field:'channelCode'});
+                            flag = false;
+                            return;
+                        }
                         channelCodePre = channelCode[item.channelCode];
                         if(channelCodePre){
-                            showMessage("第"+(+i+1)+"行的仪器通道码["+item.channelCode+"]有重复，请重新输入");
+                            BM.showMessage("第"+(+i+1)+"行的仪器通道码["+item.channelCode+"]有重复，请重新输入");
+                            dataGrid.datagrid("editCell",{index:i,field:'channelCode'});
                             flag = false;
                             return;
                         }else{
                             channelCode[item.channelCode] = item.channelCode;
                         }
+                    }
+                    //单位
+                    if(reg.test(item.unit)){
+                        BM.showMessage("第"+(+i+1)+"行的单位有特殊符号，请重新输入");
+                        dataGrid.datagrid("editCell",{index:i,field:'unit'});
+                        flag = false;
+                        return;
                     }
                     if(itemTypeId == 1) {                //细菌
                         formData.push({name: "txtIdGerm", value: item.id});
@@ -250,7 +275,7 @@ var CtrInstrMics = (function($){
                     }
                 })
             }else{
-                showMessage("没有可保持的数据");
+                BM.showMessage("没有可保存的数据");
                 flag = false;
                 return false;
             }
@@ -277,7 +302,7 @@ var CtrInstrMics = (function($){
     $("#" + _preId + "Add2").click(function () {
 
         if(!CtrInstrMics.instrumentId){
-            showMessage("请选择仪器");
+            BM.showMessage("请选择仪器");
             return;
         }
 
@@ -343,7 +368,7 @@ var CtrInstrMics = (function($){
             };
 
         //将编辑栏位栋结
-        if(CtrInstrMics.frozeCell >= 0) {
+        if(CtrInstrMics.frozeCell >= 0 && CtrInstrMics.frozeCell != null) {
             dataGrid.datagrid("endEdit", CtrInstrMics.frozeCell);
         }
 
@@ -362,9 +387,10 @@ var CtrInstrMics = (function($){
                 itemTypeId: itemTypeId
             };
         //将编辑栏位栋结
-        if(CtrInstrMics.frozeCell >= 0) {
+        if(CtrInstrMics.frozeCell >= 0 && CtrInstrMics.frozeCell != null) {
             dataGrid.datagrid("endEdit", CtrInstrMics.frozeCell);
         }
+
         _saveCommon(params);
 
     });
@@ -434,7 +460,7 @@ var CtrInstrMics = (function($){
 
 
             if(!checkRadio){
-                showMessage("请先选择一个仪器");
+                BM.showMessage("请先选择一个仪器");
                 return;
             }
             //修改页面仪器名
@@ -463,7 +489,7 @@ $(function(){
     $("#" + _preId + "Add").click(function () {
 
         if(!CtrInstrMics.instrumentId){
-            showMessage("请选择仪器");
+            BM.showMessage("请选择仪器");
             return;
         }
 

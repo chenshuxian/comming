@@ -12,7 +12,6 @@
                     </button>
                 </div>
                 <span class="symbol"></span> <span>状态:</span>
-
                 <div class="drop-down">
                     <div class="drop-down-selected">
                         <span class="selected-items" id="${ins}StatusSpan">所有</span><i class="icon icon-angle-down"></i>

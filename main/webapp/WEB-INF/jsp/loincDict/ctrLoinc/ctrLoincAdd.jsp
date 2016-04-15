@@ -42,7 +42,7 @@
 					</div>
 					<div class="flex-container flex-space-between horizontal-group">
 						<div class=" flex-container  block-show">
-							<label for="${cl}_timeAspect"><span class="required-icon">*</span>时间特性:</label>
+							<label for="${cl}_timeAspect"><span class="required-icon">*</span>时间特征:</label>
 							<div id="${cl}_timeAspect" style="width: 353px"></div>
 						</div>
 					</div>

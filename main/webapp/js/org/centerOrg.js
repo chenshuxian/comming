@@ -33,7 +33,7 @@ var CenterOrg = (function($){
 				$("#showRegionDiv").hide();
 				return;
 			}
-
+			//required: true
 		};
 		$.extend(obj,click);	//自定义click方法
 		$("#regionName").combotree(obj);
@@ -44,16 +44,13 @@ var CenterOrg = (function($){
 		//console.log(obj);
 		var
 			nacaoId = $("#nacaoId").val().trim(),
-			type = $("#opType").val();
+			type = $("#opType").val(),
+			id = $("#id").val();
 
-		/*console.log("checkNaco:"+nacaoId);
-		 console.log("url:"+check2Url);
-		 console.log(orgTypeId);
-		 console.log(type);*/
 		$.ajax({
 			url : CenterOrg.exist2Url,
 			type : CB.METHOD,
-			data : {orgTypeId : orgTypeId, nacaoId : nacaoId},
+			data : {orgTypeId : orgTypeId, nacaoId : nacaoId, id : id },
 			success : function(data) {
 				//resolutionData(data);
 				console.log("checknao:"+data);
@@ -100,7 +97,16 @@ var CenterOrg = (function($){
 		InfoUrl: _InfoUrl,
 		pageListUrl: _pageListUrl,
 
-		/*callback function area*/
+		validateSave: function() {
+			var region = $("input[name='regionName']").val();
+			console.log("region" + region);
+			//若为空
+			if(!region){
+				BM.showMessage("所属地区不能为空，请重新输入!");
+				return false;
+			}
+			return true;
+		},
 
 		//新增成功callback
 		addSuccess: function(data) {
@@ -118,7 +124,7 @@ var CenterOrg = (function($){
 						 CenterOrg.add();
 					 }
 				 });
-			 } else {
+			} else {
 			 // 无同名，确认继续
 				 if (orgTypeId == '40') {
 					 // 检测卫生机构代码
@@ -127,9 +133,9 @@ var CenterOrg = (function($){
 				 } else {
 					 CenterOrg.add();
 				 }
-			 }
+			}
 
-		 },
+		},
 		//修改成功callback
 		 editSuccess: function(data) {
 		 //console.log("editcallback");
@@ -182,6 +188,7 @@ var CenterOrg = (function($){
 				fastCode: rowData.fastCode,
 				displayOrder: rowData.displayOrder,
 				memo: rowData.memo,
+				webUrl: rowData.webUrl,
 				//orgTypeId: params.orgTypeId,
 				id:rowData.stringId,
 				codeNo:rowData.codeNo,
@@ -213,6 +220,7 @@ var CenterOrg = (function($){
 				fax: rowData.fax,
 				fastCode: rowData.fastCode,
 				displayOrder: rowData.displayOrder,
+				webUrl: rowData.webUrl,
 				memo: rowData.memo
 			});
 			$("form input").attr("readonly","readonly");

@@ -33,14 +33,14 @@ var CtrInstrItem = (function($){
 		_instrumentsListUrl = ctx + "/inst/ctrInstrumentsItem/ctrInstrumentsItemListMain",
 		_optLeftUrl = ctx + '/inst/ctrInstrumentsItem/ctrInstrumentsItemAddLeft',
 		_optRightUrl = ctx + '/inst/ctrInstrumentsItem/ctrInstrumentsItemAddRightList',
-		_initHeight = ($(window).height() < 810) ? 240 : 300,
+		_initHeight = CB.HEIGHT,
 
 
 	/*************** START dataGrid 生成 *********************/
 
 	//第一个 dataGrid
 		_dgParams = {
-			url:'',
+			url:_pageListUrl,
 			data:_data,
 			module:_module,
 			hideCols:_hideCols,
@@ -53,7 +53,7 @@ var CtrInstrItem = (function($){
 		_gridObj = dataGridM.init(_dgParams),
 
 		_upgradeObj = {
-			pagination: false,
+			//pagination: false,
 			onLoadSuccess: function(){
 				var rows = CtrInstrItem.dataGrid.datagrid("getRows"),
 					length = rows.length;
@@ -66,6 +66,7 @@ var CtrInstrItem = (function($){
 
 			},
 			onClickRow: function(index, row) {
+				dataGridM.clickRow.call(this, index,row);
 				_reloadDG2(row);
 			},
 			onCheck: function(index, row) {
@@ -75,6 +76,13 @@ var CtrInstrItem = (function($){
 				//记录最后一个编辑时的index
 				CtrInstrItem.frozeCell = index;
 				CtrInstrItem.frozeField = field;
+			},
+			loadFilter: function(data){
+				var params = {total:0,rows:[]};
+				if(data.rows)
+					return data;
+				else
+					return params;
 			}
 		};
 
@@ -102,12 +110,19 @@ var CtrInstrItem = (function($){
 		_gridObj2 = dataGridM.init(_dgParams2),
 
 		_upgrade = {
-			pagination: false,
+			//pagination: false,
 			onLoadSuccess: function(){},
 			onCellEdit: function(index,field,value){
 				//记录最后一个编辑时的index
 				CtrInstrItem.frozeCell = index;
 				CtrInstrItem.frozeField = field;
+			},
+			loadFilter: function(data){
+				var params = {total:0,rows:[]};
+				if(data.rows)
+					return data;
+				else
+					return params;
 			}
 		};
 
@@ -227,21 +242,31 @@ var CtrInstrItem = (function($){
 				data = params.data,
 				dataGrid = params.dataGrid,
 				formData = [],channelCode = [], channelCodePre,
-				flag = true;
+				flag = true,
+				reg = /[<>|$]/;
+
 
 			if(data.length > 0){
 				$.each(data,function(i,item){
 					//验证打印次数不可为空
 					if(!item.printOrder){
-						showMessage("第"+ (i+1) +"行的打印次序为空，请重新输入！");
+						BM.showMessage("第"+ (i+1) +"行的打印次序为空，请重新输入！");
+						dataGrid.datagrid("editCell",{index:i,field:'printOrder'});
 						flag = false;
-						return false;
+						return;
 					}
-					//验证仪器通道码不可重覆
+					////验证仪器通道码不可重覆
 					if(item.channelCode){
+						if(reg.test(item.channelCode)){
+							BM.showMessage("第"+(+i+1)+"行的仪器通道码有特殊符号，请重新输入");
+							dataGrid.datagrid("editCell",{index:i,field:'channelCode'});
+							flag = false;
+							return;
+						}
 						channelCodePre = channelCode[item.channelCode];
 						if(channelCodePre){
-							showMessage("第"+(+i+1)+"行的仪器通道码["+item.channelCode+"]有重复，请重新输入");
+							BM.showMessage("第"+(+i+1)+"行的仪器通道码["+item.channelCode+"]有重复，请重新输入");
+							dataGrid.datagrid("editCell",{index:i,field:'channelCode'});
 							flag = false;
 							return;
 						}else{
@@ -249,11 +274,19 @@ var CtrInstrItem = (function($){
 						}
 					}
 					//转换系数只能为数字
+					//if (item.factor != null && item.factor != '' && (isNaN(item.factor) || item.factor < 0)) {
 					if (item.factor != null && item.factor != '' && (isNaN(item.factor) || item.factor < 0)) {
 						flag = false;
-						showMessage("第"+(+i+1)+"行的转换系数必须为数字，不可为负数，请重新输入！", function() {
+						BM.showMessage("第"+(+i+1)+"行的转换系数必须为数字，不可为负数，请重新输入！", function() {
 
 						});
+						return;
+					}
+					//单位
+					if(reg.test(item.unit)){
+						BM.showMessage("第"+(+i+1)+"行的单位有特殊符号，请重新输入");
+						dataGrid.datagrid("editCell",{index:i,field:'unit'});
+						flag = false;
 						return;
 					}
 
@@ -265,9 +298,9 @@ var CtrInstrItem = (function($){
 
 				})
 			}else{
-				showMessage("没有可保持的数据");
+				BM.showMessage("没有可保存的数据");
 				flag = false;
-				return false;
+				return;
 			}
 
 			formData.push({name: "instrumentId", value: CtrInstrItem.instrumentId});
@@ -285,19 +318,83 @@ var CtrInstrItem = (function($){
 			}
 
 
+		},
+
+		//日期转换小时
+		_dateCount = function() {
+			//依年龄单位分别计算
+			//1岁、2月、3周、4天、5小时、6
+			var ageType = $("#ageUnitId").val(),
+				max = parseInt($("#ageMax").val()),
+				min = parseInt($("#ageMin").val()),
+				ys = parseInt( $("#yearStart").val()),
+				ms = parseInt($("#monthStart").val()),
+				ds = parseInt($("#dayStart").val()),
+				ye = parseInt($("#yearEnd").val()),
+				me = parseInt($("#monthEnd").val()),
+				de = parseInt($("#dayEnd").val()),
+				hour = 24,
+				year = 365 * hour,
+				month = 30 * hour,
+				week = 7 * hour,
+				calcAgeMin,calcAgeMax,ageMax,ageMin;
+
+				if(ageType == 6){
+					calcAgeMin = ys * year + ms * month + ds * hour;
+					calcAgeMax = ye * year + me * month + de * hour;
+					ageMin = ys + "/" + ms + "/" + ds;
+					ageMax = ye + "/" + me+ "/" + de;
+					$("#ageMaxStr").val(ageMax);
+					$("#ageMinStr").val(ageMin);
+				}else if(ageType == 1){
+					calcAgeMax = max * year;
+					calcAgeMin = min * year;
+				}else if(ageType == 2){
+					calcAgeMax = max * month;
+					calcAgeMin = min * month;
+				}else if(ageType == 3){
+					calcAgeMax = max * week;
+					calcAgeMin = min * week;
+				}else if(ageType == 4){
+					calcAgeMax = max * hour;
+					calcAgeMin = min * hour;
+				}else if(ageType == 5){
+					calcAgeMax = max ;
+					calcAgeMin = min ;
+				}
+
+
+				$("#calcAgeMax").val(calcAgeMax);
+
+				$("#calcAgeMin").val(calcAgeMin);
+
+		},
+
+		_setDateValue = function(start, end) {
+			var
+				startArr = start.split("/"),
+				endArr = end.split("/");
+
+			$("#yearStart").numberbox('setValue',startArr[0]);
+			$("#monthStart").numberbox('setValue',startArr[1]);
+			$("#dayStart").numberbox('setValue',startArr[2]);
+
+			$("#yearEnd").numberbox('setValue',endArr[0]);
+			$("#monthEnd").numberbox('setValue',endArr[1]);
+			$("#dayEnd").numberbox('setValue',endArr[2]);
 		};
+
 
 
 	$("#" + _preId + "Add2").click(function () {
 
 		if(!CtrInstrItem.instrumentId){
-			showMessage("请选择仪器");
+			BM.showMessage("请选择仪器");
 			return;
 		}
 
 		var
 			params = {
-				//popArea: 720,
 				BCB: true
 			};
 
@@ -397,10 +494,54 @@ var CtrInstrItem = (function($){
 			};
 		},
 
+		validateSave: function() {
+
+			var
+				totalStart = parseInt($("#calcAgeMin").val()),
+				totalEnd =parseInt($("#calcAgeMax").val());
+
+			console.log(totalStart);
+			console.log(totalEnd);
+			if(totalStart > totalEnd){
+				BM.showMessage("结束年龄不可小于起始年龄");
+				return false;
+			}
+
+			if((!totalStart && totalStart != 0) || (!totalEnd  && totalEnd != 0)){
+				BM.showMessage("结束年龄或开始年龄不可为空");
+				return false;
+			}
+
+			return true;
+		},
+
+		validateBox: function() {
+
+			//文字描述
+			$("#refText").validatebox({
+				validType:  ['symbol']
+			});
+			//备注
+			$("#refRemark").validatebox({
+				validType:  ['symbol']
+			});
+
+		},
+
+		editRowEx: function(rowData) {
+			var
+				params = {
+					BCB: true
+				};
+
+			CtrInstrItem.editRow(rowData,params);
+		},
+
 		addCallBack: function() {
 			$("#instrumentId").val(CtrInstrItem.instrumentId);
 			$("#testItemId").val(CtrInstrItem.testItemId);
 		},
+
 
 		editCallBack: function() {
 
@@ -419,27 +560,32 @@ var CtrInstrItem = (function($){
 				opType: 'edit'
 			});
 			$("#sampleTypeId").val(rowData.sampleTypeId);
+			$("#yearStart").numberbox('setValue',rowData.ageMin);
 			$("#sexId").val(rowData.sexId);
 			$("#ageUnitId").val(rowData.ageUnitId);
 			$("#refText").val(rowData.refText);
 			$("#refRemark").val(rowData.refRemark);
 			$("#instrumentId").val(CtrInstrItem.instrumentId);
 			$("#testItemId").val(CtrInstrItem.testItemId);
+			if(rowData.ageUnitId == 6){
+				$("#detail").show();
+				$("#noDetail").hide();
+				_setDateValue(rowData.ageMin,rowData.ageMax);
+			}
 			newcommonjs.oldName = rowData.name;
 		},
 
-		copy: function(rowData) {
+		copyDialogEx: function(rowData) {
 
 			var
 				params = {
-					//popArea: 720,
 					BCB: true
 				};
 
-			CtrInstrItem.showDialog(rowData,params);
+			CtrInstrItem.copyDialog(rowData,params);
 		},
 
-		showCallBack: function() {
+		copyCallBack: function() {
 
 			var rowData = BasicModule.rowData;
 
@@ -461,15 +607,41 @@ var CtrInstrItem = (function($){
 			$("#refRemark").val(rowData.refRemark);
 			$("#instrumentId").val(CtrInstrItem.instrumentId);
 			$("#testItemId").val(CtrInstrItem.testItemId);
+			if(rowData.ageUnitId == 6){
+				$("#detail").show();
+				$("#noDetail").hide();
+				_setDateValue(rowData.ageMin,rowData.ageMax);
+			}
 			newcommonjs.oldName = rowData.name;
 
 		},
 
 		beforeSubmit: function() {
 
-			var params = {
+			var params,data,ageMax,ageMin;
+
+			//日期时间转换
+			_dateCount();
+			data = $("#InfoForm").serializeArray();
+
+			//详细年龄进行资料转换
+			if($("#ageUnitId").val() == 6){
+				$.each(data,function(i,field){
+					if(field.name == "ageMax"){
+						data[i].value = $("#ageMaxStr").val();
+					}
+
+					if(field.name == "ageMin"){
+						data[i].value = $("#ageMinStr").val();
+					}
+				});
+			}
+
+			console.log(data);
+			params = {
 				addUrl:_addUrl2,
-				dataGrid: CtrInstrItem.dataGrid2
+				dataGrid: CtrInstrItem.dataGrid2,
+				data: data
 			}
 
 			this.editDictCode(params);
@@ -480,7 +652,7 @@ var CtrInstrItem = (function($){
 			$("#editBtn").attr("disabled", false);
 			var err = data.indexOf("err|");
 			if (err == 0) {
-				showMessage(data.substring(4));
+				BM.showMessage(data.substring(4));
 			}else{
 				BasicModule.add();
 			}
@@ -501,7 +673,7 @@ var CtrInstrItem = (function($){
 				};
 
 			if(!checkRadio){
-				showMessage("请先选择一个仪器");
+				BM.showMessage("请先选择一个仪器");
 				return;
 			}
 			//修改页面仪器名
@@ -527,7 +699,7 @@ $(function(){
 	$("#" + _preId + "Add").click(function () {
 
 		if(!CtrInstrItem.instrumentId){
-			showMessage("请选择仪器");
+			BM.showMessage("请选择仪器");
 			return;
 		}
 

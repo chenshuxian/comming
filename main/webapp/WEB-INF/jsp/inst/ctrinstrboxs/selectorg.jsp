@@ -37,7 +37,13 @@
     $(function () {
         $("#" + CtrInstrBoxs.preId + "OrgSearchBtn").click(function () {
             //CtrInstrBoxs.reloadDatagrid();
-            CtrInstrBoxs.searchGrid();
+            var params = {
+                dataGrid: $("#cibOrgList"),
+                searchObj:{
+                    searchStr: $("#cibOrgSearchStr").val()
+                }
+            }
+            CtrInstrBoxs.searchGrid(params);
         });
 
         $("#selectOrgBtn").click(function () {

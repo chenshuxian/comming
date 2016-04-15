@@ -4,12 +4,12 @@
         <div class="wrapper-container">
             <div class="wrapper-header flex-container flex-space-between">
                 <div>
-                    <strong>已包含项目</strong>
-                    <small>(已包含项目<span id="containSize"></span>)</small>
+                    <strong>已包含机构</strong>
+                    <small>(已包含机构<span id="containSize"></span>)</small>
                 </div>
                 <div class="header-right">
                     <div class="flex-container flex-space-between group-items">
-                        <strong>未包含项目</strong>
+                        <strong>未包含机构</strong>
 
                         <span>地区</span>
                         <div class="form-control-icon icon-left">
@@ -73,30 +73,30 @@
         });
 
         $("#addRelatedBtn").on('click', function () {
-            if((RegionalManagement.addTestItemIds.length > 0)
-                    || (RegionalManagement.delTestItemIds.length > 0)){
+        	console.log(BasicModule.addTestItemIds)
+            if((BasicModule.addTestItemIds.length > 0) || (BasicModule.delTestItemIds.length > 0)){
                 // 提交
                 var parentId = RegionalManagement.parentId;//父ID
-                var data = "parentId="+parentId+"&addTestItemIds="+RegionalManagement.addTestItemIds.join(",")+"&delTestItemIds="+RegionalManagement.delTestItemIds.join(",");
+                var data = "parentId="+parentId+"&addTestItemIds="+BasicModule.addTestItemIds.join(",")+"&delTestItemIds="+BasicModule.delTestItemIds.join(",");
                 RegionalManagement.deleteRelatedAjax(data, function () {
                     $("#ctrDictInfoModal").hide();
-                    RegionalManagement.addTestItemIds = [];
-                    RegionalManagement.delTestItemIds = [];
+                    BasicModule.addTestItemIds = [];
+                    BasicModule.delTestItemIds = [];
                 });
-//                $.ajax({
-//                    "url" : ctx + "/org/regionalManagement/regionalManagementItemAddBatch",
-//                    "type" : "POST",
-//                    data:data,
-//                    "success" : function(data) {
-//                        if(data.indexOf("succ") > -1) {
-//                            RegionalManagement.relatedDataGrid.datagrid('reload');
-//                            $("#ctrDictInfoModal").hide();
-//                            RegionalManagement.addTestItemIds = [];
-//                        }
-//                    },
-//                    "error" : function() {
-//                    }
-//                });
+                $.ajax({
+                    "url" : ctx + "/org/regionalManagement/regionalManagementItemAddBatch",
+                    "type" : "POST",
+                    data:data,
+                    "success" : function(data) {
+                        if(data.indexOf("succ") > -1) {
+                            RegionalManagement.dataGrid2.datagrid('reload');
+                            $("#ctrDictInfoModal").hide();
+                            BasicModule.addTestItemIds = [];
+                       }
+                    },
+                    "error" : function() {
+                    }
+                });
             } else {
                 $("#ctrDictInfoModal").hide();
             }

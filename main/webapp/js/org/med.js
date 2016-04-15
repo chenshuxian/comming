@@ -34,53 +34,78 @@ var MED = (function($){
         dataGrid: _dataGrid,
         addParams: MED.getAddParams(_exParams),
         exParams:_exParams,
-        orgTypeId:_orgTypeId
+        orgTypeId:_orgTypeId,
+
+        validateBox: function(){
+            $("input[name='name']").validatebox({
+                required:true,
+                validType:  ['symbol','length[0,35]','space'],
+                missingMessage: "中文名称不可为空！"
+            });
+            $("input[name='name']").attr('maxlength','35');
+
+            $("input[name='shortName']").validatebox({
+                validType:  ['symbol','length[0,15]']
+            });
+            $("input[name='shortName']").attr('maxlength','15');
+            //英文名长度
+            $("input[name='enShortName']").validatebox({
+                validType:  ['symbol','length[0,20]']
+            });
+            $("input[name='enShortName']").attr('maxlength','20');
+            //英文名长度
+            $("input[name='enName']").validatebox({
+                validType:  ['symbol','length[0,55]']
+            });
+            $("input[name='enName']").attr('maxlength','55');
+            //whonetCode长度
+            $("input[name='whonetCode']").validatebox({
+                validType:  ['symbol','length[0,15]']
+            });
+            $("input[name='whonetCode']").attr('maxlength','15');
+            //fastCode长度
+            $("input[name='fastCode']").validatebox({
+                validType:  ['symbol','length[0,9]']
+            });
+            $("input[name='fastCode']").attr('maxlength','9');
+            //displayOrder长度
+            $("input[name='displayOrder']").validatebox({
+                validType:  ['digits','length[0,6]']
+            });
+            $("input[name='displayOrder']").attr('maxlength','6');
+
+            $("#telephone").validatebox({
+                validType:  ['symbol','digits']
+            });
+            //地址
+            $("#address").validatebox({
+                validType:  ['symbol','length[0,200]']
+            });
+            $("#address").attr('maxlength','200');
+
+            $("#enAddress").validatebox({
+                validType:  ['symbol','length[0,200]']
+            });
+            $("#enAddress").attr('maxlength','200');
+            //连络人
+            $("#contacts").validatebox({
+                validType:  ['symbol','length[0,20]']
+            });
+            $("#contacts").attr('maxlength','20');
+            //传真
+            $("#fax").validatebox({
+                validType:  ['symbol','length[0,30]']
+            });
+            $("#fax").attr('maxlength','30');
+            //备注
+            $("#memo").validatebox({
+                validType:  ['symbol','length[0,50]']
+            });
+            $("#memo").attr('maxlength','50');
+        }
     })
 
-    ///* 状态搜索 */
-    //$("." + _preId + "-status-selector li").on("click", function () {
-    //    $("#" + _preId + "StatusSpan").html($(this).html());
-    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var statusVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Status").val(statusVal);
-    //
-    //    MED.searchGrid();
-    //});
-    //
-    ///* 排序 */
-    //$("." + _preId + "-sort-selector li").on("click", function () {
-    //    $("#" + _preId + "SortSpan").html($(this).html());
-    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var sortVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Sort").val(sortVal);
-    //
-    //    MED.searchGrid();
-    //});
-    //
-    ///* search Btn */
-    //$("#" + _preId + "SearchBtn").on("click",function() {
-    //    MED.searchGrid();
-    //});
 
-    /*Start add 相关参数设定  */
-    //$("#" + _preId + "Add").on("click",function() {
-    //    MED.addPop();
-    //});
-    //
-    //// deleteBatch
-    //$("#" + _preId + "DeleteBatch").on("click",function() {
-    //    MED.deleteBetch();
-    //});
 
     return MED;
 

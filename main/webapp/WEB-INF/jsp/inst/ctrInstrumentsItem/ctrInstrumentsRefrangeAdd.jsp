@@ -2,14 +2,29 @@
 <%@ include file="/WEB-INF/jsp/common/taglibs.jsp"%>
 <%@ include file="/WEB-INF/jsp/common/pageIds.jsp" %>
 <script>
-	$('#ageMin').numberbox({
+	$("#detail").hide();
+	$('.year').numberbox({
+		min:0,
+		max:200
+	});
+
+	$('.floatNum').numberbox({
 		min:0,
 		precision:2
 	});
-	$('#ageMax').numberbox({
-		min:0,
-		precision:2
+
+	/* 年龄单位 */
+	$("#ageUnitId").change(function () {
+		var val = $(this).children('option:selected').val();
+		if(val == 6){
+			$("#detail").show();
+			$("#noDetail").hide();
+		}else{
+			$("#detail").hide();
+			$("#noDetail").show();
+		}
 	});
+
 </script>
 <div class="pop-inner-wrap">
 		<div class="pop-container">
@@ -29,67 +44,81 @@
 									</c:forEach>
 							</select>
 						</div>
-
 						<div class="flex-container flex-space-between">
-							<label><span class="required-icon">*</span>年龄:</label>
+								<label>年龄单位:</label>
+								<select id="ageUnitId" name="ageUnitId"
+										data-options="editable:false,width:60,height:30,panelHeight:'auto'"
+										class="easyui-combobox xs-size form-control-combo">
+									<option value="1" selected="selected">岁</option>
+									<option value="2">月</option>
+									<option value="3">周</option>
+									<option value="4">天</option>
+									<option value="5">时</option>
+									<option value="6">详细年龄</option>
+								</select>
+						</div>
+						<div class="flex-container flex-space-between">
 							<div class="flex-container flex-space-between block-show">
-								<div class="form-combo">
-									<input type="text" id="ageMin" name="ageMin"  data-options="width:35" />
+								<div class="form-combo" id="noDetail">
+									<label><span class="required-icon">*</span>年龄:</label>
+									<input type="text" id="ageMin" name="ageMin" class="year" data-options="width:35" />
 									<span>-</span>
-									<input type="text" id="ageMax" name="ageMax"  data-options="width:35" />
+									<input type="text" id="ageMax" name="ageMax" class="year" data-options="width:35" />
 								</div>
-								<div class="form-combo">
-									<label>年龄单位:</label>
-									<select id="ageUnitId" name="ageUnitId"
-											data-options="editable:false,width:60,height:30,panelHeight:'auto'"
-											class="easyui-combobox xs-size form-control-combo">
-										<option value="1" selected="selected">年</option>
-										<option value="2">月</option>
-										<option value="3">周</option>
-										<option value="4">天</option>
-										<option value="5">时</option>
-									</select>
-								</div>
-								<div class="form-combo">
-									<label for="">性别:</label>
-									<select id="sexId" name="sexId"
-											data-options="editable:false,width:60,height:30,panelHeight:'auto'"
-											class="easyui-combobox xs-size form-control-combo">
-											<c:forEach var="sexType" items="<%=SexType.values()%>" varStatus="status">
-												<option value="${sexType.index}" <c:if test="${status.index == 3}">selected="selected"</c:if>>${sexType.text}</option>
-											</c:forEach>
-									</select>
+								<div class="form-combo" id="detail">
+									<label><span class="required-icon">*</span>起始年龄:</label>
+									<input type="text" id="yearStart" name="yearStart" class="year" data-options="width:35" />岁
+									<span>-</span>
+									<input type="text" id="monthStart" name="monthStart" class="year" data-options="width:35" />月
+									<span>-</span>
+									<input type="text" id="dayStart" name="dayStart" class="year" data-options="width:35" />天
+									<label><span class="required-icon">*</span>结束年龄:</label>
+									<input type="text" id="yearEnd" name="yearEnd" class="year" data-options="width:35" />岁
+									<span>-</span>
+									<input type="text" id="monthEnd" name="monthEnd" class="year" data-options="width:35" />月
+									<span>-</span>
+									<input type="text" id="dayEnd" name="dayEnd" class="year" data-options="width:35" />天
 								</div>
 							</div>
+						</div>
+						<div class="flex-container flex-space-between">
+								<label for="">性别:</label>
+								<select id="sexId" name="sexId"
+										data-options="editable:false,width:60,height:30,panelHeight:'auto'"
+										class="easyui-combobox xs-size form-control-combo">
+									<c:forEach var="sexType" items="<%=SexType.values()%>" varStatus="status">
+										<option value="${sexType.index}" <c:if test="${status.index == 3}">selected="selected"</c:if>>${sexType.text}</option>
+									</c:forEach>
+								</select>
 						</div>
 						<div class="flex-container flex-space-between horizontal-group xs-size">
 							<div class=" flex-container block-show">
 								<label for="">参考上限:</label>
-								<input type="text" name="refHigh" id="refHigh" class="form-control block-show" value="" />
+								<input type="text" name="refHigh" id="refHigh" class="form-control block-show floatNum" value="" />
 							</div>
 							<div class=" flex-container  block-show">
 								<label for="">参考下限:</label>
-								<input type="text" name="refLow" id="refLow" class="form-control block-show" value="" />
+								<input type="text" name="refLow" id="refLow" class="form-control block-show floatNum" value="" />
 							</div>
 						</div>
 						<div class="flex-container flex-space-between horizontal-group xs-size">
 							<div class=" flex-container block-show">
 								<label for="">危急上限:</label>
-								<input type="text" name="panicHigh" id="panicHigh" class="form-control block-show" value="" />
+								<input type="text" name="panicHigh" id="panicHigh" class="form-control block-show floatNum" value="" />
 							</div>
 							<div class=" flex-container block-show">
 								<label for="">危急下限:</label>
-								<input type="text" name="panicLow" id="panicLow" class="form-control block-show" value="" />
+								<input type="text" name="panicLow" id="panicLow" class="form-control block-show floatNum" value="" />
 							</div>
 						</div>
 						<div class="flex-container flex-space-between horizontal-group xs-size">
 							<div class=" flex-container  block-show">
 								<label for="">警告上限:</label>
-								<input type="text" name="alarmHigh" id="alarmHigh" class="form-control block-show" value="" />
+								<input type="text" name="alarmHigh" id="alarmHigh" class="form-control block-show floatNum" value="" />
 							</div>
 							<div class=" flex-container  block-show">
 								<label for="">警告下限:</label>
-								<input type="text" name="alarmLow" id="alarmLow" class="form-control block-show" value="" />
+								<input type="text" name="alarmLow" id="alarmLow" class="form-control block-show floatNum" value="" />
 							</div>
 						</div>
 						<div class="flex-container flex-space-between">
@@ -105,6 +134,10 @@
 					<input type="hidden" id="opType" name="opType" value="${opType}"/>
 					<input type="hidden" id="instrumentId" name="instrumentId"/>
 					<input type="hidden" id="testItemId" name="testItemId"/>
+					<input type="hidden" id="calcAgeMin" name="calcAgeMin"/>
+					<input type="hidden" id="calcAgeMax" name="calcAgeMax"/>
+					<input type="hidden" id="ageMinStr" name="ageMinStr"/>
+					<input type="hidden" id="ageMaxStr" name="ageMaxStr"/>
 					<div class="wrapper-footer text-center">
 						<button class="btn btn-submit sm-size" id="editBtn" onclick="BasicModule.submit()">确定</button>
 						<button class="btn btn-cancel sm-size J_ClosePop">关闭</button>

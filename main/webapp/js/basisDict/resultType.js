@@ -9,8 +9,9 @@ var ResultType = (function($){
     /* END render basicModule */
     var
         _preId = CB.PREID.RT,
-        _tableList =  $("#" + _preId + "ResultTypeList"),
-        _tableList2 = $("#" + _preId + "ResultDescList"),
+        _tableList =  $("#" + _preId + "List"),
+        _tableList2 = $("#" + _preId + "List2"),
+        _foucsId = "editName",
         _hideCols = [],	//要穩藏的欄位
         _data = ResultType.searchObj(_preId),
         _pageListUrl = ctx + "/basisDict/ctrResultTypes/ctrResultTypesPageList",
@@ -32,6 +33,9 @@ var ResultType = (function($){
         _addUrl2 = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailAdd",
         _delUrl2 = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailDelete",
         _InfoUrl2 = ctx + "/basisDict/ctrResultTypeDetail/ctrResultTypeDetailInfo",
+        _height = ($(window).height() < 810) ? 240 : 300,
+        //_height = ($("#site-content").height() - 260) / 2,
+
 
     /* START dataGrid 生成*/
 
@@ -42,13 +46,14 @@ var ResultType = (function($){
             module:_module,
             hideCols:_hideCols,
             tableList:_tableList,
-            preId:_preId
+            preId:_preId,
+            height:_height
         },
         //resultType dataGrid obj render
         _gridObj = dataGridM.init(_dgParams),
 
         _upgradeObj = {
-            pagination: false,
+            //pagination: false,
 
             onLoadSuccess: function(data) {
 
@@ -64,6 +69,7 @@ var ResultType = (function($){
             },
             onClickRow: function(index, row) {
                 // 刷新结果描述表
+                dataGridM.clickRow.call(this,index,row);
                 ResultType.reloadResultDesc(row);
 
             },
@@ -73,7 +79,7 @@ var ResultType = (function($){
 
         },
 
-        _gridObj = $.extend({},_gridObj,_upgradeObj),
+        _gridObj = $.extend(true,{},_gridObj,_upgradeObj),
         // render dataGrid
         _dataGrid = _tableList.datagrid(_gridObj),
 
@@ -91,7 +97,8 @@ var ResultType = (function($){
                 module:_module2,
                 hideCols:_hideCols,
                 tableList:_tableList2,
-                preId:_preId
+                preId:_preId,
+                height:_height
             },
 
             //resultType dataGrid obj render
@@ -99,7 +106,7 @@ var ResultType = (function($){
 
             _upgradeObj2 = {
 
-                pagination: false,
+                //pagination: false,
 
                 onLoadSuccess: function(data) {
 
@@ -108,7 +115,8 @@ var ResultType = (function($){
                 },
                 onClickRow: function(index, row) {
                         // 刷新结果描述表
-                    newcommonjs.rowClickStyle(ResultType.dataGrid, this);
+                    dataGridM.clickRow.call(this,index,row);
+                    //newcommonjs.rowClickStyle(ResultType.dataGrid, this);
 
                 }
 
@@ -147,7 +155,7 @@ var ResultType = (function($){
                 url: ResultType.InfoUrl2,
 
                 //beforeCallBack of submit before
-                BCB: "resultDescEdit"
+                BCB: true
 
             };
             //BCB = ResultType.resultDescEdit;
@@ -174,7 +182,7 @@ var ResultType = (function($){
         //设定pop弹出框的大小
         popArea: 480,
         descSort: 0,
-        focusId: "editName",
+        focusId: _foucsId,
         tableList:_tableList,
         tableList2:_tableList2,
         /*START url 定義*/
@@ -220,17 +228,23 @@ var ResultType = (function($){
         },
 
         /* 结果描述判断新增还是修改 */
-        beforeSubmit: function (opType) {
+        beforeSubmit: function () {
 
             var
-                params = {
-                    addUrl: _addUrl2,
-                    updateUrl: _updateUrl2,
-                    existUrl: _existUrl2,
-                    dataGrid: this.dataGrid2,
-                    exParams: {typeId: this.typeId}
-                }
+                name = $("#editResultValue").val(),
+                data= $("#InfoForm").serializeArray(),
+                params;
 
+            data.push({name:'name',value:name});
+            params = {
+                addUrl: _addUrl2,
+                updateUrl: _updateUrl2,
+                existUrl: _existUrl2,
+                dataGrid: this.dataGrid2,
+                data:data
+            };
+            this.exParams = {typeId: this.typeId};
+            //console.log("typeResult:" + name);
             this.editDictCode(params);
 
         },

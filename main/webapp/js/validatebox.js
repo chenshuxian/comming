@@ -21,7 +21,7 @@ validate = (function($,BM){
 		},
 		authUser:{
 			validator: function(value){
-				var reg = /^(?!(?:\d*$))[A-Za-z0-9]{4,20}$/;
+				var reg = /^(?!(?:\d*$))[A-Za-z0-9_]{4,20}$/;
 		        return reg.test(value);
 			},
 			message: "4-20位，可由数字、字母和下划线组成，最少包含一位字母，字母不区分大小写!"
@@ -39,6 +39,12 @@ validate = (function($,BM){
 				return /^([0-9])+\d*$/i.test(value);
 			},
 			message: "请输入数字"
+		},
+		blank: {
+			validator: function (value) {
+				return trim(value) != '';
+			},
+			message: "不能只输入空格！"
 		},
 		ipFormat: {
 			validator: function (value) {
@@ -66,8 +72,65 @@ validate = (function($,BM){
 				return reg.test(value);
 			},
 			message: "数字、字母的组合"
+		},
+		//下拉是选单验证
+		selectValueRequired: {
+			validator: function(value,param){
+				//console.info($(param[0]).find("option:contains('"+value+"')").val());
+				return $(param[0]).find("option:contains('"+value+"')").val() != '';
+			},
+			message: '下拉选框不可为空.'
+		},
+		english: {
+			validator: function (value) {
+				var reg = /^[A-Za-z]+$/;
+				return reg.test(value);
+			},
+			message: "只能有字母"
+		},
+		upperCase: {
+			validator: function (value) {
+				var reg = /^[A-Z]+$/;
+				return reg.test(value);
+			},
+			message: "只能为大写字母"
+		},
+		upperNum: {
+			validator: function (value) {
+				var reg = /^[A-Z|0-9]+$/;
+				return reg.test(value);
+			},
+			message: "只能为大写字母和数字，请重新输入"
+		},
+		comboxtree: {
+			validator: function (value,param) {
+				var selVal = $("input[name=" + param[0] + "]").val();
+				return parseInt(selVal) > 0;
+			},
+			message: "不可以空，请选择"
+		},
+		compareValue: {
+			validator: function (value,param) {
+				var selVal = $("input[name=" + param[0] + "]").val();
+				console.log(value);
+				console.log(selVal);
+
+				return value > parseInt(selVal);
+			},
+			message: "超始年龄要小于结束年龄"
+		},
+		space: {
+			validator: function (value) {
+				var space = true;
+
+				if($.trim(value) == "")
+					space = false;
+
+				return space;
+			},
+			message: "不可为空"
 		}
-	
+
 	});
 
 	
@@ -106,7 +169,7 @@ validate = (function($,BM){
             //console.log(starttimes +" "+endtimes);
             if (starttimes > endtimes) {
             	//$("#logQSearchBtn").attr('disabled','disabled');
-            	showMessage('开始日期需小于结束日期!');
+            	BM.showMessage('开始日期需小于结束日期!');
                 return false;
             }
             //$("#logQSearchBtn").removeAttr('disabled');
@@ -114,14 +177,19 @@ validate = (function($,BM){
     		    
     	},
     	validateBox : function() {
-        	
+
         	//中文名长度
         	$("input[name='name']").validatebox({
 				required:true,
-        		validType:  ['symbol','length[0,50]'],
-				missingMessage: "中文名称为空，请重新输入！"
-        	});
-        	$("input[name='name']").attr('maxlength','50');
+				validType:  ['symbol','length[0,35]','space'],
+				missingMessage: "中文名称不可为空！"
+			});
+			$("input[name='name']").attr('maxlength','35');
+
+			$("input[name='shortName']").validatebox({
+				validType:  ['symbol','length[0,15]']
+			});
+			$("input[name='shortName']").attr('maxlength','15');
         	//英文名长度
         	$("input[name='enShortName']").validatebox({
         		validType:  ['symbol','length[0,20]']
@@ -137,16 +205,16 @@ validate = (function($,BM){
         		validType:  ['symbol','length[0,15]']
         	});
         	$("input[name='whonetCode']").attr('maxlength','15');
-        	//fastCode长度
-        	$("input[name='fastCode']").validatebox({
-        		validType:  ['symbol','length[0,9]']
-        	});
-        	$("input[name='fastCode']").attr('maxlength','9');
+			//fastCode长度
+			$("input[name='fastCode']").validatebox({
+				validType:  ['symbol','length[0,9]']
+			});
+			$("input[name='fastCode']").attr('maxlength','9');
         	//displayOrder长度
         	$("input[name='displayOrder']").validatebox({
-        		validType:  ['symbol','length[0,11]']
-        	});
-        	$("input[name='displayOrder']").attr('maxlength','11');
+				validType:  ['digits','length[0,6]']
+			});
+			$("input[name='displayOrder']").attr('maxlength','6');
         	//memo长度
         	$("textarea").validatebox({
         		validType: ['symbol','length[0,150]']
@@ -175,22 +243,46 @@ validate = (function($,BM){
     		$("input[name='producer']").attr('maxlength','30');
 			$("#webUrl").validatebox({
 				required:true,
-				validType:  ['symbol','length[0,50]'],
+				validType:  ['symbol','length[0,50]','space'],
 				missingMessage: "网站名称为空，请重新输入！"
 			});
 			$("#telephone").validatebox({
 				required:true,
-				validType:  ['symbol','digits'],
+				validType:  ['symbol','digits','space'],
 				missingMessage: "联系电话为空，请重新输入！"
 			});
 			$("#editResultValue").validatebox({
 				required:true,
-				validType:  ['symbol'],
+				validType:  ['symbol','space'],
 				missingMessage: "结果描述为空，请重新输入！"
 			});
+			//地址
+			$("#address").validatebox({
+				validType:  ['symbol','length[0,200]']
+			});
+			$("#address").attr('maxlength','200');
 
-        	//_beforeSubmit();
-        	
+			$("#enAddress").validatebox({
+				validType:  ['symbol','length[0,200]']
+			});
+			$("#enAddress").attr('maxlength','200');
+			//连络人
+			$("#contacts").validatebox({
+				validType:  ['symbol','length[0,20]']
+			});
+			$("#contacts").attr('maxlength','20');
+			//传真
+			$("#fax").validatebox({
+				validType:  ['symbol','length[0,30]']
+			});
+			$("#fax").attr('maxlength','30');
+			//备注
+			$("#memo").validatebox({
+				validType:  ['symbol','length[0,50]']
+			});
+			$("#memo").attr('maxlength','50');
+
+
         },
         getAuth : function(obj) {
         	
@@ -214,20 +306,6 @@ validate = (function($,BM){
         	//_beforeSubmit();
         	
         },
-        authUser : function() {
-        	  
-        	//用户名验证    	   	
-        	$("input[name='userNo']").validatebox({
-        		validType: ['symbol','authUser']
-        	});
-        	
-        	$("input[name='userName']").validatebox({
-        		validType: 'symbol',
-        		required:true
-        	});
-        	
-        },
-
         updatePW : function() {
         	
         	$("#up_newPassword").validatebox({

@@ -22,8 +22,8 @@
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container  flex-space-between">
-										<label for="editShortName">中文简称:</label>
-										<input type="text" class="form-control block-show" id="editShortName" name="shortName"
+										<label for="shortName">中文简称:</label>
+										<input type="text" class="form-control block-show" id="shortName" name="shortName"
 											   value=""/>
 									</div>
 								</div>
@@ -36,8 +36,8 @@
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container  flex-space-between">
-										<label for="editAddress">中文地址:</label>
-										<input type="text" class="form-control block-show" id="editAddress" name="address" value=""/>
+										<label for="address">中文地址:</label>
+										<input type="text" class="form-control block-show" id="address" name="address" value=""/>
 									</div>
 								</div>
 							</div>
@@ -46,8 +46,8 @@
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container  flex-space-between">
-										<label for="editEnName">英文名称:</label>
-										<input type="text" class="form-control block-show" id="editEnName" name="enName"
+										<label for="enName">英文名称:</label>
+										<input type="text" class="form-control block-show" id="enName" name="enName"
 											   value=""/>
 									</div>
 								</div>
@@ -60,8 +60,8 @@
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container  flex-space-between">
-										<label for="editEnShortName">英文简称:</label>
-										<input type="text" class="form-control block-show" id="editEnShortName" name="enShortName" value=""/>
+										<label for="enShortName">英文简称:</label>
+										<input type="text" class="form-control block-show" id="enShortName" name="enShortName" value=""/>
 									</div>
 								</div>
 							</div>
@@ -70,31 +70,8 @@
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container  flex-space-between">
-										<label for="editEnAddress">英文地址:</label>
-										<input type="text" class="form-control block-show" id="editEnAddress" name="enAddress" value=""/>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="flex-container flex-space-between flex-space-10">
-						<div class="flex-col-6">
-							<div class="flex-container">
-								<div class="form-combo block-show">
-									<div class=" flex-container  flex-space-between">
-										<label for="editContacts">联系人:</label>
-										<input type="text" class="form-control block-show" id="editContacts" name="contacts" value=""/>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="flex-col-6">
-							<div class="flex-container">
-								<div class="form-combo block-show">
-									<div class=" flex-container  flex-space-between">
-										<label for="editTelephone">联系电话:</label>
-										<input type="text" class="form-control block-show" id="editTelephone" name="telephone" value=""/>
+										<label for="enAddress">英文地址:</label>
+										<input type="text" class="form-control block-show" id="enAddress" name="enAddress" value=""/>
 									</div>
 								</div>
 							</div>
@@ -106,8 +83,8 @@
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container  flex-space-between">
-										<label for="editFax">传真号码:</label>
-										<input type="text" class="form-control block-show" id="editFax" name="fax" value=""/>
+										<label for="contacts">联系人:</label>
+										<input type="text" class="form-control block-show" id="contacts" name="contacts" value=""/>
 									</div>
 								</div>
 							</div>
@@ -116,8 +93,8 @@
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container  flex-space-between">
-										<label for="editFastCode">助记符:</label>
-										<input type="text" class="form-control block-show" id="editFastCode" name="fastCode" value=""/>
+										<label for="telephone">联系电话:</label>
+										<input type="text" class="form-control block-show" id="telephone" name="telephone" value=""/>
 									</div>
 								</div>
 							</div>
@@ -129,8 +106,8 @@
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container  flex-space-between">
-										<label for="editDisplayOrder">顺序号:</label>
-										<input type="text" class="form-control block-show" id="editDisplayOrder" name="displayOrder" value="${displayOrder}"/>
+										<label for="fax">传真号码:</label>
+										<input type="text" class="form-control block-show" id="fax" name="fax" value=""/>
 									</div>
 								</div>
 							</div>
@@ -139,9 +116,32 @@
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container  flex-space-between">
-										<label for="editMemo">备注:</label>
+										<label for="fastCode">助记符:</label>
+										<input type="text" class="form-control block-show" id="fastCode" name="fastCode" value=""/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="flex-container flex-space-between flex-space-10">
+						<div class="flex-col-6">
+							<div class="flex-container">
+								<div class="form-combo block-show">
+									<div class=" flex-container  flex-space-between">
+										<label for="displayOrder">顺序号:</label>
+										<input type="text" class="form-control block-show" id="displayOrder" name="displayOrder" value="${displayOrder}"/>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="flex-col-6">
+							<div class="flex-container">
+								<div class="form-combo block-show">
+									<div class=" flex-container  flex-space-between">
+										<label for="memo">备注:</label>
 										<%--<input type="text" class="form-control block-show" id="editMemo" name="memo" value=""/>--%>
-										<textarea class="form-control block-show" id="editMemo" name="memo"></textarea>
+										<textarea class="form-control block-show" id="memo" name="memo"></textarea>
 									</div>
 								</div>
 							</div>

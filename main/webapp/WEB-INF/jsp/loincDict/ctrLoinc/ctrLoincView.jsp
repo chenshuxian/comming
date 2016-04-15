@@ -44,7 +44,7 @@
 					<div class="flex-container">
 						<div class="form-combo block-show">
 							<div class=" flex-container flex-space-between">
-								<label for="editTimeAspectName"><span class="required-icon">*</span>时间特性:</label>
+								<label for="editTimeAspectName"><span class="required-icon">*</span>时间特征:</label>
 								<input type="text" class="form-control block-show" id="editTimeAspectName"
 									   name="timeAspectName"/>
 							</div>

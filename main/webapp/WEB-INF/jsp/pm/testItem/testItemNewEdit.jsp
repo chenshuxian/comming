@@ -125,6 +125,7 @@
     </div>
 </div>
 
+
 <script>
     $(document).ready(function () {
         TestItem.testMethodGrid = new TextCombo(TestItem.testMethodParam);
@@ -132,7 +133,7 @@
         TestItem.sampleTypeGrid = new TextCombo(TestItem.sampleTypeParam);
         TestItem.unitGrid = new TextCombo(TestItem.unitParam);
         TestItem.resultTypeGrid = new TextCombo(TestItem.resultTypeParam);
-        //console.log(${crtTestItemDto.testMethodId});
+
         setTimeout(function(){
             TestItem.testMethodGrid.setText("${crtTestItemDto.testMethodName}");
             TestItem.disciplineGrid.setText("${crtTestItemDto.disciplineName}");

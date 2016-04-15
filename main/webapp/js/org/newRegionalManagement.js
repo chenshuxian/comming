@@ -11,10 +11,10 @@ var RegionalManagement = (function($){
 	var
 		_preId = CB.PREID.RMM,
 		_tableList =  $("#" + _preId + "List"),
-		_tableList2 = $("#" + _preId + "RelatedList"),
+		_tableList2 = $("#" + _preId + "List2"),
 		_orgTypeId = $("#" + _preId + "orgTypeId").val(),
 		_exParams = {orgTypeId: _orgTypeId},
-		_hideCols = ["nacaoId","regionName","fastCode","displayOrder"],	//要穩藏的欄位
+		_hideCols = ["regionName","fastCode","displayOrder","nacaoId"],	//要穩藏的欄位
 		_data = RegionalManagement.searchObj(_preId),
 		_focusId = "editName",
 		// URL SETTING
@@ -34,6 +34,7 @@ var RegionalManagement = (function($){
 		_module = "RegionalManagement",
 		_popArea = 800,
 		_dataGrid,
+		_height =($(window).height() < 810) ? 240 : 300;
 
 		/******************* first dataGrid *********************/
 		_dgParams = {
@@ -42,11 +43,11 @@ var RegionalManagement = (function($){
 			module:_module,
 			hideCols:_hideCols,
 			tableList:_tableList,
-			preId:_preId
+			preId:_preId,
+			height:_height
 		},
 
 		_gridObj = dataGridM.init(_dgParams);
-		_gridObj.height = ($(window).height() < 810) ? 240 : 300;
 		_gridObj.onLoadSuccess = function (data) {
 
 			var rows = RegionalManagement.dataGrid.datagrid("getRows");
@@ -58,81 +59,43 @@ var RegionalManagement = (function($){
 			}
 
 			if (data.total == 0) {
-				//RegionalManagement.resultDescDataGrid.datagrid('loadData', {total: 0, rows: []});//清空下方DateGrid
-				////添加一个新数据行，提示无数据
-				//ResultType.resultTypeDataGrid.datagrid('appendRow', { noData: '<div style="text-align:center;color:red">未查询到数据！</div>' }).datagrid('mergeCells', { index: 0, field: 'noData', colspan: columns.length })
-				////隐藏分页导航条
-				//ResultType.resultTypeDataGrid.closest('div.datagrid-wrap').find('div.datagrid-pager').hide();
+				RegionalManagement.add2 = true;			//断判关联表是否可以添加
+				_loadRelatedDataGrid("0");
 			} else {
 				//ResultType.resultTypeDataGrid.closest('div.datagrid-wrap').find('div.datagrid-pager').show();
+				RegionalManagement.add2 = false;
 				RegionalManagement.parentId = rows[0].stringId;
 				BasicModule.parentStatus = rows[0].status;
 				_loadRelatedDataGrid(RegionalManagement.parentId);
 			}
 
+
 		};
 		_gridObj.onClickRow = function (index, row) {
 			// 刷新结果描述表
+			dataGridM.clickRow.call(this, index,row);
 			RegionalManagement.reloadRelateList(row);
 		};
 		_gridObj.onCheck = function (index, row) {
 			RegionalManagement.reloadRelateList(row);
 		};
 
+
 		_dataGrid = _tableList.datagrid(_gridObj);
 
 		/******************* first dataGrid end ****************/
 
-	///* 状态搜索 */
-	//$("." + _preId + "-status-selector li").on("click", function () {
-	//	$("#" + _preId + "StatusSpan").html($(this).html());
-	//	$("." + _preId + "-status-selector li.selected").removeClass("selected");
-	//	var flg = $(this).is('.selected');
-	//	$(this).addClass(function () {
-	//		return flg ? '' : 'selected';
-	//	})
-    //
-	//	var statusVal = $(this).attr("el-value");
-	//	$("#" + _preId + "Status").val(statusVal);
-    //
-	//	RegionalManagement.searchGrid();
-	//});
-    //
-	///* 排序 */
-	//$("." + _preId + "-sort-selector li").on("click", function () {
-	//	$("#" + _preId + "SortSpan").html($(this).html());
-	//	$("." + _preId + "-sort-selector li.selected").removeClass("selected");
-	//	var flg = $(this).is('.selected');
-	//	$(this).addClass(function () {
-	//		return flg ? '' : 'selected';
-	//	})
-    //
-	//	var sortVal = $(this).attr("el-value");
-	//	$("#" + _preId + "Sort").val(sortVal);
-    //
-	//	RegionalManagement.searchGrid();
-	//});
-    //
-	///* search Btn */
-	//$("#" + _preId + "SearchBtn").on("click",function() {
-	//	RegionalManagement.searchGrid();
-	//});
-
-	/*Start add 相关参数设定  */
-	//$("#" + _preId + "Add").on("click",function() {
-	//	RegionalManagement.addPop();
-	//});
-    //
-	//// deleteBatch
-	//$("#" + _preId + "DeleteBatch").on("click",function() {
-	//	RegionalManagement.deleteBetch();
-	//});
 
 	/!* 关联机构新增 *!/
 	$("#" + _preId + "AddRelated").click(function () {
 
-		if (RegionalManagement.parentStatus == 1) {
-			showMessage("当前选中机构已启用，不允许关联其他机构！");
+		if(RegionalManagement.add2){
+			BM.showMessage("请选择区域机构!");
+			return;
+		}
+
+		if(RegionalManagement.parentStatus == 1) {
+			BM.showMessage("当前选中区域机构已启用，不允许关联其他机构！");
 			return;
 		}
 		RegionalManagement.currentEvent = "addRegional";
@@ -141,6 +104,7 @@ var RegionalManagement = (function($){
 			params = {
 				url: _InfoUrl2,
 				data: {parentId: RegionalManagement.parentId},
+				popArea:900,
 				callback: function(){
 					RegionalManagement.addTestItemIds = [];
 					RegionalManagement.delTestItemIds = [];
@@ -157,11 +121,16 @@ var RegionalManagement = (function($){
 	/!* 关联机构批量删除 *!/
 	$("#" + _preId + "DeleteRelatedBatch").click(function () {
 
+		//if(RegionalManagement.parentStatus == 1) {
+		//	BM.showMessage("当前选中区域机构已启用，不允许删除其他机构！");
+		//	return;
+		//}
+
 		var checkedItems = RegionalManagement.dataGrid2.datagrid("getChecked"),
 			ids = [];
 
 		if (checkedItems.length == 0) {
-			showMessage('请选择要删除的数据!');
+			BM.showMessage('请选择要删除的数据!');
 			return false;
 		}
 
@@ -208,6 +177,7 @@ var RegionalManagement = (function($){
 				hideCols: _hideCols,
 				tableList: _tableList2,
 				preId: _preId,
+				height: _height,
 				isSecond: true
 			},
 
@@ -216,17 +186,16 @@ var RegionalManagement = (function($){
 		_gridObj.pagination = false;
 		_gridObj.onLoadSuccess = function (data) {
 			var columns = RegionalManagement.dataGrid2.datagrid('getColumnFields');
-
 			if (data.total == 0) {
-
+				RegionalManagement.haveSon = false;
 			} else {
-
+				RegionalManagement.haveSon = true;
 			}
 		};
+
 		RegionalManagement.dataGrid2 = _tableList2.datagrid(_gridObj);
 
 	}
-
 
 
 
@@ -258,6 +227,86 @@ var RegionalManagement = (function($){
 			addTestItemIds: [],
 			delTestItemIds: [],
 
+			validateSave: function() {
+				return true;
+			},
+
+			validateBox : function() {
+
+				//中文名长度
+				$("input[name='name']").validatebox({
+					required:true,
+					validType:  ['symbol','length[0,35]','space'],
+					missingMessage: "中文名称不可为空！"
+				});
+				$("input[name='name']").attr('maxlength','35');s
+
+				$("input[name='shortName']").validatebox({
+					validType:  ['symbol','length[0,15]']
+				});
+				$("input[name='shortName']").attr('maxlength','15');
+				//英文名长度
+				$("input[name='enShortName']").validatebox({
+					validType:  ['symbol','length[0,20]']
+				});
+				$("input[name='enShortName']").attr('maxlength','20');
+				//英文名长度
+				$("input[name='enName']").validatebox({
+					validType:  ['symbol','length[0,55]']
+				});
+				$("input[name='enName']").attr('maxlength','55');
+
+				//fastCode长度
+				$("input[name='fastCode']").validatebox({
+					validType:  ['symbol','length[0,9]']
+				});
+				$("input[name='fastCode']").attr('maxlength','9');
+				//displayOrder长度
+				$("input[name='displayOrder']").validatebox({
+					validType:  ['digits','length[0,6]']
+				});
+				$("input[name='displayOrder']").attr('maxlength','6');
+				//memo长度
+				$("textarea").validatebox({
+					validType: ['symbol','length[0,150]']
+				});
+				$("textarea").attr('maxlength','150');
+
+				//地址
+				$("#address").validatebox({
+					validType:  ['symbol','length[0,200]']
+				});
+				$("#address").attr('maxlength','200');
+
+				$("#enAddress").validatebox({
+					validType:  ['symbol','length[0,200]']
+				});
+				$("#enAddress").attr('maxlength','200');
+				//连络人
+				$("#contacts").validatebox({
+					validType:  ['symbol','length[0,20]']
+				});
+				$("#contacts").attr('maxlength','20');
+				//传真
+				$("#fax").validatebox({
+					validType:  ['symbol','length[0,30]']
+				});
+				$("#fax").attr('maxlength','30');
+				//备注
+				$("#memo").validatebox({
+					validType:  ['symbol','length[0,50]']
+				});
+				$("#memo").attr('maxlength','50');
+
+				//电话
+				$("#telephone").validatebox({
+					validType:  ['symbol','length[0,20]']
+				});
+				$("#telephone").attr('maxlength','20');
+
+
+			},
+
 			deleteRelated: function(index,rowData) {
 
 				RegionalManagement.delTestItemIds.push(rowData.stringId);
@@ -273,10 +322,10 @@ var RegionalManagement = (function($){
 						data: data
 					};
 
-				if(RegionalManagement.parentStatus == 1) {
-					showMessage("当前选中机构已启用，不允许删除!");
-					return;
-				}
+				//if(RegionalManagement.parentStatus == 1) {
+				//	BM.showMessage("当前选中区域机构已启用，不允许删除!");
+				//	return;
+				//}
 
 				this.deleteRow(index,rowData,params);
 				
@@ -384,7 +433,22 @@ var RegionalManagement = (function($){
 				});
 			},
 
+			changeStatusEx: function(index,rowData) {
+
+				var params = {
+					logParent: true
+				};
+				this.changeStatus(index,rowData,params);
+
+			},
+
 			changeRelatedStatus: function(index, rowData) {
+
+				//if(RegionalManagement.parentStatus == 1) {
+				//	BM.showMessage("当前选中区域机构已启用，不允许修改状态！");
+				//	this.dataGrid2.datagrid('refreshRow', index);
+				//	return;
+				//}
 
 				var
 					params ={
@@ -396,30 +460,41 @@ var RegionalManagement = (function($){
 
 			},
 
-			showRelatedDialog: function (rowData) {
-				//var url = ctx + "/org/regionalManagement/regionalManagementInfo";
-				//var data = {orgTypeId: this.orgTypeId, id: '', opType: 'view'};
-				newcommonjs.newshowDictCodeEditDialog(data, function () {
-					$("#InfoForm").form("load", {
-						name: rowData.name,
-						shortName: rowData.shortName,
-						enName: rowData.enName,
-						enShortName: rowData.enShortName,
-						address: rowData.address,
-						enAddress: rowData.enAddress,
-						contacts: rowData.contacts,
-						telephone: rowData.telephone,
-						fax: rowData.fax,
-						fastCode: rowData.fastCode,
-						displayOrder: rowData.displayOrder,
-						memo: rowData.memo
-					});
-					$("form input").attr("readonly", "readonly");
-					$("form textarea").attr("readonly", "readonly");
-					$("#editBtn").hide();
-					$("#spanEditCodeNo").html(rowData.codeNo);
-				}, url, 800);
+			deleteRowEx: function(index,rowData){
+
+				if(RegionalManagement.haveSon){
+					BM.showMessage('当前选中记录有关联机构，不允许删除！');
+					return;
+				}
+
+				this.deleteRow(index,rowData);
+
 			},
+
+			//showRelatedDialog: function (rowData) {
+			//	//var url = ctx + "/org/regionalManagement/regionalManagementInfo";
+			//	//var data = {orgTypeId: this.orgTypeId, id: '', opType: 'view'};
+			//	newcommonjs.newshowDictCodeEditDialog(data, function () {
+			//		$("#InfoForm").form("load", {
+			//			name: rowData.name,
+			//			shortName: rowData.shortName,
+			//			enName: rowData.enName,
+			//			enShortName: rowData.enShortName,
+			//			address: rowData.address,
+			//			enAddress: rowData.enAddress,
+			//			contacts: rowData.contacts,
+			//			telephone: rowData.telephone,
+			//			fax: rowData.fax,
+			//			fastCode: rowData.fastCode,
+			//			displayOrder: rowData.displayOrder,
+			//			memo: rowData.memo
+			//		});
+			//		$("form input").attr("readonly", "readonly");
+			//		$("form textarea").attr("readonly", "readonly");
+			//		$("#editBtn").hide();
+			//		$("#spanEditCodeNo").html(rowData.codeNo);
+			//	}, url, 800);
+			//},
 
 
 			reloadRelateList: function (row) {

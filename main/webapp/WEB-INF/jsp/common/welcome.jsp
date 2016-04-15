@@ -40,3 +40,9 @@
         </div>
     </div>
 </div>
+<script>
+    $("#site-content").tabs({
+        fit:false
+    });
+
+</script>

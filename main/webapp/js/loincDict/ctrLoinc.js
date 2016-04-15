@@ -114,37 +114,37 @@ var CtrLoinc = (function($){
                 sampleTypeId = CtrLoinc.sampleTypeGrid.getValue();
 
             if(componentId == ""){
-                showMessage("受检成份为空,请重新输入!",function(){
+                BM.showMessage("受检成份为空,请重新输入!",function(){
                 });
                 return false;
             }
 
             if(testPropertyId == ""){
-                showMessage("受检属性为空,请重新输入!",function(){
+                BM.showMessage("受检属性为空,请重新输入!",function(){
                 });
                 return false;
             }
 
             if(testMethodId == ""){
-                showMessage("检验方法为空,请重新输入!",function(){
+                BM.showMessage("检验方法为空,请重新输入!",function(){
                 });
                 return false;
             }
 
             if(typeOfScaleId == ""){
-                showMessage("样本标识为空,请重新输入!",function(){
+                BM.showMessage("样本标识为空,请重新输入!",function(){
                 });
                 return false;
             }
 
             if(timeAspectId == ""){
-                showMessage("时间特性为空,请重新输入!",function(){
+                BM.showMessage("时间特征为空,请重新输入!",function(){
                 });
                 return false;
             }
 
             if(sampleTypeId == ""){
-                showMessage("标本类型为空,请重新输入!",function(){
+                BM.showMessage("标本类型为空,请重新输入!",function(){
                 });
                 return false;
             }
@@ -332,7 +332,7 @@ $(function(){
             {title: "受检属性", field: 'testPropertyName', flex: 1, width: 60},
             {title: "检验方法", field: 'testMethodName', flex: 1, width: 60},
             {title: "标本标识", field: 'typeOfScaleName', flex: 1, width: 60},
-            {title: "时间特性", field: 'timeAspectName', flex: 1, width: 60},
+            {title: "时间特征", field: 'timeAspectName', flex: 1, width: 60},
             {title: "标本类型", field: 'sampleTypeName', flex: 1, width: 60},
             {title: "助记符", field: 'fastCode', flex: 1, width: 60},
             {title: "顺序号", field: 'displayOrder', flex: 1, width: 60},
@@ -572,7 +572,7 @@ $(function(){
         }
 
         if(timeAspectId == ""){
-            showMessage("时间特性为空,请重新输入!",function(){
+            showMessage("时间特征为空,请重新输入!",function(){
             });
             return false;
         }

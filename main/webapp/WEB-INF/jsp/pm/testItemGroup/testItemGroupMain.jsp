@@ -54,7 +54,6 @@
 
         <div class="main-content-body">
             <table id="${tig}List"></table>
-
         </div>
     </div>
     <div class="flex-container layout-vertical main-content-bottom">

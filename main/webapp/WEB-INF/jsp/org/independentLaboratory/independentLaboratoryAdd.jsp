@@ -15,17 +15,8 @@
                 <div class="flex-container label-inline">
                     <div class="form-combo block-show">
                         <div class=" flex-container  flex-space-between">
-                            <label for="">所属地区:</label>
+                            <label for=""><span class="required-icon">*</span>所属地区:</label>
                             <input type="text" id="regionName" name="regionName" class="form-control block-show" value="">
-                            <!-- <div id="showRegionDiv" class="col-sm-10  col-md-10" style="width:30%;display:none;text-align:left;position:absolute;background-color:#f0f0f0 ;overflow: auto;z-index:999;border:1px solid #AAAAAA;height:270px;overflow-y: auto;">
-								<div class="panel panel-default">
-									<div class="panel-body">
-										<div class="zTreeDemoBackground left">
-											<ul id="medtt"></ul>
-										</div>
-									</div>
-								</div> 
-							</div> -->
                         </div>
                     </div>
                 </div>
@@ -34,7 +25,7 @@
                 <div class="flex-container label-inline">
                     <div class="form-combo block-show">
                         <div class=" flex-container  flex-space-between">
-                            <label for="">中文名称:</label>
+                            <label for=""><span class="required-icon">*</span>中文名称:</label>
                             <input type="text" class="form-control block-show" value="" id="name" name="name" maxlength="35">
                         </div>
                     </div>
@@ -43,16 +34,26 @@
         </div>
 
         <div class="flex-container vertical-space flex-space-between flex-space-20">
-            <div class="flex-col-6">
-                <div class="flex-container label-inline">
-                    <div class="form-combo block-show">
-                        <div class=" flex-container  flex-space-between">
-                            <label for="">卫生机构代码:</label>
-                            <input type="text" class="form-control block-show" value="" id="nacaoId" name="nacaoId" maxlength="32">
+            <%--<div class="flex-col-6">--%>
+                <%--<div class="flex-container label-inline">--%>
+                    <%--<div class="form-combo block-show">--%>
+                        <%--<div class=" flex-container  flex-space-between">--%>
+                            <%--<label for="">卫生机构代码:</label>--%>
+                            <%--<input type="text" class="form-control block-show" value="" id="nacaoId" name="nacaoId" maxlength="32">--%>
+                        <%--</div>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+                <div class="flex-col-6">
+                    <div class="flex-container label-inline">
+                        <div class="form-combo block-show">
+                            <div class=" flex-container  flex-space-between">
+                                <label for=""><span class="required-icon">*</span>网站名称(地址):</label>
+                                <input type="text" class="form-control block-show" value="" id="webUrl" name="webUrl" maxlength="50">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
             <div class="flex-col-6">
                 <div class="flex-container label-inline">
                     <div class="form-combo block-show">
@@ -127,7 +128,7 @@
                 <div class="flex-container label-inline">
                     <div class="form-combo block-show">
                         <div class=" flex-container  flex-space-between">
-                            <label for="">联系电话:</label>
+                            <label for=""><span class="required-icon">*</span>联系电话:</label>
                             <input type="text" class="form-control block-show" value="" id="telephone" name="telephone" maxlength="50">
                         </div>
                     </div>

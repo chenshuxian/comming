@@ -6,7 +6,6 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-
 <div class="pop-inner-wrap">
     <div class="pop-container">
         <div class="wrapper-container">
@@ -31,7 +30,7 @@
                     <div class="form-group">
                         <label for="editDisplayOrder"><strong>顺序号</strong>
                         </label>
-                        <input type="text" class="form-control block-show" name="displayOrder" id="editDisplayOrder"/>
+                        <input type="text" class="form-control block-show" name="displayOrder" id="editDisplayOrder" value="${displayOrder}"/>
 
                     </div>
                     <div class="form-group">
@@ -41,21 +40,19 @@
                     </div>
                 </div>
                 <input type="hidden" id="editId" name="id"/>
-                <input type="hidden" id="editOpType" name="opType" />
+                <input type="hidden" id="opType" name="opType" />
+                <input type="hidden" id="action" name="action">
+                <div class="wrapper-footer text-center">
+                    <%--<script type="text/javascript">--%>
+                    <%--function authUsers_onclickSave(){--%>
+                    <%--var _optype = $('#editOpType').val();--%>
+                    <%--AuthUsers.updateAuthUsers(_optype);--%>
+                    <%--}--%>
+                    <%--</script>--%>
+                    <button id="editBtn" class="btn btn-submit sm-size" onclick="BasicModule.submit()">确定</button>
+                    <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
+                </div>
             </form>
-            <div class="wrapper-footer text-center">
-                <script type="text/javascript">
-                    function authUsers_onclickSave(){
-                        var _optype = $('#editOpType').val();
-                        AuthUsers.updateAuthUsers(_optype);
-                    }
-                </script>
-                <button id="editBtn" class="btn btn-submit sm-size"
-                        onclick="authUsers_onclickSave()">确定
-                </button>
-                <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
-            </div>
-
         </div>
     </div>
 </div>

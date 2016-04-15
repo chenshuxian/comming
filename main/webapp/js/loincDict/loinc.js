@@ -176,7 +176,7 @@ function validateSave(){
 	}
 	
 	if(timeAspectId == ""){
-		showMessage("时间特性为空,请重新输入!",function(){
+		showMessage("时间特征为空,请重新输入!",function(){
 		});
 		return false;
 	}

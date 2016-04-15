@@ -81,7 +81,17 @@
 <c:set var="imr" value="imr" />
 <%--中心仪器项目对照--%>
 <c:set var="iir" value="iir" />
+<%--客户仪器信息--%>
+<c:set var="ii" value="ii" />
 
+<%--机构系统初始化--%>
+<c:set var="oi" value="oi" />
+
+<%--中心报表模板维护--%>
+<c:set var="ct" value="ct" />
+
+<%--客户报表模板维护--%>
+<c:set var="cst" value="cst" />
 
 
 

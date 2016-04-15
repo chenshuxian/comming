@@ -19,79 +19,114 @@ dataGridM = (function($){
 	 * _height:grid 高度设定
 	 * _isSecond:是否为第二个grid ，若只有一个时不给设定，所以值为undefined
 	 */
-	
-	var _initObj = function(params){
-		
-		 var  _tableList = params.tableList,
-			  _url = params.url,
-			  _data = params.data,
-			  _module = params.module,
-			  _preId =params.preId,
-			  _hideCols = (params.hideCols == null) ? new Array() : params.hideCols,
-			  _height = params.height,
-			  _isSecond = params.isSecond,
 
-			  //grid 产生后
-			  onAfterRender = function() {
-				  //
-				  if (_module == "ResultType2")
-				  	_module = "ResultType";
+	var
+		_onClickRow = function (index,row) {
+			var opt = $(this).datagrid("options");
+			var rows1 = opt.finder.getTr(this, "", "allbody", 2);
+			if (rows1.length > 0) {
+				$(rows1).each(function(){
+					var tempIndex = parseInt($(this).attr("datagrid-row-index"));
+					if (tempIndex == index) {
+						$(this).addClass("datagrid-row-click");
+					}
+					else {
+						$(this).removeClass("datagrid-row-click");
+					}
+				});
+			}
+		},
 
-				  //第一个grid 必预执行以下动作
-				  //新增时将排序设为按录入顺序降序
-				  if(!_isSecond) {
+		_hideColumn = function(tableList,hideCols) {
 
-					  var obj = eval("(" + _module + ")");
+			if (hideCols) {
+				$.each(hideCols, function (k, v) {
+					tableList.datagrid('hideColumn', v);
+				})
+			}
+		};
 
-					  switch (obj.currentEvent) {
-						  case "add":
-							  newcommonjs.setSearchConditions(_preId, "", 2, 2);
-							  obj.currentEvent = undefined;
-							  break;
-					  }
+		 _initObj = function(params){
 
-				  }
+			var
+				_tableList = params.tableList,
+				_url = params.url,
+				_data = params.data,
+				_module = params.module,
+				_preId =params.preId,
+				_hideCols = (params.hideCols == null) ? new Array() : params.hideCols,
+				_height = params.height,
+				_isSecond = params.isSecond,
 
-			  };
+				//grid 产生后
+				_onAfterRender = function() {
 
-		 var gridObj = {
-	            url: _url,
-	            method: CB.METHOD,
-	            queryParams: _data,
-	            height: _height,
-	            fitColumns: true,
-	            fit: false,
-	            checkOnSelect: false,
-	            selectOnCheck: false,
-	            autoRowHeight: false,
-	            striped: true,
-	            pagination: true,
-	            pageNumber: 1,
-	            pageSize: 10
-		 };
+					if (_module == "ResultType2")
+						_module = "ResultType";
+
+					//第一个grid 必预执行以下动作
+					//新增时将排序设为按录入顺序降序
+					if(!_isSecond) {
+
+						//var obj = eval("(" + _module + ")");
+						var obj = BM;
+
+						switch (obj.currentEvent) {
+							case "add":
+								newcommonjs.setSearchConditions(_preId, "", 2, 2);
+								obj.currentEvent = undefined;
+								break;
+						}
+
+					}
+
+				};
+
+			var gridObj = {
+				url: _url,
+				method: CB.METHOD,
+				queryParams: _data,
+				height: _height,
+				fitColumns: true,
+				fit: false,
+				checkOnSelect: false,
+				selectOnCheck: false,
+				autoRowHeight: false,
+				striped: true,
+				pagination: true,
+				pageNumber: 1,
+				pageSize: 10
+			};
 
 
-		 //复写 datagrid view 方法
-		gridObj.view = $.extend({}, $.fn.datagrid.defaults.view, {onAfterRender: onAfterRender});
+			//复写 datagrid view 方法
+			gridObj.view = $.extend({}, $.fn.datagrid.defaults.view, {onAfterRender: _onAfterRender});
 
-		 //取得欄位
-		 gridObj.columns = ColCollect.getColumns(_module);
+			//取得欄位
+			gridObj.columns = ColCollect.getColumns(_module);
 
-		 //載入成功後操作事項，稳藏不出现的栏位
-		 gridObj.onLoadSuccess = function () {
-	            newcommonjs.tableAuto(_tableList);
-	            if (_hideCols) {
-	                $.each(_hideCols, function (k, v) {
-	                	_tableList.datagrid('hideColumn', v);
-	                })
-	            }
-	     };
-		 
-		 return gridObj;
-	}
+			//載入成功後操作事項，稳藏不出现的栏位
+			gridObj.onLoadSuccess = function () {
+				newcommonjs.tableAuto(_tableList);
+				//_hideColumn(_tableList,_hideCols);
+				if (_hideCols) {
+					$.each(_hideCols, function (k, v) {
+						_tableList.datagrid('hideColumn', v);
+
+					})
+				}
+			};
+
+			//点即栏位时高亮
+			gridObj.onClickRow = _onClickRow;
+
+			return gridObj;
+		}
 
 	dataGridObj = {
-		init:_initObj
+		init: _initObj,
+		clickRow: _onClickRow,
+		hideColumn: _hideColumn
 	};
 	
 	return dataGridObj;

@@ -62,7 +62,7 @@
 <!--------------------------------------------------------------------------------
 ---------------------------检验方法下拉Grid数据源------------------------------------
 --------------------------------------------------------------------------------->
-<div id="${cl}_gridTestMethod" class="tablebox_02" style="width: 353px; height: 205px; display: none;">
+<div id="${cl}_gridTestMethod" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr class="tablehead">
             <td style="width: 15px;">&nbsp;</td>
@@ -84,7 +84,7 @@
 <!--------------------------------------------------------------------------------
 ---------------------------受检成份下拉Grid数据源--------------------------------------
 --------------------------------------------------------------------------------->
-<div id="${cl}_gridComponent" class="tablebox_02" style="width: 353px; height: 205px; display: none;">
+<div id="${cl}_gridComponent" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr class="tablehead">
             <td style="width: 15px;">&nbsp;</td>
@@ -106,7 +106,7 @@
 <!--------------------------------------------------------------------------------
 ---------------------------默认标本类型下拉Grid数据源-------------------------------------
 --------------------------------------------------------------------------------->
-<div id="${cl}_gridSampleType" class="tablebox_02" style="width: 353px; height: 205px; display: none;">
+<div id="${cl}_gridSampleType" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr class="tablehead">
             <td style="width: 15px;">&nbsp;</td>
@@ -128,7 +128,7 @@
 <!--------------------------------------------------------------------------------
 ---------------------------受检属性Grid数据源--------------------------------------------
 --------------------------------------------------------------------------------->
-<div id="${cl}_gridProperty" class="tablebox_02" style="width: 353px; height: 205px; display: none;">
+<div id="${cl}_gridProperty" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr class="tablehead">
             <td style="width: 15px;">&nbsp;</td>
@@ -150,7 +150,7 @@
 <!--------------------------------------------------------------------------------
 ---------------------------样本类型下拉Grid数据源--------------------------------------
 --------------------------------------------------------------------------------->
-<div id="${cl}_gridTypeOfScale" class="tablebox_02" style="width: 353px; height: 205px; display: none;">
+<div id="${cl}_gridTypeOfScale" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr class="tablehead">
             <td style="width: 15px;">&nbsp;</td>
@@ -170,9 +170,9 @@
     </div>
 </div>
 <!--------------------------------------------------------------------------------
----------------------------时间特性下拉Grid数据源--------------------------------------
+---------------------------时间特征下拉Grid数据源--------------------------------------
 --------------------------------------------------------------------------------->
-<div id="${cl}_gridTimeAspect" class="tablebox_02" style="width: 353px; height: 205px; display: none;">
+<div id="${cl}_gridTimeAspect" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr class="tablehead">
             <td style="width: 15px;">&nbsp;</td>
