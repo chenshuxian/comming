@@ -18,7 +18,7 @@
 -----
 
 3/18
-###问题:datagrid 重新载入时grid原始设定跑掉了。 
+###问题:datagrid 重新载入时grid原始设定跑掉了。(高度)
 __原因:__ dataGrid JS 中初始化有一个__onLoadSuccess__函数，呼叫了一个grid调整的函数所致。
 
 __解决:__在前端建立物件时重新定议载入__onLoadSuccess__函数。
@@ -40,15 +40,6 @@ __解决:__ 将字串中的空白以\&nbsp;字符取代
 
  `str.replace(/\s/g,"&nbsp;");`
  
------
-### 0414 表单载入成功后高度一直跑掉
 
-原因: dataGrid.js 预设有一个 loadSuccess event 会调整 grid 的高和宽
-
-__解决:__ 
-
-1.加一个控制参数，如果为两个grid不进行 loadSuccess event 的继承。
-
-2.在前端加一个 loadSuccess overwrite。
 
 
