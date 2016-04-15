@@ -31,6 +31,7 @@ http://www.easyui.info/archives/396.html
 4/1
 ###问题:在form表单发送触发异常
 __原因:__ 因为在button 上也写了一个 onclick 事件，在事件触发后，系统又自动触发了表单submit事件。
+
 __解决:__ 把button放到 from 表单外，或加event.preventDefault();
 
 -----
