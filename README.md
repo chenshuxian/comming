@@ -8,5 +8,5 @@ comming 是运用 easyui 所设计出的一个前端 web 介面
 * __[gridColumns](https://github.com/chenshuxian/comming/blob/master/main/webapp/js/gridColumns.js):__ Columns of dataGrid 集合
 * __[const](https://github.com/chenshuxian/comming/blob/master/main/webapp/js/const.js):__常量宣告集合
 * __[validateBox](https://github.com/chenshuxian/comming/blob/master/main/webapp/js/validatebox.js):__验证集合
-* __权限管理
+* __checkAuth:__权限管理
 
