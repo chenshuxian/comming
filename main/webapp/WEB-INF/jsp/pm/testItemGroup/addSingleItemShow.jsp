@@ -15,13 +15,14 @@
 							<div class="drop-down">
 								<%--<div class="drop-down-selected">--%>
 									<%--<span class="selected-items"  id="instrument"></span>--%>
-									<%--<i class="icon icon-angle-down"></i>--%>
+									<%--<i class="fa fa-angle-down "></i>--%>
 								<%--</div>--%>
 								<%--<div class="drop-down-menu">--%>
 									<select  class="list-unstyled ul_instrument">
+										<option vlaue="-1"></option>
 										<c:forEach items="${ctrInstrumentsList}" var="instrument">
 											<%--<li onclick="testItemGroupMain.instrumentClick('${instrument.idStr }','${instrument.name }');" value="${instrument.idStr }">${instrument.name }</li>--%>
-											<option selected="selected" value="${instrument.idStr}" >${instrument.name}</option>
+											<option value="${instrument.idStr}" >${instrument.name}</option>
 										</c:forEach>
 									</select>
 								<%--</div>--%>
@@ -57,7 +58,7 @@
 				</div>
 				<div class="wrapper-footer text-center">
 					<button id="addBtn" class="btn btn-submit sm-size J_ShowPop">确定</button>
-					<button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
+					<button class="btn btn-cancel sm-size J_ClosePop" onclick="BM.arrayClean();">关闭</button>
 				</div>
 				<input type="hidden" id="instrumentId"/>
 			</div>
@@ -96,24 +97,33 @@
 
 			$("#leftShiftBtn").on('click',function(){
 				var rightProjectData = $("#addCheckProjectRight").datagrid('getSelections'),
-				stringId,rowIndex,rows;
+				stringId,rowIndex,rows, localArr = testItemGroupMain.rightArr;
 				var leftProjectData = $("#addCheckProjectLeft").datagrid('getData');
+				var leftLen = leftProjectData.rows.length;
 				var sexId = 3;
+				console.log(leftLen);
 				if(leftProjectData && leftProjectData.total > 0) {
-					makeToArray(leftProjectData.rows).forEach(function (element, index) {
-						if(element.sexId!=3){
-							sexId = element.sexId;
-							return false;
+					for (var i = 0; i < leftLen; i++) {
+						if (leftProjectData.rows[i].sexId != 3) {
+							sexId = leftProjectData.rows[i].sexId;
+							break;
 						}
-					});
+					}
 				}
 			if(rightProjectData.length > 0) {
-				var msg='', sex='',rightSex=3;
+
+				var msg='', sex='',rightSex= 3, addCheck = true;
 				makeToArray(rightProjectData).forEach(function (element, index) {
 					var newrow = {
 						index:0,
 						row: element
 					};
+
+					stringId = element.idString;
+					if (element.stringId) {
+						stringId = element.stringId;
+					}
+
 					if(sexId == 1){
 						sex = "男";
 					}else if(sexId == 2){
@@ -121,12 +131,29 @@
 					}
 					if(element.sexId == 3 || element.sexId == sexId || sexId == 3){
 						rowIndex = $("#addCheckProjectRight").datagrid("getRowIndex", element);
-						$("#addCheckProjectRight").datagrid('deleteRow', rowIndex);
-						$("#addCheckProjectLeft").datagrid('insertRow', newrow);
-						stringId = element.idString;
-						if (element.stringId)
-							stringId = element.stringId;
-						BasicModule.addTestItemIds.push(stringId);
+						if(leftProjectData && leftProjectData.total > 0) {
+							makeToArray(leftProjectData.rows).forEach(function (el,index) {
+								if( element.stringId == el.stringId ) {
+									BM.showMessage(element.name + "已存在");
+									addCheck = false;
+								}
+							});
+						}
+						if (addCheck) {
+							$("#addCheckProjectRight").datagrid('deleteRow', rowIndex);
+							$("#addCheckProjectLeft").datagrid('insertRow', newrow);
+							if(BM.addDelCheck(BM.addTestItemIds,stringId)) {
+								BasicModule.addTestItemIds.push(stringId);
+							}
+							//本地数资料移除
+							BM.removeLocalArr(localArr,stringId);
+
+						}
+
+//						$("#addCheckProjectRight").datagrid('deleteRow', rowIndex);
+//						$("#addCheckProjectLeft").datagrid('insertRow', newrow);
+
+					//	BasicModule.addTestItemIds.push(stringId);
 					}else if(rightSex!=3 && rightSex!=element.sexId){
 						msg += element.name+"、";
 					}
@@ -150,9 +177,14 @@
 			});
 			
 			
-			$("#rightShiftBtn").on('click',BasicModule.rightShiftBtn);
+			$("#rightShiftBtn").on('click',function () { BasicModule.rightShiftBtn(testItemGroupMain.rightArr); });
 			$("#searchBtn2").on('click', function () {
-				$("#addCheckProjectRight").datagrid("reload", getSearchObj());
+				//$("#addCheckProjectRight").datagrid("reload", getSearchObj());
+				var
+						searchStr = $("#instrumentSearch").val(),
+						queryItem = ["codeNo","name","enName","enShortName","fastCode","testMethodName"];
+
+				BM.localQuery(testItemGroupMain.rightArr,searchStr,queryItem);
 			});
 
 			$("#addBtn").on('click', function () {
@@ -189,42 +221,3 @@
 		});
 	</script>
 
-<%--<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>--%>
-<%--<%@ include file="/WEB-INF/jsp/common/taglibs.jsp"%>--%>
-<%--<%@ include file="/WEB-INF/jsp/common/page_head.jsp"%>--%>
-<%--<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">--%>
-<%--<html>--%>
-<%--<head>--%>
-<%--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">--%>
-<%--<link href="${ctx}/css/select.css" type="text/css" rel="stylesheet">--%>
-<%--<script src="${ctx}/js/enterToTab.js"></script>--%>
-<%--<script type="text/javascript">--%>
-	<%--$(document).ready(function(){--%>
-		<%--var testItemId = $("#testItemGroupId").val();--%>
-		<%--$("#containList").load(ctx + "/pm/testItemGroup/containList",{testItemId:testItemId});--%>
-		<%--$("#notContainListMain").load(ctx + "/pm/testItemGroup/notContainListMain",{testItemId:testItemId});--%>
-	<%--});--%>
-<%--</script>--%>
-<%--<title>添加项目</title>--%>
-<%--</head>--%>
-<%--<body>--%>
-	<%--<h3>--%>
-		<%--添加项目<a href="javascript:closeShow();"></a>--%>
-	<%--</h3>--%>
-	      <%--<div class="yi_c over">--%>
-	      	<%--<div id="containList" style="float: left; width: 520px;height: 480px;overflow-y:auto;"></div>--%>
-	      	<%--<div style="float: left;width: 50px;padding-top: 200px;">--%>
-		      	<%--<div class="btns">--%>
-		      		<%--<input type="button" id="leftMove" value="&lt;&lt;" onclick="notContainTr();" title="添加项目"/>--%>
-		      		<%--<br/><br/>--%>
-		      		<%--<input type="button" id="rightMove" value=">>" onclick="containTr();" title="移除项目"/>--%>
-		        <%--</div>--%>
-	      	<%--</div>--%>
-	    	<%--<div id="notContainListMain" style="float: right; width: 510px;height: 480px;overflow-y:auto;"></div>--%>
-	      <%--</div>--%>
-	      <%--<div class="btns">--%>
-	        <%--<input type="button" value="确 定" onclick="addOrRemoveItem();">--%>
-	        <%--<input type="button" value="取 消" onclick="closeShow();">--%>
-	      <%--</div>--%>
-<%--</body>--%>
-<%--</html>--%>

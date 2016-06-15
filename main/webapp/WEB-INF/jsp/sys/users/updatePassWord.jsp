@@ -16,7 +16,7 @@
                         </div>
                         <label for="">
                         	<strong>密码</strong>
-                            <small>(6-20个字符，字母、数字和符号的组合)</small>
+                            <small>(6-20个字符，字母、数字的组合)</small>
                         </label>
                         <input type="password" class="form-control block-show" id="up_newPassword" />
                     </div>

@@ -6,7 +6,7 @@
         <div class="flex-col-5 dictionary-database">
           <div class="wrapper-header flex-container flex-space-between">
             <div class="option">
-              <div class="flex-container flex-vertical-center">
+              <div class="flex-container flex-y-center">
                 <span class="symbol"></span><span>前台通讯类:</span>
                 <div class="drop-down drop-down-icon">
                   <div class="drop-down-selected">
@@ -29,21 +29,26 @@
               </button>
             </div>
           </div>
-          <div class="wrapper-content">
-            <div class="main-content-body easyui-layout">
+            <div class="main-content-body">
               <table id="instCtrList"></table>
             </div>
-          </div>
           <div class="wrapper-footer text-center">
             <button class="btn btn-submit sm-size J_ShowPop" id="editBtn">确定</button>
             <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
           </div>
         </div>
         <div class="flex-col-7">
-          <div class="wrapper-header">
-            <span>前台通讯类: <input type="text" id="frontClassName" class="form-control block-show" style="width:150px" disabled/></span>
-            <span class="symbol"></span>
-            <span>后台解析类: <input type="text" id="className" class="form-control block-show" style="width:150px" disabled/></span>
+          <div class="wrapper-header flex-container flex-space-between flex-space-10">
+              <div class="flex-col-6">
+                  <div class="flex-container flex-y-center">
+                     <label for=""> 前台通讯类:</label> <input type="text" id="frontClassName" class="form-control block-show" style="width:150px" disabled/>
+                  </div>
+              </div>
+              <div class="flex-col-6">
+                  <div class="flex-container flex-y-center">
+                      <label for="">  后台解析类:</label> <input type="text" id="className" class="form-control block-show" style="width:150px" disabled/>
+                  </div>
+              </div>
           </div>
           <div class="wrapper-content">
             <div class="vertical-space">

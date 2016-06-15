@@ -21,76 +21,78 @@
 			<input type="hidden" id="${ii}settingAuthrized" value="true" />
 		</local:ifAuthrized>
 		<div class="main-content-header" id="ii_main-content-header">
-			<div class="flex-container flex-space-between">
-				<div class="search flex-container flex-space-between">
-					<span class="drop-down-label">机构:</span>
-					<div class="J_ShowPop J_mechanismList md-size">
-						<input type="hidden" id="ii_mechanismId" />
-						<span class="selected-items" id="${ii}SelectOrg" >请选择机构</span><i class="icon icon-angle-down"></i>
-					</div>
-					<div class="form-control-icon icon-right">
-							<input id="${ii}SearchStr" type="text" class="form-control" placeholder="搜索内容..."/>
-							<button class="control-icon text-center" id="${ii}SearchBtn">
-								<i class="icon icon-search"></i>
-							</button>
+				<div class="flex-container flex-space-between">
+					<div class="search flex-container flex-space-between">
+						<span class="symbol"></span>
+						<span>机构:</span>
+						<div class="drop-down">
+							<div class="drop-down-selected">
+								<span class="selected-items blue" id="${ii}SelectOrg" >请选择机构</span><i class="fa fa-angle-down "></i>
+							</div>
 						</div>
-				</div>
-				<div class="search flex-container  flex-space-between">
-							<span class="symbol"></span><span>前台通讯类:</span>
+						<div class="form-control-icon icon-right">
+								<input id="${ii}SearchStr" type="text" class="form-control searchWidth" style="width:250px;" placeholder="搜索内容..."/>
+								<button class="control-icon text-center" id="${ii}SearchBtn">
+									<i class="icon icon-search"></i>
+								</button>
+							</div>
+					</div>
+					<div class="search flex-container  flex-space-between">
+							<%-- 	<span class="symbol"></span><span>前台通讯类:</span>
+								<div class="drop-down drop-down-icon">
+									<div class="drop-down-selected">
+										<span class="selected-items" id="${ii}frontClassSpan">全部</span>
+									</div>
+									<div class="drop-down-menu">
+										<ul class="list-unstyled ${ii}-frontClass-selector">
+											<li class="selected" el-value="">全部</li>
+											<li el-value="0">类名不为空</li>
+											<li el-value="1">类名为空</li>
+										</ul>
+									</div>
+								</div> --%>
+								<span class="symbol"></span> <span>状态:</span>
+								<div class="drop-down">
+									<div class="drop-down-selected">
+										<span class="selected-items" id="${ii}StatusSpan">所有</span><i class="fa fa-angle-down "></i>
+									</div>
+									<div class="drop-down-menu">
+										<ul class="list-unstyled ${ii}-status-selector">
+											<c:forEach items="${isAbleList}" var="isAble">
+												<li <c:if test="${isAble.index == 2}">selected="selected" el-value=""</c:if>
+													<c:if test="${isAble.index != 2}">selected="selected" el-value="${isAble.index}"</c:if> >${isAble.text}</li>
+											</c:forEach>
+										</ul>
+									</div>
+								</div>
+					</div>
+					<div class="option icon-group-inline ">
 							<div class="drop-down drop-down-icon">
 								<div class="drop-down-selected">
-									<span class="selected-items" id="${ii}frontClassSpan">全部</span>
+									<i class="icon icon-sort"></i><span class="selected-items" id="${ii}SortSpan">排序</span>
 								</div>
 								<div class="drop-down-menu">
-									<ul class="list-unstyled ${ii}-frontClass-selector">
-										<li class="selected" el-value="">全部</li>
-										<li el-value="0">类名不为空</li>
-										<li el-value="1">类名为空</li>
+									<ul class="list-unstyled ${ii}-sort-selector">
+										<li class="selected" el-value="0">按顺序号升序</li>
+										<li el-value="1">按名称升序</li>
+										<li el-value="2">按录入顺序降序</li>
 									</ul>
 								</div>
 							</div>
-							<span class="symbol"></span> <span>状态:</span>
-							<div class="drop-down">
-								<div class="drop-down-selected">
-									<span class="selected-items" id="${ii}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
-								</div>
-								<div class="drop-down-menu">
-									<ul class="list-unstyled ${ii}-status-selector">
-										<c:forEach items="${isAbleList}" var="isAble">
-											<li <c:if test="${isAble.index == 2}">selected="selected" el-value=""</c:if>
-												<c:if test="${isAble.index != 2}">selected="selected" el-value="${isAble.index}"</c:if> >${isAble.text}</li>
-										</c:forEach>
-									</ul>
-								</div>
-							</div>
+							<span class="symbol">|</span>
+							<local:ifAuthrized value="01040102">
+								<span id="${ii}Add2" class="J_ShowPop J_InstrumentAddFromCTR lg-size"  ><i class="icon icon-plus-square"></i> 从仪器库添加</span>
+							</local:ifAuthrized>
+							<local:ifAuthrized value="01040103">
+								<span id="${ii}Add" class="J_ShowPop md-size"><i class="icon icon-plus-square"></i> 添加</span>
+							</local:ifAuthrized>
+							<local:ifAuthrized value="01040104">
+								<span id="${ii}DeleteBatch"><i class="icon icon-trash"></i>删除选中</span>
+							</local:ifAuthrized>
+					</div>
 				</div>
-				<div class="option icon-group-inline ">
-						<div class="drop-down drop-down-icon">
-							<div class="drop-down-selected">
-								<i class="icon icon-sort"></i><span class="selected-items" id="${ii}SortSpan">排序</span>
-							</div>
-							<div class="drop-down-menu">
-								<ul class="list-unstyled ${ii}-sort-selector">
-									<li class="selected" el-value="0">按顺序号升序</li>
-									<li el-value="1">按名称升序</li>
-									<li el-value="2">按录入顺序降序</li>
-								</ul>
-							</div>
-						</div>
-						<span class="symbol">|</span>
-						<local:ifAuthrized value="01040102">
-							<span id="${ii}Add2" class="J_ShowPop J_InstrumentAddFromCTR lg-size"  ><i class="icon icon-plus-square"></i> 从仪器库添加</span>
-						</local:ifAuthrized>
-						<local:ifAuthrized value="01040103"> 
-							<span id="${ii}Add" class="J_ShowPop md-size"><i class="icon icon-plus-square"></i> 添加</span>
-						</local:ifAuthrized>
-						<local:ifAuthrized value="01040104">
-							<span id="${ii}DeleteBatch"><i class="icon icon-trash"></i>删除选中</span>
-						</local:ifAuthrized>
-				</div>
-			</div>
 		</div>
-		<div class="main-content-body easyui-layout">
+		<div class="main-content-body">
 			<table id="${ii}List"></table>
 		</div>
 		<input type="hidden" id="${ii}Status"/>

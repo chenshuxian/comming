@@ -77,9 +77,13 @@ setPassword:function(){
 	
 	var password = $("#password").val();
 	var rePassword = $("#rePassword").val();
-	var regPw = /^(?![a-zA-Z0-9]+$)(?![^a-zA-Z/D]+$)(?![^0-9/D]+$).{6,20}$/;
+	var regPw = /^((?=.*?\d)(?=.*?[A-Za-z])|(?=.*?\d)(?=.*?[!@#$%^&_])|(?=.*?[A-Za-z])(?=.*?[!@#$%^&_]))[\dA-Za-z!@#$%^&_]{6,20}$/;
    
 	console.log(password)
+	if(!regPw.test(password)){
+		showMessage("6-20个字符，字母、数字的组合!");
+		return;
+	}
 	if(password==null||password==""){
 		showMessage("请输入密码");
 		return;
@@ -92,10 +96,7 @@ setPassword:function(){
 		showMessage("两次密码不一致，请重新输入！");
 		return;
 	}
-	if(!regPw.test(password)){
-		showMessage("6-20个字符，字母、数字和符号的组合!");
-		return;
-	}
+
 	$("#setPasswordForm").submit();
 	/*$.ajax({
 			url : ctx + "/sys/user/setPassWord",

@@ -24,21 +24,6 @@
               </div>
             </div>
           </div>
-         <%--  <div class="flex-container">
-            <div class="form-combo block-show">
-              <div class=" flex-container flex-space-between">
-                <label><span class="required-icon">*</span>仪器类型:</label>
-                <select id="typeId" name="typeId"
-                        data-options="editable:false,width:240,height:30,panelHeight:'auto'"
-                        class="easyui-combobox xs-size form-control-combo">
-                  <option value="">&nbsp;</option>
-                  <c:forEach items="<%=CtrInstrumentsType.values()%>" var="item" varStatus="status">
-                    <option value="${item.ordinal()}" >${item.text}</option>
-                  </c:forEach>
-                </select>
-              </div>
-            </div>
-          </div> --%>
         </div>
         <input type="hidden" id="editId" name="id"/>
         <input type="hidden" id="opType" name="opType" value="${opType}"/>

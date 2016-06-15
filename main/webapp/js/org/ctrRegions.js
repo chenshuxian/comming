@@ -2,7 +2,8 @@ $(function() {
 	EasyTree.setObj($("#tt"));
 	EasyTree.setCheckBox(false,false);
 	var obj = EasyTree.getInit();
-	EasyTree.init(obj);	
+	EasyTree.init(obj);
+	BM.checkAuth("reg");
 	$("#regaddBrotherBtn").on('click',function(){EasyTree.nodeAdd("addBrotherNode")});
 	$("#regaddchildrenBtn").on('click',function(){EasyTree.nodeAdd("addchildrenNode")});
 	$("#regdelBtn").on('click',function(){EasyTree.del()});

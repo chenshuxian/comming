@@ -18,6 +18,7 @@ var SpecimenType = (function($){
          _hideCols = null,	//要穩藏的欄位
          _data = SpecimenType.searchObj(_preId),
          _pageListUrl = SpecimenType.pageListUrl,
+
     
          /* 参数说明:
          * url:pagelisturl
@@ -49,59 +50,13 @@ var SpecimenType = (function($){
         exParams: _exParams
     });
 
-
-    ///* 状态搜索 */
-    //$("." + _preId + "-status-selector li").on("click", function () {
-    //    $("#" + _preId + "StatusSpan").html($(this).html());
-    //    $("." + _preId + "-status-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var statusVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Status").val(statusVal);
-    //
-    //    SpecimenType.searchGrid();
-    //});
-    //
-    ///* 排序 */
-    //$("." + _preId + "-sort-selector li").on("click", function () {
-    //    $("#" + _preId + "SortSpan").html($(this).html());
-    //    $("." + _preId + "-sort-selector li.selected").removeClass("selected");
-    //    var flg = $(this).is('.selected');
-    //    $(this).addClass(function () {
-    //        return flg ? '' : 'selected';
-    //    })
-    //
-    //    var sortVal = $(this).attr("el-value");
-    //    $("#" + _preId + "Sort").val(sortVal);
-    //
-    //    SpecimenType.searchGrid();
-    //});
-    //
-    ///* search Btn */
-    //$("#" + _preId + "SearchBtn").on("click",function() {
-    //    SpecimenType.searchGrid();
-    //});
-
-    /*Start add 相关参数设定  */
-    //$("#" + _preId + "Add").on("click",function() {
-    //    SpecimenType.addPop();
-    //});
-    //
-    //// deleteBatch
-    //$("#" + _preId + "DeleteBatch").on("click",function() {
-    //    SpecimenType.deleteBetch();
-    //});
-
     return SpecimenType;
 
-
-}(jQuery));
+}($));
 
 $(function(){
     SpecimenType.init();
+    //BasicModule.checkAuth("sy");
 });
 /*var SpecimenType = {
     preId: $("#specimenTypeMainPreId").val(),

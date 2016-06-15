@@ -1,5 +1,5 @@
 /**
- * 机构系统初始化js
+ * 机构系统管理js
  * Created by chenshuxian
  * data 2016/4/13.
  */
@@ -14,7 +14,7 @@ OrgInit2 = OrgInit = (function($){
         _preId = CB.PREID.OI,
         _tableList =  $("#" + _preId + "List"),
         _tableList2 = $("#" + _preId + "List2"),
-        _hideCols = ["displayOrder","memo","status"],	//要穩藏的欄位
+        _hideCols = ["displayOrder","memo","status","ck"],	//要穩藏的欄位
         _data = {orgId: typeof OrgInit.orgId == "undefined" ? -1 : OrgInit.orgId},
         _module = "OrgInit",
         _focusId = "account",
@@ -27,9 +27,10 @@ OrgInit2 = OrgInit = (function($){
         _pageListUrl = ctx + "/sys/systemInit/applicationsList",
         _InfoUrl = ctx + "/sys/systemInit/systemInfo",
         _existUrl = ctx + "/sys/systemInit/userIfExisted",
+        _systemInitUrl = ctx + "/sys/systemInit/setInit",
 
         _pageListUrl2 = ctx + "/sys/systemInit/usersList",
-        _initHeight = CB.HEIGHT,
+        _initHeight = CB.HEIGHT - 51 ,
 
 
     /* START dataGrid 生成*/
@@ -54,20 +55,26 @@ OrgInit2 = OrgInit = (function($){
                 var rowData = $(this).datagrid('getData').rows[0],
                     params,appId;
 
-                appId ="";
-
-                if(rowData){
-                    appId = rowData.appId
+                if ( rowData ){
+                    if ( OrgInit.appId ) {
+                        appId = OrgInit.appId;
+                    } else {
+                        appId = rowData.appId;
+                    }
                 }
+
                 params = {
                         orgId: OrgInit.orgId ? OrgInit.orgId : -1,
                         appId: appId
                 };
                 $("#oiTotal").html(response.total);
                 _loadDG2(params);
+
+                dataGridM.loadSuccess(this);
             },
             onClickRow: function(index,row) {
                 dataGridM.clickRow.call(this, index,row);
+                OrgInit.appId = row.appId;
                 var params = {
                     orgId: OrgInit.orgId,
                     appId: row.appId
@@ -101,11 +108,6 @@ OrgInit2 = OrgInit = (function($){
                 pagination: false,
                 onLoadSuccess: function(response){
                     $("#oiTotal2").html(response.total);
-                    if(response.total > 0){
-                        OrgInit.disableAdminAdd = true;
-                    }else{
-                        OrgInit.disableAdminAdd = false;
-                    }
                     dataGridM.hideColumn(_tableList2,_hideCols);
                 }
             };
@@ -126,6 +128,9 @@ OrgInit2 = OrgInit = (function($){
                 fitColumns : true,
                 striped : true,
                 checkOnSelect : false,
+                onLoadSuccess: function(response){
+                    $("#total").html(response.total);
+                },
                 columns:
                     [
                         [
@@ -141,47 +146,11 @@ OrgInit2 = OrgInit = (function($){
 
     /* 选择机构 */
     $("#" + _preId + "orgList").click(function () {
+        OrgInit.tempOrgId = OrgInit.orgId;
+        OrgInit.tempOrgName = OrgInit.orgName;
+        OrgInit.orgId = undefined;
         var
-            //url = _selectOrgUrl,
-            callback = function () {
-                OrgInit.tempOrgId = OrgInit.orgId;
-                OrgInit.tempOrgName = OrgInit.orgName;
-
-                $("#" +_preId + "OrgList").datagrid({
-                    url: ctx + "/local_inst/instruments/centerOrgPageList",
-                    method: 'POST',
-                    queryParams: "",
-                    height: ($(window).height() < 700) ? 400 : 400,
-                    fitColumns : true,
-                    striped : true,
-                    checkOnSelect : false,
-                    onClickCell: function(index, field){
-
-                        var rows = $("#" + _preId + "OrgList").datagrid("getData").rows[index];
-                        OrgInit.orgId = rows.stringId;
-                        OrgInit.orgName = rows.name;
-
-                        $("#"+ _preId +"OrgPop input[type='radio']:eq("+index+")").attr("checked",true);
-                    },
-                    columns:
-                        [
-                            [
-                                {
-                                    field : 'idString',
-                                    width: 10,
-                                    formatter : function(value, row, index) {
-                                        return "<input type='radio' datagrid-row-index='"+index+"' name='instrument'>";
-                                    }
-                                },
-                                {title: "编码", field: 'codeNo', width: 50},
-                                {title: "中文名称", field: 'name', flex: 1, width: 50},
-                                {title: "地区", field: 'regionName', width: 50}
-                            ]
-                        ],
-                    autoRowHeight: false,
-                    pagination: true
-                });
-            },
+            callback = function () { BM.orgSelect(_preId,OrgInit) },
             params = {
                 data:{opType:"org"},
                 callback: callback,
@@ -225,32 +194,32 @@ OrgInit2 = OrgInit = (function($){
         InfoUrl: _InfoUrl,
         existUrl: _existUrl,
         changeStatusUrl: _changeStatusUrl,
-        disableAdminAdd: false,
+        //disableAdminAdd: false,
 
         //dataGrid2 of Url
         pageListUrl2: _pageListUrl2,
         /*END url 定義*/
         dataGrid:_dataGrid,
         //dataGrid2:_dataGrid2,
-        orgId: null,
-        orgName: null,
+        //orgId: null,
+        //orgName: null,
 
         validateBox: function() {
             //中文名长度
             $("input[name='userNo']").validatebox({
                 required:true,
-                validType:  ['authUser','length[0,16]','space'],
-                missingMessage: "用户名称不可为空！"
+                validType:  ['authUser','length[0,15]','blank'],
+                missingMessage: "用户帐号不可为空！"
             });
-            $("input[name='userNo']").attr('maxlength','16');
+            $("input[name='userNo']").attr('maxlength','15');
 
             //中文名长度
             $("input[name='userName']").validatebox({
                 required:true,
-                validType:  ['symbol','length[0,35]'],
-                missingMessage: "用户帐号不可为空！"
+                validType:  ['symbol','length[0,25]','blank'],
+                missingMessage: "用户名称不可为空！"
             });
-            $("input[name='userName']").attr('maxlength','35');
+            $("input[name='userName']").attr('maxlength','25');
         },
 
         searchObj: function() {
@@ -264,25 +233,28 @@ OrgInit2 = OrgInit = (function($){
             _addDg();
             $("#total").val(1);
         },
-        changeStatusEx: function() {
-            var params ={
+        changeStatusEx: function(index,rowData) {
 
-            };
-            OrgInit.changeStatus();
+            if(rowData.initCount == 1){
+                OrgInit.changeStatus(index,rowData);
+            }else{
+                BM.showMessage("请先进行系统初始化!");
+                this.dataGrid.datagrid('refreshRow', index);
+            }
+
         },
         adminSet: function(rowData){
-            if(OrgInit.disableAdminAdd) {
+            if(rowData.adminStatus) {
                 BM.showMessage("每机构最多只能有一个管理员");
                 return;
             }else{
-
                 var params = {
                     data: {opType: "admin"},
                     callback: function () {
                         $("#appId").val(rowData.appId);
                         $("#orgId").val(OrgInit.orgId);
-                    },
-                    BCB:true
+                    }
+                    //BCB:true
                 };
                 OrgInit.commonPop(params);
             }
@@ -298,19 +270,38 @@ OrgInit2 = OrgInit = (function($){
             var
                 data = {
                     action: "resetPassword",
-                    userId: rowData.userId,
+                    id: rowData.idString,
                     appId: rowData.appId,
                     orgId: OrgInit.orgId
                 };
 
-            $.ajax({
-                url: _addUrl,
-                type: CB.METHOD,
-                data: data,
-                success: function (response) {
-                    BM.resolutionData(response);
-                }
+            showConfirm('是否重置密码为[111111]?', function () {
+                $.ajax({
+                    url: _addUrl,
+                    type: CB.METHOD,
+                    data: data,
+                    success: function (response) {
+                        BM.resolutionData(response);
+                    }
+                });
             });
+        },
+        //系统初始化
+        systemInit: function(rowData){
+            //管理员设置后才可进行系统初始化
+            if(rowData.adminStatus) {
+                $.ajax({
+                    url: _systemInitUrl,
+                    data: {id:rowData.stringId,orgId:OrgInit.orgId},
+                    type: CB.METHOD,
+                    success: function(data){
+                        BM.resolutionData(data);
+                        OrgInit.dataGrid.datagrid("reload");
+                    }
+                });
+            }else{
+                BM.showMessage("请先设置管理员!");
+            }
         }
 
     });
@@ -327,7 +318,7 @@ $(function(){
     /* 细菌列表 */
     $("#" + _preId + "Add").click(function () {
 
-        if(!OrgInit.orgId){
+        if(!OrgInit.orgId && !OrgInit.tempOrgId){
             BM.showMessage("请选择机构");
             return;
         }

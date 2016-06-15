@@ -6,7 +6,7 @@
         <div class="flex-container flex-space-between">
             <div class="search flex-container  flex-space-between">
                 <div class="form-control-icon icon-right">
-                    <input type="text" id="${ins}SearchStr" class="form-control" placeholder="搜索内容..."/>
+                    <input type="text" id="${ins}SearchStr" class="form-control searchWidth" style="width:250px;" placeholder="搜索内容..."/>
                     <button class="control-icon text-center" id="${ins}SearchBtn">
                         <i class="icon icon-search"></i>
                     </button>
@@ -14,7 +14,7 @@
                 <span class="symbol"></span> <span>状态:</span>
                 <div class="drop-down">
                     <div class="drop-down-selected">
-                        <span class="selected-items" id="${ins}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
+                        <span class="selected-items" id="${ins}StatusSpan">所有</span><i class="fa fa-angle-down "></i>
                     </div>
                     <div class="drop-down-menu">
                         <ul class="list-unstyled ${ins}-status-selector">
@@ -25,19 +25,19 @@
                         </ul>
                     </div>
                 </div>
-                 <span class="symbol"></span><span>前台通讯类:</span>
-                <div class="drop-down drop-down-icon">
-                	<div class="drop-down-selected">
-                        <span class="selected-items" id="${ins}frontClassSpan">全部</span>
-                    </div>
-                    <div class="drop-down-menu">
-                        <ul class="list-unstyled ${ins}-frontClass-selector">
-                            <li class="selected" el-value="">全部</li>
-                            <li el-value="0">类名不为空</li>
-                            <li el-value="1">类名为空</li>
-                        </ul>
-                    </div>
-               </div>
+                 <%--<span class="symbol">|</span><span>前台通讯类:</span>--%>
+                <%--<div class="drop-down drop-down-icon">--%>
+                	<%--<div class="drop-down-selected">--%>
+                        <%--<span class="selected-items" id="${ins}frontClassSpan">全部</span>--%>
+                    <%--</div>--%>
+                    <%--<div class="drop-down-menu">--%>
+                        <%--<ul class="list-unstyled ${ins}-frontClass-selector">--%>
+                            <%--<li class="selected" el-value="">全部</li>--%>
+                            <%--<li el-value="0">类名不为空</li>--%>
+                            <%--<li el-value="1">类名为空</li>--%>
+                        <%--</ul>--%>
+                    <%--</div>--%>
+               <%--</div>--%>
             </div>
             <div class="option icon-group-inline ">
                 <div class="drop-down drop-down-icon">
@@ -109,7 +109,7 @@
         <h3>查询条件</h3>
         <form id="rslForm">
             <div>
-                <input type="text" id="searchStr" name="searchStr" placeholder="搜索内容..."><input type="button" value="搜索" onclick="pageQuery_realtime('init');">
+                <input type="text" id="searchStr" name="searchStr" style="width:250px;" placeholder="搜索内容..."><input type="button" value="搜索" onclick="pageQuery_realtime('init');">
             </div>
             <div class="sc">
                 <span>前台通讯类</span>

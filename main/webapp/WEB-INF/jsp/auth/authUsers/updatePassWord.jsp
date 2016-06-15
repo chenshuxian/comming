@@ -4,22 +4,23 @@
     <div class="panel-main">
         <div class="panel-container">
             <div class="panel-main-header">
-                <h1 class="text-center color-green"><i class="icon icon-lock-g"></i>修改密码</h1>
+                <h1 class="text-center"><i class="icon icon-lock-g"></i>修改密码</h1>
             </div>
+            <form id="editForm">
             <div class="panel-content" style="width: 60%;margin:30px auto;">
                 <div class="col-6 margin-center">
-                    <div class="form-group">
-                    	<div class="form-group">
+                        <div class="form-group">
                             <label for=""><strong>旧密码</strong>
                             </label>
                             <input type="password" class="form-control block-show" id="up_oldPassword" />
                         </div>
-                        <label for="">
-                        	<strong>新密码</strong>
-                            <small>(6-20个字符，字母、数字和符号的组合)</small>
-                        </label>
-                        <input type="password" class="form-control block-show" id="up_newPassword" />
-                    </div>
+                        <div class="form-group">
+                            <label for="">
+                                <strong>新密码</strong>
+                                <small>(6-20个字符，字母、数字的组合)</small>
+                            </label>
+                            <input type="password" class="form-control block-show" id="up_newPassword" />
+                        </div>
                     <div class="form-group">
                         <label for="">
                         	<strong>确认新密码</strong>
@@ -29,8 +30,10 @@
                 </div>
             </div>
             <div class="panel-main-footer text-center">
-                <button class="btn btn-submit middle-size" onclick="AuthUsers.updatePassword();">提交</button>
+                <%--<button id="updatePwBtn" class="btn btn-submit middle-size" onclick="AuthUsers.updatePassword();">提交</button>--%>
+                <button id="updatePwBtn" class="btn btn-submit middle-size" onclick="BM.submit();">提交</button>
             </div>
+            </form>
         </div>
     </div>
 <style>
@@ -50,5 +53,12 @@
 <script>
 	$("#up_oldPassword").focus();
 	BasicModule.updatePW();
+    $('form').form({
+        onSubmit:function(){
+            return $(this).form('validate');
+        },
+        success: AuthUsers.updatePassword
+    });
+    //BM.checkAuth("updatePw");
 </script>
 <!--end-->

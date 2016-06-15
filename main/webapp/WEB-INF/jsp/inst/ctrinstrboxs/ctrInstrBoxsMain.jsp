@@ -16,12 +16,12 @@
 
         <div class="drop-down">
           <div class="drop-down-selected">
-            <span class="selected-items" id="${ctrInsBox}SelectOrg">请选择机构</span><i class="icon icon-angle-down"></i>
+            <span class="selected-items blue" id="${ctrInsBox}SelectOrg">请选择机构</span><i class="fa fa-angle-down "></i>
           </div>
         </div>
         &nbsp;&nbsp;
         <div class="form-control-icon icon-right">
-          <input type="text" id="${ctrInsBox}SearchStr" class="form-control" placeholder="搜索内容..."/>
+          <input type="text" id="${ctrInsBox}SearchStr" class="form-control searchWidth" style="width:250px;" placeholder="搜索内容..."/>
           <button class="control-icon text-center" id="${ctrInsBox}SearchBtn">
             <i class="icon icon-search"></i>
           </button>
@@ -30,7 +30,7 @@
 
         <div class="drop-down">
           <div class="drop-down-selected">
-            <span class="selected-items" id="${ctrInsBox}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
+            <span class="selected-items" id="${ctrInsBox}StatusSpan">所有</span><i class="fa fa-angle-down "></i>
           </div>
           <div class="drop-down-menu">
             <ul class="list-unstyled ${ctrInsBox}-status-selector">

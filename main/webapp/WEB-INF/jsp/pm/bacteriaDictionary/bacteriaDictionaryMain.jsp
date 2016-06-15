@@ -6,7 +6,7 @@
 		<div class="flex-container flex-space-between">
 			<div class="search flex-container  flex-space-between">
 				<div class="form-control-icon icon-right">
-					<input type="text" id="${bd}SearchStr" class="form-control" placeholder="搜索内容..."/>
+					<input type="text" id="${bd}SearchStr" class="form-control searchWidth" style="width:250px;" placeholder="搜索内容..."/>
 					<button class="control-icon text-center" id="${bd}SearchBtn">
 						<i class="icon icon-search"></i>
 					</button>
@@ -15,7 +15,7 @@
 
 				<div class="drop-down">
 					<div class="drop-down-selected">
-						<span class="selected-items" id="${bd}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
+						<span class="selected-items" id="${bd}StatusSpan">所有</span><i class="fa fa-angle-down "></i>
 					</div>
 					<div class="drop-down-menu">
 						<ul class="list-unstyled ${bd}-status-selector">
@@ -89,7 +89,7 @@
 			<%--<form id="rslForm">--%>
 				<%--<input type="hidden" id="itemTypeId" name="itemTypeId" value="${itemTypeId}" />--%>
 				<%--<div>--%>
-					<%--<input type="text" id="searchStr" name="searchStr" placeholder="搜索内容..."><input type="button" value="搜索" onclick="pageQuery('init');" />--%>
+					<%--<input type="text" id="searchStr" name="searchStr" style="width:250px;" placeholder="搜索内容..."><input type="button" value="搜索" onclick="pageQuery('init');" />--%>
 				<%--</div>--%>
 				<%--<div class="sc">--%>
 					<%--<span>状态</span>--%>

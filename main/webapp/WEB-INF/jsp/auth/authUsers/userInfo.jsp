@@ -4,13 +4,14 @@
 	<div class="panel-main">
 		<div class="panel-container">
 			<div class="panel-main-header">
-				<h1 class="text-center color-green">
+				<h1 class="text-center">
 					<i class="icon icon-user-g"></i>个人信息
 				</h1>
 			</div>
 			<div class="panel-content" style="width: 95%;margin:30px auto;">
-				<div class="flex-container flex-space-between flex-flex-start">
+				<div class="flex-container flex-x-center">
 					<div class="col-6">
+						<input type="hidden" name="id" value="${user.userNo }"/>
 						<div class="form-group">
 							<label for=""><strong>用户账号</strong></label> <input type="text" class="form-control block-show" value="${user.userNo }" readOnly="readOnly"/>
 						</div>
@@ -18,15 +19,23 @@
 							<label for=""><strong>用户名称</strong></label> <input type="text" class="form-control block-show" value="${user.userName }" readOnly="readOnly"/>
 						</div>
 						<div class="form-group">
-							<label for=""><strong>手机号</strong><small>(完成绑定后，您可以用该手机号登录和找回密码)</small>
+							<label for=""><span class="required-icon">*</span><strong>手机号</strong><small>(完成绑定后，您可以用该手机号登录和找回密码)</small>
 							</label>
 							<div class="form-control-icon icon-right block-show">
-								<button class="control-icon J_ShowPop" data-show="ui_blindPhone" disabled="disabled" title="此功能暂时不开放">绑定</button>
-								<input type="text" readonly=readonly value="13712345638" class="form-control block-show" />
+								<%--<c:choose>--%>
+								   <%--<c:when test="${empty user.mobile}">  --%>
+									<button class="control-icon J_ShowPop" id="connect" onclick="AuthUsers.telephone();" title="">绑定</button>
+								   <%--</c:when>--%>
+								   <%--<c:otherwise> --%>
+								    <button class="control-icon J_ShowPop" id="unconnect"  onclick="AuthUsers.unConnect();" title="">解绑</button>
+								   <%--</c:otherwise>--%>
+								<%--</c:choose>--%>
+								<input type="text" id="mobileMain" readonly=readonly value="${user.mobile }" class="form-control block-show" />
+								<input type="hidden" id="msgSecond" value="0">
 							</div>
 						</div>
 					</div>
-					<div class="col-6">
+					<%-- <div class="col-6">
 						<div class="form-group">
 							<label for=""><strong>默认登录机构</strong></label>
 							<div class="form-control-icon icon-right block-show">
@@ -43,11 +52,11 @@
 								<input id="ui_loginSysName" type="text" class="form-control block-show" value="${user.sysName }" readonly="readonly" />
 							</div>
 						</div>
-					</div>
+					</div> --%>
 				</div>
 			</div>
 			<div class="panel-main-footer text-center">
-			<button class="btn btn-submit middle-size" onclick="AuthUsers.ui_submit();">提交</button>
+				<%--<button id="personalBtn" class="btn btn-submit middle-size" onclick="AuthUsers.ui_submit();">提交</button>--%>
 			</div>
 		</div>
 	</div>
@@ -118,37 +127,6 @@
 		</div>
 	</div>
 
-	<!--绑定手机-->
-	<div class="pop" id="ui_blindPhone">
-		<div class="pop-inner-wrap">
-			<div class="pop-container">
-				<div class="panel-container">
-					<div class="panel-header">
-						<h1 class="text-center">绑定手机号</h1>
-					</div>
-					<div class="panel-content">
-						<div class="form-group">
-							<label for=""><strong>手机号</strong> <small>(完成绑定后，您可以用该手机号登录和找回密码)</small>
-							</label> <input type="text" class="form-control block-show" />
-						</div>
-						<div class="form-group">
-							<label for=""><strong>验证码</strong> </label>
-
-							<div class="form-control-icon icon-right md-size">
-								<button class="control-icon" data-show="loginSystem">
-									获取短信验证码</button>
-								<input type="text" class="form-control block-show" />
-							</div>
-						</div>
-					</div>
-					<div class="panel-footer text-center">
-						<button class="btn btn-submit sm-size">确定</button>
-						<button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
  <script src="${ctx}/js/auth/user.js?var=v1.0.0.1"></script>
 <style>
 	.panel-main{
@@ -172,9 +150,9 @@
 	.control-icon {
 	  position: absolute;left: 0;top: 0;width: 40px;bottom: 0;background: transparent;border: none;line-height: 1;text-align: center;float: right;
 	}
-	.form-control {
-  		padding-left: 10px;
-	}
+	/*.form-control {*/
+  		/*padding-left: 10px;*/
+	/*}*/
 	.form-control-icon.icon-right.md-size .form-control {
 	  padding-right: 120px;
 	}
@@ -182,7 +160,7 @@
 	  width: 120px;
 	}
 	.form-control-icon.icon-right .form-control {
-	  padding-right: 50px; padding-left: 10px;
+	  padding-right: 50px;
 	}
 	.form-control-icon.icon-right .control-icon {
 	  left: auto; right: 0; width: 50px;
@@ -219,3 +197,67 @@
 	  margin-bottom: 0;
 	}
 </style>
+<script>
+
+	$(function() {
+		var mobile = $("#mobileMain").val();
+		$("#connect").hide();
+		$("#unconnect").hide();
+		if ( mobile == "" || mobile == null ) {
+			$("#connect").show();
+			$("#mobileMain").removeAttr("readonly");
+		}else{
+			$("#unconnect").show();
+		}
+	});
+
+	function getPasscode(){
+
+		var
+				mobile = $("#mobile").val(),
+		 		reg = /^(?:13\d|14\d|15\d|18\d)\d{5}(\d{3}|\*{3})$/,
+				_this = $("#getpasscode"),
+				userName = $("#userName").val(),
+				startTime = Math.round(new Date().getTime()/1000);
+
+		localStorage.setItem(userName,startTime);
+
+		if	(!reg.test(mobile)) {
+			BM.showMessage("请输入正确的手机号码!");
+			return false;
+		}
+
+		time(_this,180);
+
+		$.ajax({
+			type: "GET",
+			url: ctx + "/auth/user/getPasscode",
+			data: {mobile: mobile},
+			success: function(data){
+				$("#mobile").attr("readonly","readonly");
+			}
+		});
+
+	}
+
+
+	function time(_this,wait) {
+
+		if (wait == 0 || wait == null) {
+			_this.removeAttr("disabled");
+			_this.html('免费获取验证码')
+			$("#mobile").removeAttr("readonly");
+			wait = 180;
+		} else {
+			_this.attr('disabled','disabled');
+			_this.html("重新发送(" + wait + ")");
+			wait--;
+			setTimeout(function() {
+						time(_this,wait);
+						//localStorage.setItem(userName,wait);
+					},
+					1000)
+		}
+	}
+
+</script>

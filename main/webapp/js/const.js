@@ -1,14 +1,18 @@
 /**
  * Created by jacky on 2016/2/7.
  */
-var CB = ConstBox = (function($){
+
+var CB,ConstBox;
+CB = ConstBox = (function($){
 
     const ConstBox = {
         METHOD: "POST",
         POPDIV: "ctrDictInfoModal",
         DELSUCC: "succ|刪除成功!",
         COLMAXLEN: 15,
-        HEIGHT:($(window).height() < 810) ? 220 : 300,
+        HEIGHT:($(window).height() - 232) / 2,
+        LOCALHOST: window.location.host,
+        VERSION: "V1.0.0.0",
 
         PREID:{
             //就诊类型
@@ -97,7 +101,35 @@ var CB = ConstBox = (function($){
             CT: "ct",
             //客户报表模板
             CST: "cst"
+        },
+
+        //查询提示字串
+        SEARCHHOLDER: {
+            COMMON: "编码\\中文名称\\英文简称\\英文名称\\助记符",
+            RESULTTYPE: "编码\\中文名称",     //结果类型
+            LOGICTABLE: "编码\\受检成份\\受检属性\\检验方法\\样本标识\\时间特征\\标本类型\\助记符",      //罗辑编码表
+            TEMPLATE: "编码\\模板名称",     //中心报表,机构报表模板维护
+            CENTERINSTR: "编码\\仪器名称\\仪器型号\\助记符",     //中心仪器信息
+            MED: "编码\\卫生机构代码\\所属地区\\中文名称\\中文地址\\联系人\\联系电话\\助记符",     //医疗机构维护
+            INDEPENDT: "编码\\所属地区\\中文名称\\中文地址\\联系人\\联系电话\\助记符",     //独立实验室维护
+            AREAMANAGEMENT: "编码\\中文名称\\中文地址\\联系人\\联系电话\\助记符",     //区域管理机构维护
+            USERMEANAGEMENT: "用户帐号\\用户名称",       //用户管理
+            ROLE: "编码\\名称",         //角色管理
+            LOG: "操作项目\\操作类型\\操作内容\\操作人"       //中心日志管理
+        },
+
+        COMBOMSG: {
+            SAMPLETYPE: "默认标本类型",
+            COMPONENT: "受检成份",
+            TESTPROPERTY: "受检属性",
+            TESTMETHOD: "检验方法",
+            TESTITEM: "样本标识",
+            TIMEASPECT: "时间特征",
+            UNIT: "单位",
+            DISCIPLINE: "医学专业",
+            RESULTTYPE: "结果类型"
         }
+
 
     };
 

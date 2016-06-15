@@ -21,15 +21,41 @@ validate = (function($,BM){
 		},
 		authUser:{
 			validator: function(value){
-				var reg = /^(?!(?:\d*$))[A-Za-z0-9_]{4,20}$/;
-		        return reg.test(value);
+				//var reg = /^(?!(?:\d*$))[A-Za-z0-9_]{4,20}$/;
+				var reg = /^[A-Za-z0-9_]{1,14}$/;
+				return reg.test(value);
 			},
-			message: "4-20位，可由数字、字母和下划线组成，最少包含一位字母，字母不区分大小写!"
+			message: "长6-20字符，可由数字、字母和下划线组成，字母不区分大小写!"
+		},
+		//客户帐号创建
+		customer:{
+			validator: function(value){
+				//var reg = /^(?!(?:\d*$))[A-Za-z0-9_]{4,20}$/;
+				value = value.toLowerCase();
+				//var reg = /^(?!.*?(?:admin|administrator)).*([A-Za-z]+[0-9_]*)$/;
+				//var reg = /^[^admin\x22A-Za-z0-9_]{6,20}$/;
+				var reg = /^(?!.*admin)/;
+
+				return reg.test(value);
+
+			},
+			message: "不能包含admin"
+		},
+		account:{
+			validator: function(value){
+				//var reg = /^(?!(?:\d*$))[A-Za-z0-9_]{4,20}$/;
+				value = value.toLowerCase();
+				var reg = /^(?!(?:[\d_]*$))[A-Za-z0-9_]{4,20}$/;
+
+				return reg.test(value);
+
+			},
+			message: "长4-20字符，可由数字、字母和下划线组成，字母不区分大小写!"
 		},
 		compareDate:{
 			validator: function(value,param){	
 				//console.log($(param[0]).datetimebox('getValue'));
-		        return _dateCompare($(param[0]).datetimebox('getValue'),value);
+		        return _dateCompare($(param[0]).datetimebox('getValue'),value);s
 			},
 			message: "开始日期需小于结束日期！"
 		},
@@ -39,6 +65,12 @@ validate = (function($,BM){
 				return /^([0-9])+\d*$/i.test(value);
 			},
 			message: "请输入数字"
+		},
+		telephone: {
+			validator: function (value) {
+				return /^[\d\s\-]+$/.test(value);
+			},
+			message: "可输入数字,-,空格"
 		},
 		blank: {
 			validator: function (value) {
@@ -55,10 +87,12 @@ validate = (function($,BM){
 		},
 		password:{
 			validator: function(value){
-				var reg = /^(?![a-zA-Z0-9]+$)(?![^a-zA-Z/D]+$)(?![^0-9/D]+$).{6,20}$/;
-		        return reg.test(value);
+				//var reg = /^(?![a-zA-Z0-9]+$)(?![^a-zA-Z/D]+$)(?![^0-9/D]+$).{6,20}$/;
+				var reg = /^((?=.*?\d)(?=.*?[A-Za-z])|(?=.*?\d)(?=.*?[!@#$%^&_])|(?=.*?[A-Za-z])(?=.*?[!@#$%^&_]))[\dA-Za-z!@#$%^&_]{6,20}$/;
+				//var reg = /^[!@#$%^&_]*[\dA-Za-z]+$/;
+				return reg.test(value);
 			},
-			message: "6-20个字符，字母、数字和符号的组合!"
+			message: "6-20个字符，字母、数字的组合!"
 		},
 		equalTo:{
 			validator: function(value,param){
@@ -123,13 +157,23 @@ validate = (function($,BM){
 			validator: function (value) {
 				var space = true;
 
-				if($.trim(value) == "")
+				if ($.trim(value) == ""){
 					space = false;
+				}
 
 				return space;
 			},
 			message: "不可为空"
+		},
+		//中心信息项目对照数字验证，取到小数点第二位
+		numberTwo:{
+			validator: function (value) {
+				var reg = /^[0-9]+(.[0-9]{1,2})?$/;
+				return reg.test(value);
+			},
+			message: "只能为数字，小数点取到第二位"
 		}
+
 
 	});
 
@@ -181,10 +225,10 @@ validate = (function($,BM){
         	//中文名长度
         	$("input[name='name']").validatebox({
 				required:true,
-				validType:  ['symbol','length[0,35]','space'],
+				validType:  ['symbol','length[0,30]','space'],
 				missingMessage: "中文名称不可为空！"
 			});
-			$("input[name='name']").attr('maxlength','35');
+			$("input[name='name']").attr('maxlength','30');
 
 			$("input[name='shortName']").validatebox({
 				validType:  ['symbol','length[0,15]']
@@ -248,7 +292,7 @@ validate = (function($,BM){
 			});
 			$("#telephone").validatebox({
 				required:true,
-				validType:  ['symbol','digits','space'],
+				validType:  ['symbol','telephone','space'],
 				missingMessage: "联系电话为空，请重新输入！"
 			});
 			$("#editResultValue").validatebox({
@@ -256,16 +300,17 @@ validate = (function($,BM){
 				validType:  ['symbol','space'],
 				missingMessage: "结果描述为空，请重新输入！"
 			});
+			$("#editResultValue").attr('maxlength','100');
 			//地址
 			$("#address").validatebox({
-				validType:  ['symbol','length[0,200]']
+				validType:  ['symbol','length[0,35]']
 			});
-			$("#address").attr('maxlength','200');
+			$("#address").attr('maxlength','35');
 
 			$("#enAddress").validatebox({
-				validType:  ['symbol','length[0,200]']
+				validType:  ['symbol','length[0,120]']
 			});
-			$("#enAddress").attr('maxlength','200');
+			$("#enAddress").attr('maxlength','120');
 			//连络人
 			$("#contacts").validatebox({
 				validType:  ['symbol','length[0,20]']
@@ -273,50 +318,64 @@ validate = (function($,BM){
 			$("#contacts").attr('maxlength','20');
 			//传真
 			$("#fax").validatebox({
-				validType:  ['symbol','length[0,30]']
+				validType:  ['symbol','length[0,25]']
 			});
-			$("#fax").attr('maxlength','30');
+			$("#fax").attr('maxlength','25');
+			//备注
+			$("textarea").validatebox({
+				validType:  ['symbol','length[0,150]']
+			});
+			$("textarea").attr('maxlength','150');
+
 			//备注
 			$("#memo").validatebox({
-				validType:  ['symbol','length[0,50]']
+				validType:  ['symbol','length[0,150]']
 			});
-			$("#memo").attr('maxlength','50');
+			$("#memo").attr('maxlength','150');
 
 
         },
-        getAuth : function(obj) {
-        	
-        	switch(obj){
-        	
-    			case "AuthUsers" :
-    				return authUser(); 
-    				break;
-    			case "UpdatePw" :
-    				return updatePW(); 
-    				break;
-    			case "Inst" :	//中心仪器信息
-    				return _default(); 
-    				break;
-    			default:
-    				return validateBox();
-    				break;
-    			
-    		}
-        	
-        	//_beforeSubmit();
-        	
-        },
+
         updatePW : function() {
         	
         	$("#up_newPassword").validatebox({
         		validType: 'password'
         	});
-        	
+			$("#up_newPassword").attr('maxlength','20');
+
         	$("#up_reNewPassword").validatebox({
         		validType: 'equalTo["#up_newPassword"]'
         	});
-        	   	
-        }
+			$("#up_reNewPassword").attr('maxlength','20');
+        },
+
+		//进行comboGrid 验证
+		comboGrid: function(obj,msg,parentId,req) {
+			var
+				checkNull = obj.getText(),
+				require = true;
+
+			if(req == 0 && checkNull == "") {
+				require = false
+			}
+
+
+			if (require) {	//必填
+				if (checkNull == "") {
+					BM.showMessage(msg +"数据为空,，请从下拉列表中添加！",function(){
+						$("#" + parentId + "input:text").select();
+					});
+					return true;
+				}
+				if(!obj.checkValue(false)){
+					BM.showMessage(msg +"数据不存在,，请从下拉列表中添加！",function(){
+						$("#" + parentId + "input:text").select();
+					});
+					return true;
+				}
+			}
+
+		}
         
     	
     });
@@ -325,7 +384,3 @@ validate = (function($,BM){
 
 
 }(jQuery,BasicModule));
-
-//$(function(){
-//	validate.init();
-//});

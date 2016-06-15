@@ -1,93 +1,354 @@
-.icon-blank{
-	background:url('../images/icons/blank.gif') no-repeat center center;
+.icon-sort,.icon-angle-down, .icon-sprite, .icon-advice, .icon-card, .icon-check, .icon-clock,
+.icon-close, .icon-code, .icon-concat, .icon-trash, .icon-export, .icon-locked, .icon-log, .icon-notice, .icon-page-first, .icon-page-last,
+.icon-page-next, .icon-page-prev, .icon-page, .icon-plus-square, .icon-preview, .icon-print, .icon-purple, .icon-radio, .icon-radio_checked,
+.icon-red, .icon-refresh, .icon-return, .icon-save, .icon-search, .icon-setting, .icon-split, .icon-square, .icon-statics,
+.icon-unlocked, .tabs-close {
+  background-image: url('../images/icon-s91a604bf2a.png');
+  /*background-image: url('../images/icon-s4653a9589a.png');*/
+  background-repeat: no-repeat;
+  margin-right: 5px;
 }
-.icon-add{
-	background:url('../images/icons/edit_add.png') no-repeat center center;
+
+.icon-dict,.icon-orgm,.icon-center {
+  background-image: url('../images/sprite.png');
+  /*background-image: url('../images/icon-s4653a9589a.png');*/
+  background-repeat: no-repeat;
+  margin-right: 5px;
 }
-.icon-edit{
-	background:url('../images/icons/pencil.png') no-repeat center center;
+.icon-tools{
+  background-image: url('../images/set.png');
+  /*background-image: url('../images/icon-s4653a9589a.png');*/
+  background-repeat: no-repeat;
+  margin-right: 5px;
 }
-.icon-clear{
-	background:url('../images/icons/clear.png') no-repeat center center;
+.icon-advice {
+  background-position: 0 0;
+  height: 14px;
+  width: 14px;
 }
-.icon-remove{
-	background:url('../images/icons/edit_remove.png') no-repeat center center;
+.icon-advice:hover, .icon-advice.advice-hover {
+  background-position: 0 -14px;
 }
-.icon-save{
-	background:url('../images/icons/filesave.png') no-repeat center center;
+
+.icon-card {
+  /*background-position: 0 -28px;*/
+  background-image: url("../images/icon/card.png");
+  height: 56px;
+  width: 55px;
 }
-.icon-cut{
-	background:url('../images/icons/cut.png') no-repeat center center;
+
+.icon-check {
+  background-position: 0 -78px;
+  height: 14px;
+  width: 14px;
 }
-.icon-ok{
-	background:url('../images/icons/ok.png') no-repeat center center;
+.icon-check:hover, .icon-check.check-hover {
+  background-position: 0 -92px;
 }
-.icon-no{
-	background:url('../images/icons/no.png') no-repeat center center;
-}
-.icon-cancel{
-	background:url('../images/icons/cancel.png') no-repeat center center;
-}
-.icon-reload{
-	background:url('../images/icons/reload.png') no-repeat center center;
-}
-.icon-search{
-	background:url('../images/icons/search.png') no-repeat center center;
-}
-.icon-print{
-	background:url('../images/icons/print.png') no-repeat center center;
-}
-.icon-help{
-	background:url('../images/icons/help.png') no-repeat center center;
-}
-.icon-undo{
-	background:url('../images/icons/undo.png') no-repeat center center;
-}
-.icon-redo{
-	background:url('../images/icons/redo.png') no-repeat center center;
-}
-.icon-back{
-	background:url('../images/icons/back.png') no-repeat center center;
-}
-.icon-sum{
-	background:url('../images/icons/sum.png') no-repeat center center;
-}
-.icon-tip{
-	background:url('../images/icons/tip.png') no-repeat center center;
-}
-.icon-filter{
-	background:url('../images/icons/filter.png') no-repeat center center;
-}
-.icon-man{
-	background:url('../images/icons/man.png') no-repeat center center;
-}
-.icon-lock{
-	background:url('../images/icons/lock.png') no-repeat center center;
+
+.icon-clock {
+  /*background-position: 0 -106px;*/
+  background-image: url("../images/icon/clock.png");
+  height: 56px;
+  width: 56px;
 }
 
 
-.icon-mini-add{
-	background:url('../images/icons/mini_add.png') no-repeat center center;
+.icon-close {
+  background-position: 0 -156px;
+  height: 9px;
+  width: 9px;
 }
-.icon-mini-edit{
-	background:url('../images/icons/mini_edit.png') no-repeat center center;
-}
-.icon-mini-refresh{
-	background:url('../images/icons/mini_refresh.png') no-repeat center center;
+.icon-close:hover, .icon-close.close-hover {
+  background-position: 0 -165px;
 }
 
-.icon-large-picture{
-	background:url('../images/icons/large_picture.png') no-repeat center center;
+.icon-code {
+  background-position: 0 -174px;
+  height: 14px;
+  width: 14px;
 }
-.icon-large-clipart{
-	background:url('../images/icons/large_clipart.png') no-repeat center center;
+.icon-code:hover, .icon-code.code-hover {
+  background-position: 0 -188px;
 }
-.icon-large-shapes{
-	background:url('../images/icons/large_shapes.png') no-repeat center center;
+
+.icon-concat {
+  background-position: 0 -202px;
+  height: 14px;
+  width: 14px;
 }
-.icon-large-smartart{
-	background:url('../images/icons/large_smartart.png') no-repeat center center;
+.icon-concat:hover, .icon-concat.concat-hover {
+  background-position: 0 -216px;
 }
-.icon-large-chart{
-	background:url('../images/icons/large_chart.png') no-repeat center center;
+
+.icon-trash {
+  background-position: 0 -230px;
+  height: 14px;
+  width: 14px;
+}
+.icon-trash:hover, .icon-trash.delete-hover {
+  background-position: 0 -244px;
+}
+
+.icon-export {
+  background-position: 0 -258px;
+  height: 14px;
+  width: 14px;
+}
+.icon-export:hover, .icon-export.export-hover {
+  background-position: 0 -272px;
+}
+
+.icon-locked {
+  background-position: 0 -286px;
+  height: 11px;
+  width: 10px;
+}
+
+.icon-log {
+  background-position: 0 -297px;
+  height: 14px;
+  width: 14px;
+}
+.icon-log:hover, .icon-log.log-hover {
+  background-position: 0 -311px;
+}
+
+.icon-notice {
+  /*background-position: 0 -325px;*/
+  background-image: url("../images/icon/notice.png");
+  height: 49px;
+  width: 63px;
+}
+
+.icon-page-first {
+  background-position: 0 -374px;
+  height: 11px;
+  width: 13px;
+}
+
+.icon-page-last {
+  background-position: 0 -385px;
+  height: 11px;
+  width: 13px;
+}
+
+.icon-page-next {
+  background-position: 0 -396px;
+  height: 11px;
+  width: 11px;
+}
+
+.icon-page-prev {
+  background-position: 0 -407px;
+  background-position: 0 -407px;
+  height: 11px;
+  width: 11px;
+}
+
+.icon-page {
+  background-position: 0 -418px;
+  height: 15px;
+  width: 13px;
+}
+.icon-page:hover, .icon-page.page-hover {
+  background-position: 0 -433px;
+}
+
+.icon-plus-square {
+  background-position: 0 -448px;
+  height: 14px;
+  width: 14px;
+}
+.icon-plus-square:hover, .icon-plus-square.plus-hover {
+  background-position: 0 -462px;
+}
+
+.icon-preview {
+  background-position: 0 -476px;
+  height: 14px;
+  width: 14px;
+}
+.icon-preview:hover, .icon-preview.preview-hover {
+  background-position: 0 -490px;
+}
+
+.icon-print {
+  background-position: 0 -504px;
+  height: 14px;
+  width: 14px;
+}
+.icon-print:hover, .icon-print.print-hover {
+  background-position: 0 -518px;
+}
+
+.icon-purple {
+  background-position: 0 -532px;
+  height: 18px;
+  width: 18px;
+}
+
+.icon-radio {
+  background-position: 0 -550px;
+  height: 14px;
+  width: 14px;
+}
+
+.icon-radio_checked {
+  background-position: 0 -564px;
+  height: 14px;
+  width: 14px;
+}
+
+.icon-red {
+  background-position: 0 -578px;
+  height: 18px;
+  width: 18px;
+}
+
+.icon-refresh {
+  background-position: 0 -596px;
+  height: 13px;
+  width: 10px;
+}
+
+.icon-return {
+  background-position: 0 -609px;
+  height: 14px;
+  width: 14px;
+}
+.icon-return:hover, .icon-return.return-hover {
+  background-position: 0 -623px;
+}
+
+.icon-save {
+  background-position: 0 -637px;
+  height: 14px;
+  width: 14px;
+}
+.icon-save:hover, .icon-save.save-hover {
+  background-position: 0 -651px;
+}
+
+.icon-search {
+  background-position: 0 -665px;
+  height: 12px;
+  width: 12px;
+}
+
+.icon-setting {
+  background-position: 0 -677px;
+
+  height: 14px;
+  width: 13px;
+}
+.icon-setting:hover, .icon-setting.setting-hover {
+  background-position: 0 -691px;
+}
+
+.icon-split {
+  background-position: 0 -705px;
+  height: 14px;
+  width: 14px;
+}
+.icon-split:hover, .icon-split.split-hover {
+  background-position: 0 -719px;
+}
+
+.icon-square {
+  background-position: 0 -733px;
+  height: 14px;
+  width: 14px;
+}
+
+.icon-statics {
+  background-position: 0 -747px;
+  height: 14px;
+  width: 14px;
+}
+.icon-statics:hover, .icon-statics.statics-hover {
+  background-position: 0 -761px;
+}
+
+.icon-tools {
+  background-position: 0 0px;
+  /*background-image: url("../images/icon/set.png");*/
+  height: 22px;
+  width: 20px;
+}
+.icon-tools:hover, .icon-tools.tools-hover {
+  background-position: 0 -53px;
+  /*background-image: url("../images/icon/set-hover.png");*/
+  height: 22px;
+  width: 20px;
+}
+
+.icon-unlocked {
+  background-position: 0 -805px;
+  height: 12px;
+  width: 10px;
+}
+
+.tabs-close {
+  background-position: 0 -156px;
+  height: 9px;
+  width: 9px;
+}
+.tabs-close:hover, .tabs-close.close-hover {
+  background-position: 0 -165px;
+}
+
+.icon-angle-down {
+  width: 16px;
+  height: 16px;
+  background-image: url("../images/icon_angle_down.png");
+}
+
+.icon-center {
+  background-position: 0 -124px;
+  /*background-image: url("../images/icon/center.png");*/
+  height: 20px;
+  width: 19px;
+}
+
+.icon-center:hover, .icon-center.center-hover {
+  background-position: 0 -143px;
+  /*background-image: url("../images/icon/center-hover.png");*/
+  height: 20px;
+  width: 19px;
+}
+
+.icon-orgm {
+  background-position: 0 -44px;
+  /*background-image: url("../images/icon/orgm.png");*/
+  height: 20px;
+  width: 19px;
+}
+
+.icon-orgm:hover, .icon-orgm.orgm-hover {
+  background-position: 0 -64px;
+  /*background-image: url("../images/icon/orgm-hover.png");*/
+  height: 20px;
+  width: 19px;
+}
+
+.icon-dict {
+  background-position: 0 0;
+  /*background-image: url("../images/icon/dict.png");*/
+  height: 22px;
+  width: 18px;
+}
+
+.icon-dict:hover, .icon-dict.dict-hover {
+  background-position: 0 -22px;
+  /*background-image: url("../images/icon/dict-hover.png");*/
+  height: 22px;
+  width: 18px;
+}
+
+.icon-sort {
+  /*background-position: 0 -418px;*/
+  background-image: url("../images/icon/sort.png");
+  height: 14px;
+  width: 11px;
 }

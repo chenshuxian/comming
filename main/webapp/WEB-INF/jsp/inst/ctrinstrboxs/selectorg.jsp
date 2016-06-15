@@ -40,7 +40,7 @@
             var params = {
                 dataGrid: $("#cibOrgList"),
                 searchObj:{
-                    searchStr: $("#cibOrgSearchStr").val()
+                    searchStr: $.trim($("#cibOrgSearchStr").val())
                 }
             }
             CtrInstrBoxs.searchGrid(params);

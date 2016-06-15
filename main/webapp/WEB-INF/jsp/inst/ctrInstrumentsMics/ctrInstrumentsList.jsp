@@ -11,19 +11,19 @@
 								<button class="control-icon text-center" id="SearchBtn"><i class="icon icon-search"></i></button>
 							</div>
 							<span class="symbol"></span>
-							<span class="drop-down-label">前台通讯类:</span>
-							<div class="drop-down">
-								<div class="drop-down-selected">
-									<span class="selected-items" id="frontClassStr">全部</span> <i class="icon icon-angle-down"></i>
-								</div>
-								<div class="drop-down-menu">
-									<ul class="list-unstyled frontClass-selector">
-										<li class="selected" value="2">全部</li>
-										<li value="0">类名不为空</li>
-										<li value="1">类名为空</li>
-									</ul>
-								</div>
-							</div>
+							<%--<span class="drop-down-label">前台通讯类:</span>--%>
+							<%--<div class="drop-down">--%>
+								<%--<div class="drop-down-selected">--%>
+									<%--<span class="selected-items" id="frontClassStr">全部</span> <i class="fa fa-angle-down "></i>--%>
+								<%--</div>--%>
+								<%--<div class="drop-down-menu">--%>
+									<%--<ul class="list-unstyled frontClass-selector">--%>
+										<%--<li class="selected" value="2">全部</li>--%>
+										<%--<li value="0">类名不为空</li>--%>
+										<%--<li value="1">类名为空</li>--%>
+									<%--</ul>--%>
+								<%--</div>--%>
+							<%--</div>--%>
 						</div>
 						<span class="drop-down-label">状态:</span>
 						<div class="option icon-group-inline ">

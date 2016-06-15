@@ -14,7 +14,7 @@
 				<span class="symbol"></span> <span>状态:</span>
 				<div class="drop-down">
 					<div class="drop-down-selected">
-						<span class="selected-items">所有</span><i class="icon icon-angle-down"></i>
+						<span class="selected-items">所有</span><i class="fa fa-angle-down "></i>
 					</div>
 					<div class="drop-down-menu">
 						<ul class="list-unstyled">
@@ -67,7 +67,7 @@
 				<span> 每页显示：</span>
 				<div class="drop-down">
 					<div class="drop-down-selected">
-						20 <i class="icon icon-angle-down"></i>
+						20 <i class="fa fa-angle-down "></i>
 					</div>
 					<div class="drop-down-menu position-top">
 						<ul class="list-unstyled">
@@ -173,7 +173,7 @@
 								<span><span class="required-icon">*</span>用户所属机构:</span>
 								<div class="drop-down">
 									<div class="drop-down-selected selected-items">
-										广州达安实验室 <i class="icon icon-angle-down"></i>
+										广州达安实验室 <i class="fa fa-angle-down "></i>
 									</div>
 									<div class="drop-down-menu">
 										<ul class="list-unstyled">

@@ -40,7 +40,7 @@
       var params = {
         dataGrid: $("#iiOrgList"),
         searchObj:{
-          searchStr: $("#iiOrgSearchStr").val()
+          searchStr: $.trim($("#iiOrgSearchStr").val())
         }
       };
       //Instruments.reloadDatagrid();

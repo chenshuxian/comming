@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
+<%@ include file="/WEB-INF/jsp/common/taglibs.jsp"%>
 <div class="pop-inner-wrap">
   <div class="pop-container">
     <div class="wrapper-container">
@@ -25,12 +26,32 @@
           <div class="flex-container">
             <div class="form-combo block-show">
               <div class=" flex-container flex-space-between">
+                <label for="appId"><span class="required-icon">*</span>所属系统:</label>
+                <select name="appIdShow"  id="appIdShow" style="width: 315px;height: 30px;line-height: 16px;border: 1px solid #cdd2d4;vertical-align: middle;box-sizing: border-box;box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1) inset;">
+                  <c:forEach items="${applicationList}" var="appList">
+                    <option value="${appList.stringId}" >${appList.name}</option>
+                  </c:forEach>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="flex-container">
+            <div class="form-combo block-show">
+              <div class=" flex-container flex-space-between">
                 <label for="editDisplayOrder"><span class="required-icon">*</span>模版类型:</label>
-                <select name="typeKey"  id="typeKey" style="width: 315px;height: 30px;line-height: 16px;padding-left: 8px;border: 1px solid #cdd2d4;vertical-align: middle;box-sizing: border-box;box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1) inset;">
+                <select name="typeKeyShow"  id="typeKeyShow" style="width: 315px;height: 30px;line-height: 16px;border: 1px solid #cdd2d4;vertical-align: middle;box-sizing: border-box;box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1) inset;">
                   <option value="0">报告</option>
                   <option value="1">条码标签</option>
                   <option value="2">报表</option>
                 </select>
+              </div>
+            </div>
+          </div>
+          <div class="flex-container">
+            <div class="form-combo block-show">
+              <div class=" flex-container flex-space-between">
+                <label for="rows">项目最大行数:</label>
+                <input type="text" class="form-control block-show" id="rows" name="rows"/>
               </div>
             </div>
           </div>
@@ -53,6 +74,8 @@
           </div>
         </div>
         <input type="hidden" id="editId" name="id"/>
+        <input type="hidden" id="appId" name="appId"/>
+        <input type="hidden" id="typeKey" name="typeKey"/>
         <input type="hidden" id="opType" name="opType" value="${opType}"/>
         <input type="hidden" id="editCodeNo" name="codeNo" value="${codeNo}"/>
         <div class="wrapper-footer text-center">

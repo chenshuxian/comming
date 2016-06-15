@@ -41,7 +41,7 @@
             </div>
             <div class="wrapper-footer text-center">
                 <button class="btn btn-submit sm-size" id="addBtn">确定</button>
-                <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
+                <button class="btn btn-cancel sm-size J_ClosePop" onclick="BM.arrayClean();">关闭</button>
             </div>
             <input type="hidden" id="itemTypeId" value="1"/>
         </div>

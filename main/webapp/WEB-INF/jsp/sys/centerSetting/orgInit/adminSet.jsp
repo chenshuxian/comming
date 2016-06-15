@@ -17,7 +17,7 @@
             <div class="form-combo block-show">
               <div class=" flex-container flex-space-between">
                 <label for="userNo"><span class="required-icon">*</span>用户帐号:</label>
-                admin<input type="text" class="form-control block-show" id="userNo" name="userNo"/>
+                admin<input type="text" class="form-control block-show" id="userNo" name="userNo" style="margin-left:5px;"/>
               </div>
             </div>
           </div>
@@ -25,7 +25,7 @@
             <div class="form-combo block-show">
               <div class=" flex-container flex-space-between">
                 <label></label>
-                <span class="required-icon">admin开头，长度不超过20个字符（数字、字母和下划线），每个帐号最少包含一个字母，不区分大小写，确定后不可修改。</span>
+                <span class="required-icon">预设admin开头，长度6-20个字符（数字、字母和下划线），不区分大小写，确定后不可修改。</span>
               </div>
             </div>
           </div>
@@ -33,7 +33,7 @@
             <div class="form-combo block-show">
               <div class=" flex-container flex-space-between">
                 <label for="userName"><span class="required-icon">*</span>用户名称:</label>
-                <input type="text" class="form-control block-show" id="userName" name="userName"/>
+                <input type="text" class="form-control block-show" id="userName" name="userName" readonly="readonly" value="管理员"/>
               </div>
             </div>
           </div>

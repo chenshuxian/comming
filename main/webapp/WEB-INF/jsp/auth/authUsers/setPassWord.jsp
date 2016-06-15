@@ -15,14 +15,14 @@
     
         <div class="panel-container">
             <div class="panel-main-header">
-                <h1 class="text-center color-green"><i class="icon icon-lock-g"></i> 设置密码</h1>
+                <h1 class="text-center" style="color:#2e88e3;"><i class="icon icon-lock-g"></i> 设置密码</h1>
             </div>
             <div class="panel-content" style="width: 60%;margin:30px auto;">
                 <div class="col-6 margin-center">
                     <div class="form-group">
                         <label for="">
                         	<strong>密码</strong>
-                            <small>(6-20个字符，字母、数字和符号的组合)</small>
+                            <small>(6-20个字符，字母、数字的组合)</small>
                         </label>
                         <input type="password" class="form-control block-show" id="password" name="password"/>
                     </div>

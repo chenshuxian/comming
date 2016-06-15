@@ -43,6 +43,14 @@ EasyTree = (function($){
 	
 	var loadPop = function(url,data,callback){
 		$("#ctrDictInfoModal").load(url, data, function () {
+			_validateBox();
+			$('form').form({
+				onSubmit:function(){
+					console.log("submitTree");
+					return $(this).form('validate');
+				},
+				success: EasyTree.save
+			});
             dialog("ctrDictInfoModal", {width: 480},callback);
 			$("#name").attr('maxlength','30');
 			$("#name").focus();
@@ -93,12 +101,41 @@ EasyTree = (function($){
 		loadPop(_loadUrlById,data,callback);
 	
 	}
+
+	//表单验证
+	var _validateBox = function() {
+		//中文名长度
+		$("input[name='name']").validatebox({
+			required:true,
+			validType:  ['symbol','length[0,30]','space'],
+			missingMessage: "中文名称为空，请重新输入！"
+		});
+		$("input[name='name']").attr('maxlength','30');
+		//英文名长度
+		$("input[name='enShortName']").validatebox({
+			validType:  ['symbol','length[0,20]']
+		});
+		$("input[name='enShortName']").attr('maxlength','20');
+		//英文名长度
+		$("input[name='enName']").validatebox({
+			validType:  ['symbol','length[0,55]']
+		});
+		$("input[name='enName']").attr('maxlength','55');
+
+		$("input[name='fastCode']").validatebox({
+			validType:  ['symbol','length[0,9]']
+		});
+		$("input[name='fastCode']").attr('maxlength','9');
+
+	}
+
 	/**
 	 * 名字重复提示
 	 */
 	var _save = function() {
 		//防止重复提交
-		$("#editBtn").attr("disabled", true);
+		//$("#editBtn").attr("disabled", true);
+
 		//var zTree = $.fn.zTree.getZTreeObj("treeDemo");
 		formTextTrim("editForm");
 		var
@@ -112,10 +149,10 @@ EasyTree = (function($){
 				$("#name").focus();
 			});
 			$("#editBtn").attr("disabled", false);
-			console.log("ch1");
+
 		}else{
 			//前后一样不做验证处理
-			console.log("ch2");
+
 			if (oldName == name) {
 				_addCtrRegions(name, id);
 			} else {
@@ -123,7 +160,8 @@ EasyTree = (function($){
 					url: _nameRepeatUrl,
 					type: "POST",
 					data: {
-						"name": name
+						"name": name,
+						"id": id
 					},
 					success: function (data) {
 						if (data.indexOf("confirm|") == 0) {

@@ -6,8 +6,8 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
-<div class="pop-inner-wrap">
-    <div class="pop-container">
+<div class="pop-inner-wrap" >
+    <div class="pop-container" >
         <div class="wrapper-container">
             <div class="wrapper-header flex-container flex-space-between"><h1>分配角色</h1>
 
@@ -22,20 +22,21 @@
                 <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
             </div>
             <input type="hidden" id="userGroup_userId">
-            <script type="text/javascript">
-                function authUsers_saveUserGroup(){
-                    var userId = $('#userGroup_userId').val();
-                    var nodes = $('#userGroup_tree').tree('getChecked');
-                    var groupIds = [];
-                    for(i in nodes){
-                        groupIds[i] = nodes[i].id;
-                    }
-                    var gps = {};
-                    gps.groupIds = groupIds;
-                    AuthUsers.saveUserGroup(userId,groupIds);
-                }
-            </script>
+
         </div>
 
     </div>
 </div>
+<script type="text/javascript">
+    function authUsers_saveUserGroup(){
+        var userId = $('#userGroup_userId').val();
+        var nodes = $('#userGroup_tree').tree('getChecked');
+        var groupIds = [];
+        for(i in nodes){
+            groupIds[i] = nodes[i].id;
+        }
+        var gps = {};
+        gps.groupIds = groupIds;
+        AuthUsers.saveUserGroup(userId,groupIds);
+    }
+</script>

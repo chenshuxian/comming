@@ -50,7 +50,7 @@
             </div>
             <div class="wrapper-footer text-center">
                 <button id="addRelatedBtn" class="btn btn-submit sm-size J_ShowPop">确定</button>
-                <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
+                <button class="btn btn-cancel sm-size J_ClosePop" onclick="BM.arrayClean();">关闭</button>
             </div>
         </div>
 
@@ -61,15 +61,20 @@
     $(function () {
         /*左右数据切换*/
 
-        $("#leftShiftBtn").on('click',BasicModule.leftShiftBtn);
-        $("#rightShiftBtn").on('click',BasicModule.rightShiftBtn);
+        $("#leftShiftBtn").on('click',function () { BasicModule.leftShiftBtn(RegionalManagement.rightArr);});
+        $("#rightShiftBtn").on('click',function () { BasicModule.rightShiftBtn(RegionalManagement.rightArr)});
 
         $("#relatedSearchBtn").on('click', function () {
-            $("#addCheckProjectRight").datagrid("reload", {
-                parentId: RegionalManagement.parentId,
-                regionId: $("#regionId").val(),
-                searchStr: $.trim($("#relatedSearchStr").val())
-            })
+            var
+                    searchStr = [$("#relatedSearchStr").val(),$("#regionName").val()],
+                    queryItem = ["codeNo","name"];
+
+            BM.localQuery(RegionalManagement.rightArr,searchStr,queryItem,true);
+//            $("#addCheckProjectRight").datagrid("reload", {
+//                parentId: RegionalManagement.parentId,
+//                regionId: $("#regionId").val(),
+//                searchStr: $.trim($("#relatedSearchStr").val())
+//            })
         });
 
         $("#addRelatedBtn").on('click', function () {
@@ -83,20 +88,20 @@
                     BasicModule.addTestItemIds = [];
                     BasicModule.delTestItemIds = [];
                 });
-                $.ajax({
-                    "url" : ctx + "/org/regionalManagement/regionalManagementItemAddBatch",
-                    "type" : "POST",
-                    data:data,
-                    "success" : function(data) {
-                        if(data.indexOf("succ") > -1) {
-                            RegionalManagement.dataGrid2.datagrid('reload');
-                            $("#ctrDictInfoModal").hide();
-                            BasicModule.addTestItemIds = [];
-                       }
-                    },
-                    "error" : function() {
-                    }
-                });
+//                $.ajax({
+//                    "url" : ctx + "/org/regionalManagement/regionalManagementItemAddBatch",
+//                    "type" : "POST",
+//                    data:data,
+//                    "success" : function(data) {
+//                        if(data.indexOf("succ") > -1) {
+//                            RegionalManagement.dataGrid2.datagrid('reload');
+//                            $("#ctrDictInfoModal").hide();
+//                            BasicModule.addTestItemIds = [];
+//                       }
+//                    },
+//                    "error" : function() {
+//                    }
+//                });
             } else {
                 $("#ctrDictInfoModal").hide();
             }

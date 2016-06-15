@@ -3,7 +3,7 @@
   User: Administrator
   Date: 2016/4/13
   Time: 10:34
-  Name: 机构系统初始化
+  Name: 机构系统管理
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" import="com.daan.enums.*" pageEncoding="UTF-8"%>
@@ -16,7 +16,7 @@
         <div class="search flex-container flex-space-between">
           <span class="drop-down-label">机构:</span>
           <div class="J_ShowPop J_instrumentList md-size" id="${oi}orgList">
-            <span class="selected-items" id="${oi}orgName">请选择机构</span><i class="icon icon-angle-down"></i>
+            <span class="selected-items blue" id="${oi}orgName">请选择机构</span><i class="fa fa-angle-down "></i>
           </div>
         </div>
       </div>
@@ -34,10 +34,11 @@
         </div>
       </div>
     </div>
-    <div class="main-content-body">
+    <div class="main-content-body" style="overflow-y: hidden;">
         <table id="${oi}List"></table>
     </div>
   </div>
+  <div class="line sm-size"></div>
   <div class="flex-container layout-vertical main-content-bottom">
     <div class="main-content-header">
       <div class="flex-container flex-space-between">
@@ -49,7 +50,7 @@
         </div>
       </div>
     </div>
-    <div class="main-content-body">
+    <div class="main-content-body" style="overflow-y: hidden;">
       <table id="${oi}List2"></table>
     </div>
   </div>

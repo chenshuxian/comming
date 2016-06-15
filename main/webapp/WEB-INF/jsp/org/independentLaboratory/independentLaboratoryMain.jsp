@@ -69,7 +69,7 @@
         <div class="flex-container flex-space-between">
             <div class="search flex-container  flex-space-between">
                 <div class="form-control-icon icon-right">
-                    <input type="text" id="${idl}SearchStr" class="form-control" placeholder="搜索内容..."/>
+                    <input type="text" id="${idl}SearchStr" class="form-control searchWidth" style="width:250px;" placeholder="搜索内容..."/>
                  	<button class="control-icon text-center" id="${idl}SearchBtn">
                         <i class="icon icon-search"></i>
                     </button>
@@ -78,7 +78,7 @@
 
                 <div class="drop-down">
                     <div class="drop-down-selected">
-                        <span class="selected-items" id="${idl}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
+                        <span class="selected-items" id="${idl}StatusSpan">所有</span><i class="fa fa-angle-down "></i>
                     </div>
                     <div class="drop-down-menu">
                         <ul class="list-unstyled ${idl}-status-selector">
@@ -151,7 +151,7 @@ $(document).ready(function(){
         <form id="rslForm">
             <input type="hidden" id="orgTypeId" name="orgTypeId" value="${orgTypeId}" />
             <div>
-                <input type="text" id="searchStr" name="searchStr" placeholder="搜索内容..."><input type="button" value="搜索" onclick="search();">
+                <input type="text" id="searchStr" name="searchStr" style="width:250px;" placeholder="搜索内容..."><input type="button" value="搜索" onclick="search();">
             </div>
             <div class="sc">
                 <span>状态</span>
@@ -223,7 +223,7 @@ $(document).ready(function(){
         <form id="rslForm">
             <input type="hidden" id="orgTypeId" name="orgTypeId" value="${orgTypeId}" />
             <div>
-                <input type="text" id="searchStr" name="searchStr" placeholder="搜索内容..."><input type="button" value="搜索" onclick="search();">
+                <input type="text" id="searchStr" name="searchStr" style="width:250px;" placeholder="搜索内容..."><input type="button" value="搜索" onclick="search();">
             </div>
             <div class="sc">
                 <span>状态</span>

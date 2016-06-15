@@ -3,23 +3,23 @@
 <%@ include file="/WEB-INF/jsp/common/taglibs.jsp"%>
 <c:set var="rm" value="rm"></c:set>
 <div class="flex-container layout-vertical main-content-container" id="${rm}mainContentContainer">
-	<local:ifAuthrized value="02020404">
+	<local:ifAuthrized value="4010201">
 		<input type="hidden" id="${rm}statusAuthrized" value="true"/>
 	</local:ifAuthrized>
-	<local:ifAuthrized value="02020405">
+	<local:ifAuthrized value="4010202">
 		<input type="hidden" id="${rm}offerAuthrized" value="true"/>
 	</local:ifAuthrized>
-	<local:ifAuthrized value="02020406">
+	<local:ifAuthrized value="4010203">
 		<input type="hidden" id="${rm}editAuthrized" value="true"/>
 	</local:ifAuthrized>
-	<local:ifAuthrized value="02020403">
+	<local:ifAuthrized value="4010204">
 		<input type="hidden" id="${rm}deleteAuthrized" value="true"/>
 	</local:ifAuthrized>
 	<div class="main-content-header" id="${rm}main-content-header">
 		<div class="flex-container flex-space-between">
 			<div class="search flex-container  flex-space-between">
 				<div class="form-control-icon icon-right">
-					<input type="text" id="${rm}SearchStr" class="form-control" placeholder="搜索内容..." />
+					<input type="text" id="${rm}SearchStr" class="form-control searchWidth" style="width:250px;" placeholder="搜索内容..." />
 					<button class="control-icon text-center" id="${rm}SearchBtn">
 						<i class="icon icon-search"></i>
 					</button>
@@ -29,17 +29,10 @@
 				<div class="drop-down">
 					<div class="drop-down-selected">
 						<span class="selected-items" id="${rm}StatusSpan">全部</span>
-						<i class="icon icon-angle-down"></i>
+						<i class="fa fa-angle-down "></i>
 					</div>
 					<div class="drop-down-menu">
 						<ul class="list-unstyled ${rm}-status-selector">
-							<%--<c:forEach items="<%=StatusEnum.values()%>" var="isAbleEnum" varStatus="status">--%>
-								<%--<li el-value="${isAbleEnum.getIndex()}"--%>
-									<%--<c:if test="${isAbleEnum.getIndex()==-1}">--%>
-										<%--selected="selected"--%>
-									 <%--</c:if> >${isAbleEnum.text}--%>
-									 <%--</li>--%>
-		                    <%--</c:forEach>--%>
 								<c:forEach items="${isAbleList}" var="isAble">
 									<li     <c:if test="${isAble.index == 2}">selected="selected" el-value=""</c:if>
 											<c:if test="${isAble.index != 2}">selected="selected"
@@ -65,13 +58,13 @@
 				</div>
 
 				<span class="symbol">|</span>
-				<local:ifAuthrized value="02020402">
+				<local:ifAuthrized value="4010205">
 				<%--<span id="${rm}J_ShowPop" class="J_ShowPop" data-show="${rm}roleManagerAdd" onclick="userGroupsMain.showuserGroupsAddPop('','0');">--%>
 					<%--<i class="icon icon-plus-square"></i>添加--%>
 				<%--</span>--%>
 					<span id="${rm}Add"><i class="icon icon-plus-square"></i>添加</span>
 				</local:ifAuthrized>
-				<local:ifAuthrized value="02020403">
+				<local:ifAuthrized value="4010206">
 				<%--<span onclick="userGroupsMain.checkedDelRow();">--%>
 				 	<%--<i class="icon icon-trash"></i>--%>
 				 	<%--删除选中--%>

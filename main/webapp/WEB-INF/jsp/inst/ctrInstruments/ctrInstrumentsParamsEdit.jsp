@@ -34,24 +34,11 @@
 
         <div class="flex-container vertical-space flex-space-between flex-space-20">
             <div class="flex-col-6">
-                <div class="flex-container label-inline">
+                <div class="flex-container">
                     <div class="form-combo block-show">
-                        <div class=" flex-container  flex-space-between">
+                        <div class="flex-container  flex-space-between">
                         	<label for="">端口选择:</label>
-                            <select id="comPort" name="comPort" data-val="${entity.comPort }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"
-				                    class="easyui-combobox form-control-combo">
-				                   	<option value="">&nbsp;</option>
-				                	<option value="1">COM1</option>
-									<option value="2">COM2</option>
-									<option value="3">COM3</option>
-									<option value="4">COM4</option>
-									<option value="5">COM5</option>
-									<option value="6">COM6</option>
-									<option value="7">COM7</option>
-									<option value="8">COM8</option>
-									<option value="9">COM9</option>
-									<option value="10">COM10</option>
-				             </select>
+                            <input id="comPort" name="comPort" value="" data-val="${entity.comPort }">
                         </div>
                     </div>
                 </div>
@@ -60,16 +47,16 @@
                 <div class="flex-container label-inline">
                     <div class="form-combo block-show">
                         <div class=" flex-container  flex-space-between">
-                        <span class="required-icon">*</span>
-                            <label for="">通信模式:</label>
-                            <select id="transferMode" name="transferMode" data-val="${entity.transferMode }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"
-				                    class="easyui-combobox xs-size form-control-combo">
-				                   	<option value="0">无通信</option>
-									<option value="1">单向</option>
-									<option value="2">双向（无校验位）</option>
-									<option value="3">双向（带校验位）</option>
-									<option value="4">其它</option>
-				             </select>
+                            <label for=""><span class="required-icon">*</span>通信模式:</label>
+                            <input id="transferMode" name="transferMode" value="" data-val="${entity.transferMode }">
+                            <%--<select id="transferMode" name="transferMode" data-val="${entity.transferMode }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"--%>
+				                    <%--class="easyui-combobox xs-size form-control-combo">--%>
+				                   	<%--<option value="0">无通信</option>--%>
+									<%--<option value="1">单向</option>--%>
+									<%--<option value="2">双向（无校验位）</option>--%>
+									<%--<option value="3">双向（带校验位）</option>--%>
+									<%--<option value="4">其它</option>--%>
+				             <%--</select>--%>
                         </div>
                     </div>
                 </div>
@@ -82,13 +69,14 @@
                     <div class="form-combo block-show">
                         <div class=" flex-container  flex-space-between">
                             <label for="">通讯协议:</label>
-                            <select id="protocol" name="protocol" data-val="${entity.protocol }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"
-				                    class="easyui-combobox xs-size form-control-combo">
-				                   	<option value="">&nbsp;</option>
-				                	<option value="1">XonXof</option>
-									<option value="2">RTS or OTS</option>
-									<option value="3">ASTS</option>
-				             </select>
+                            <input id="protocol" name="protocol" value="" data-val="${entity.protocol }">
+                            <%--<select id="protocol" name="protocol" data-val="${entity.protocol }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"--%>
+				                    <%--class="easyui-combobox xs-size form-control-combo">--%>
+				                   	<%--<option value="">&nbsp;</option>--%>
+				                	<%--<option value="1">XonXof</option>--%>
+									<%--<option value="2">RTS or OTS</option>--%>
+									<%--<option value="3">ASTS</option>--%>
+				             <%--</select>--%>
                         </div>
                     </div>
                 </div>
@@ -98,17 +86,18 @@
                     <div class="form-combo block-show">
                         <div class=" flex-container  flex-space-between">
                             <label for="">波特率:</label>
-                            <select id="baudRate" name="baudRate" data-val="${entity.baudRate }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"
-				                    class="easyui-combobox xs-size form-control-combo">
-				                    <option value="">&nbsp;</option>
-				                	<option value="1200">1200</option>
-									<option value="2400">2400</option>
-									<option value="4800">4800</option>
-									<option value="9600">9600</option>
-									<option value="19200">19200</option>
-									<option value="38400">38400</option>
-									<option value="115200">115200</option>
-				             </select>
+                            <input id="baudRate" name="baudRate" value="" data-val="${entity.baudRate }">
+                            <%--<select id="baudRate" name="baudRate" data-val="${entity.baudRate }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"--%>
+				                    <%--class="easyui-combobox xs-size form-control-combo">--%>
+				                    <%--<option value="">&nbsp;</option>--%>
+				                	<%--<option value="1200">1200</option>--%>
+									<%--<option value="2400">2400</option>--%>
+									<%--<option value="4800">4800</option>--%>
+									<%--<option value="9600">9600</option>--%>
+									<%--<option value="19200">19200</option>--%>
+									<%--<option value="38400">38400</option>--%>
+									<%--<option value="115200">115200</option>--%>
+				             <%--</select>--%>
                         </div>
                     </div>
                 </div>
@@ -121,17 +110,18 @@
                     <div class="form-combo block-show">
                         <div class=" flex-container  flex-space-between">
                             <label for="">数据位:</label>
-                            <select id="dataBit" name="dataBit" data-val="${entity.dataBit }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"
-				                    class="easyui-combobox xs-size form-control-combo">
-				                   <option value="">&nbsp;</option>
-				                	<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-									<option value="5">5</option>
-									<option value="6">6</option>
-									<option value="7">7</option>
-									<option value="8">8</option>
+                            <input id="dataBit" name="dataBit" value="" data-val="${entity.dataBit }">
+                            <%--<select id="dataBit" name="dataBit" data-val="${entity.dataBit }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"--%>
+				                    <%--class="easyui-combobox xs-size form-control-combo">--%>
+				                   <%--<option value="">&nbsp;</option>--%>
+				                	<%--<option value="1">1</option>--%>
+									<%--<option value="2">2</option>--%>
+									<%--<option value="3">3</option>--%>
+									<%--<option value="4">4</option>--%>
+									<%--<option value="5">5</option>--%>
+									<%--<option value="6">6</option>--%>
+									<%--<option value="7">7</option>--%>
+									<%--<option value="8">8</option>--%>
 				             </select>
                         </div>
                     </div>
@@ -142,13 +132,14 @@
                     <div class="form-combo block-show">
                         <div class=" flex-container  flex-space-between">
                             <label for="">停止位:</label>
-                            <select id="stopBit" name="stopBit" data-val="${entity.stopBit }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"
-				                    class="easyui-combobox xs-size form-control-combo">
-				                   <option value="">&nbsp;</option>
-				                	<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-				             </select>
+                            <input id="stopBit" name="stopBit" value="" data-val="${entity.stopBit }">
+                            <%--<select id="stopBit" name="stopBit" data-val="${entity.stopBit }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"--%>
+				                    <%--class="easyui-combobox xs-size form-control-combo">--%>
+				                   <%--<option value="">&nbsp;</option>--%>
+				                	<%--<option value="1">1</option>--%>
+									<%--<option value="2">2</option>--%>
+									<%--<option value="3">3</option>--%>
+				             <%--</select>--%>
                         </div>
                     </div>
                 </div>
@@ -161,13 +152,14 @@
                     <div class="form-combo block-show">
                         <div class=" flex-container  flex-space-between">
                             <label for="">奇偶校验位:</label>
-                            <select id="parityBit" name="parityBit" data-val="${entity.parityBit }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"
-				                    class="easyui-combobox xs-size form-control-combo">
-				                   <option value="">&nbsp;</option>
-				                	<option value="0">无校验</option>
-									<option value="1">奇校验</option>
-									<option value="2">偶校验</option>
-				             </select>
+                            <input id="parityBit" name="parityBit" value="" data-val="${entity.parityBit }">
+                            <%--<select id="parityBit" name="parityBit" data-val="${entity.parityBit }" data-options="editable:false,width:214,height:30,panelHeight:'auto'"--%>
+				                    <%--class="easyui-combobox xs-size form-control-combo">--%>
+				                   <%--<option value="">&nbsp;</option>--%>
+				                	<%--<option value="0">无校验</option>--%>
+									<%--<option value="1">奇校验</option>--%>
+									<%--<option value="2">偶校验</option>--%>
+				             <%--</select>--%>
                         </div>
                     </div>
                 </div>

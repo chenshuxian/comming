@@ -20,11 +20,16 @@ getSearchObj = function() {
     return searchObj;
 };
 
-$("#leftShiftBtn").on('click',BasicModule.leftShiftBtn);
-$("#rightShiftBtn").on('click',BasicModule.rightShiftBtn);
+$("#leftShiftBtn").on('click',function () { BasicModule.leftShiftBtn(CtrInstrMics.rightArr); });
+$("#rightShiftBtn").on('click',function () { BasicModule.rightShiftBtn(CtrInstrMics.rightArr); });
 
 $("#searchBtn2").on('click', function () {
-    $("#addCheckProjectRight").datagrid("reload", getSearchObj());
+   // $("#addCheckProjectRight").datagrid("reload", getSearchObj());
+    var
+        searchStr = $("#searchStr").val(),
+        queryItem = ["codeNo","name","enName","enShortName","fastCode"];
+
+    BM.localQuery(CtrInstrMics.rightArr,searchStr,queryItem);
 });
 
 $("#addBtn").on('click', function () {

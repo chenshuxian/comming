@@ -35,14 +35,15 @@ var MED = (function($){
         addParams: MED.getAddParams(_exParams),
         exParams:_exParams,
         orgTypeId:_orgTypeId,
+        searchHold: CB.SEARCHHOLDER.MED,
 
         validateBox: function(){
             $("input[name='name']").validatebox({
                 required:true,
-                validType:  ['symbol','length[0,35]','space'],
+                validType:  ['symbol','length[0,30]','space'],
                 missingMessage: "中文名称不可为空！"
             });
-            $("input[name='name']").attr('maxlength','35');
+            $("input[name='name']").attr('maxlength','30');
 
             $("input[name='shortName']").validatebox({
                 validType:  ['symbol','length[0,15]']
@@ -75,18 +76,18 @@ var MED = (function($){
             $("input[name='displayOrder']").attr('maxlength','6');
 
             $("#telephone").validatebox({
-                validType:  ['symbol','digits']
+                validType:  ['symbol']
             });
             //地址
             $("#address").validatebox({
-                validType:  ['symbol','length[0,200]']
+                validType:  ['symbol','length[0,35]']
             });
-            $("#address").attr('maxlength','200');
+            $("#address").attr('maxlength','35');
 
             $("#enAddress").validatebox({
-                validType:  ['symbol','length[0,200]']
+                validType:  ['symbol','length[0,120]']
             });
-            $("#enAddress").attr('maxlength','200');
+            $("#enAddress").attr('maxlength','120');
             //连络人
             $("#contacts").validatebox({
                 validType:  ['symbol','length[0,20]']
@@ -94,16 +95,27 @@ var MED = (function($){
             $("#contacts").attr('maxlength','20');
             //传真
             $("#fax").validatebox({
-                validType:  ['symbol','length[0,30]']
+                validType:  ['symbol','length[0,25]']
             });
-            $("#fax").attr('maxlength','30');
+            $("#fax").attr('maxlength','25');
             //备注
             $("#memo").validatebox({
-                validType:  ['symbol','length[0,50]']
+                validType:  ['symbol','length[0,100]']
             });
-            $("#memo").attr('maxlength','50');
+            $("#memo").attr('maxlength','100');
+
+            //卫生代码
+            $("#nacaoId").validatebox({
+                validType:  ['symbol','length[0,30]']
+            });
+            $("#nacaoId").attr('maxlength','30');
+        },
+
+        addCallBack: function(){
+            MED.initTree();
+            $("#spanEditCodeNo").hide();
         }
-    })
+    });
 
 
 

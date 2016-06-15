@@ -462,7 +462,7 @@ ul, ol, li, dl, dd {
 }
 
 ul, ol {
-  list-style: none outside none;
+  /*list-style: none outside none;*/
 }
 
 h1, h2, h3 {
@@ -571,7 +571,7 @@ textarea::-webkit-input-placeholder {
 .panel-container {
   padding: 20px 0;
   border: 1px solid #e1e9ed;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.41);
   box-shadow: 0 2px 18px rgba(0, 0, 0, 0.1);
 }
 .panel-container .panel-header {
@@ -804,7 +804,7 @@ textarea::-webkit-input-placeholder {
   outline: none;
 }
 .btn.btn-submit {
-  background: #39bc8b;
+  background:#12a5a7;
   color: #fff;
   font-size: 1.4rem;
   font-weight: bold;
@@ -878,8 +878,8 @@ input[type=radio]:checked:before {
 }
 
 input[type=radio]:checked {
-  background: #39bc8b;
-  border-color: #39bc8b;
+  background:#12a5a7;
+  border-color:#12a5a7;
 }
 
 .form-control {
@@ -906,6 +906,7 @@ input[type=radio]:checked {
 }
 .form-control-icon .form-control {
   padding-left: 50px;
+  font-size: 14px;
 }
 .form-control-icon .control-icon {
   position: absolute;
@@ -962,14 +963,14 @@ textarea.form-control {
 }
 .form-group .control-icon {
   background: #f7fbfc;
-  color: #39bc8b;
-  border: 1px solid #39bc8b;
+  color:#12a5a7;
+  border: 1px solid#12a5a7;
   font-weight: bold;
   -webkit-transition: 0.25s;
           transition: 0.25s;
 }
 .form-group .control-icon:hover {
-  background: #39bc8b;
+  background:#12a5a7;
   color: #fff;
   -webkit-transition: 0.25s;
           transition: 0.25s;
@@ -1049,7 +1050,7 @@ textarea.form-control {
 
 h1 {
   font-size: 2.4rem;
-  color: #39bc8b;
+  color:#12a5a7;
   padding-bottom: 10px;
   line-height: 1;
 }
@@ -1193,7 +1194,7 @@ a {
 }
 .pop-inner-wrap .pop-container {
   background-color: #fff;
-  border-top: 5px solid #39bc8b;
+  border-top: 5px solid#12a5a7;
   position: relative;
   margin: -50% auto 0;
   min-width: 480px;
@@ -1246,7 +1247,7 @@ a {
   text-align: left;
 }
 .table a {
-  color: #39bc8b;
+  color:#12a5a7;
 }
 
 .table-header, .table-footer {
@@ -1294,7 +1295,7 @@ a {
   color: #fff;
 }
 #site-header.personal-center {
-  background: #39bc8b;
+  background:#12a5a7;
   color: #fff;
 }
 #site-header.personal-center .title {
@@ -1328,16 +1329,21 @@ main {
 
 /*轮转焦点图*/
 #banner {
-  height: 470px;
+  /*height: 470px;*/
+  /*position: relative;*/
+  height: 385px;
   position: relative;
+  background: url("../images/login_banner.jpg")top center no-repeat;
+  margin: 40px 0;
 }
+
 #banner .slide {
   position: absolute;
   left: 0;
   top: 0;
   right: 0;
   bottom: 0;
-  box-shadow: 2px 3px 5px rgba(100, 100, 100, 0.1) inset, -2px -3px 5px rgba(200, 200, 200, 0.1) inset;
+  /*box-shadow: 2px 3px 5px rgba(100, 100, 100, 0.1) inset, -2px -3px 5px rgba(200, 200, 200, 0.1) inset;*/
   -webkit-transition: opacity 0.5s;
           transition: opacity 0.5s;
 }
@@ -1355,7 +1361,7 @@ main {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  border: 1px solid #39bc8b;
+  border: 1px solid#12a5a7;
   margin-left: 5px;
   margin-right: 5px;
   cursor: pointer;
@@ -1363,25 +1369,125 @@ main {
           transition: background 0.25s;
 }
 #banner .pagination li:hover, #banner .pagination li.active {
-  background: #39bc8b;
+  background:#12a5a7;
   -webkit-transition: background 0.25s;
           transition: background 0.25s;
 }
 
+.zindex20 {
+  /*z-index: 20;*/
+  /*font-size: 16px;*/
+  /*color: rgba(10, 12, 12, 0.38);*/
+  /*line-height: 36px;*/
+  /*margin-left: 55px;*/
+  margin-left: 55px;
+  font-size: 16px;
+  color: rgba(10, 12, 12, 0.38);
+  line-height: 36px;
+}
+
+.loginsmall {
+  position: absolute;
+  top: 257px;
+  left: 189px;
+  right: 0px;
+  bottom: 0px;
+  margin-top: 10px;
+  /*font-weight: bold;*/
+}
+
+#loginsm2 {
+  margin-left: 180px;
+}
+
+#loginsm3 {
+  margin-left: 364px;
+}
+
+#loginText1,#loginText2,#loginText3 {
+  position: absolute;
+  top: 230px;
+  left:236px;
+  right: 0px;
+  bottom: 0px;
+  margin-top: 10px;
+  font-weight: bold;
+  color: #12a5a7;
+}
+
+#loginText2 {
+  margin-left: 178px;
+}
+
+#loginText3 {
+  margin-left: 361px;
+}
+
+#login1,#login2,#login3 {
+  position: absolute;
+  top: 180px;
+  right: 0px;
+  bottom: 0px;
+}
+
+#login1 {
+  left: 230px;
+}
+
+#login2 {
+  left: 260px;
+  margin-left: 149px;
+}
+
+#login3 {
+  left: 290px;
+  margin-left: 300px;
+}
+
+/*登入页*/
+#loginTitleDiv {
+  /*z-index: 20;*/
+  /*margin: 30px 0px;*/
+  /*position: absolute;*/
+  /*left: 310px;*/
+  /*top: 20px;*/
+  /*right: 0px;*/
+  /*bottom: 0px;*/
+  width: 52%;
+  height: 300px;
+  float: left;
+  margin-left: 43px;
+}
+#loginTitle {
+  font-size: 34px;
+  color: rgb(11, 156, 158);
+  /*line-height: 30px;*/
+  /*margin: 30px 0px;*/
+  font-weight: bold;
+}
 /*登陆弹窗*/
 #login-form {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 280px;
-  margin-top: -171px;
-  margin-left: 158px;
-  z-index: 99;
-  padding-left: 40px;
-  padding-right: 40px;
+  /*position: absolute;*/
+  /*top: 41%;*/
+  /*left: 50%;*/
+  /*width: 280px;*/
+  /*margin-top: -145px;*/
+  /*margin-left: 158px;*/
+  /*z-index: 99;*/
+  /*padding-left: 40px;*/
+  /*padding-right: 40px;*/
+  /*width: 282px;*/
+  /*height: 330px;*/
+  border-radius: 5px;
+  padding: 0 40px;
+  color: #333;
 }
 #login-form h1 {
-  padding-top: 10px;
+  padding-top: 30px;
+}
+
+#loginLogo {
+  margin-top:20px;
 }
 
 .form-tips {
@@ -1389,7 +1495,7 @@ main {
   font-size: 1.4rem;
 }
 .form-tips a {
-  color: #39bc8b;
+  color:#12a5a7;
 }
 
 .personal-center-content {
@@ -1440,11 +1546,11 @@ main {
   z-index: 4;
 }
 .progress-bar .items.active {
-  border-top-color: #39bc8b;
-  color: #39bc8b;
+  border-top-color:#12a5a7;
+  color:#12a5a7;
 }
 .progress-bar .items.active:after {
-  background: #39bc8b;
+  background:#12a5a7;
 }
 
 /*验证码*/
@@ -1500,5 +1606,41 @@ html, body {
 	color: #f00;
 	min-height: 15px;
 }
+
+.site-footer address img {
+  width: 66px;
+  height: 66px;
+  display: inline-block;
+  margin-top: 2px;
+  margin-right: 3px;
+}
+
+.site-footer address {
+  font-style: normal;
+  color: #666;
+  line-height: 25px;
+  font-size: 14px;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+  width: 91px;
+  height: 115px;
+}
+
+#group {
+  width: 210px;
+  margin: 0 auto;
+}
+
+#group span {
+  font-size: 12px;
+}
+
+
 
 /*# sourceMappingURL=css.css.map */

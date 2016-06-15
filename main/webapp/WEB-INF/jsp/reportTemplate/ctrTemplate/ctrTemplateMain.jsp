@@ -6,29 +6,41 @@
     <div class="flex-container flex-space-between">
       <div class="search flex-container  flex-space-between">
         <div class="form-control-icon icon-right">
-          <input type="text" id="${ct}SearchStr" class="form-control" placeholder="搜索内容..."/>
+          <input type="text" id="${ct}SearchStr searchWidth" class="form-control" style="width:250px;" placeholder="搜索内容..."/>
           <button class="control-icon text-center" id="${ct}SearchBtn">
             <i class="icon icon-search"></i>
           </button>
         </div>
-        <span class="symbol"></span> <span>模板类型:</span>
+        <span class="symbol"></span> <span>所属系统:</span>
         <div class="drop-down">
           <div class="drop-down-selected">
-            <span class="selected-items" id="${ct}Template">全部</span><i class="icon icon-angle-down"></i>
+            <span class="selected-items" id="${ct}SystemSpan">请选择</span><i class="fa fa-angle-down"></i>
+          </div>
+          <div class="drop-down-menu">
+            <ul class="list-unstyled ${ct}-system-selector">
+              <c:forEach items="${applicationList}" var="appList">
+                <li el-value="${appList.stringId}" >${appList.name}</li>
+              </c:forEach>
+            </ul>
+          </div>
+        </div>
+        <span class="symbol">|</span> <span>模板类型:</span>
+        <div class="drop-down">
+          <div class="drop-down-selected">
+            <span class="selected-items" id="${ct}Template">请选择</span><i class="fa fa-angle-down"></i>
           </div>
           <div class="drop-down-menu">
             <ul class="list-unstyled ${ct}-template-selector">
-              <li class="selected" el-value="">全部</li>
               <li el-value="0">报告</li>
               <li el-value="1">条码标签</li>
               <li el-value="2">报表</li>
             </ul>
           </div>
         </div>
-        <span class="symbol"></span> <span>状态:</span>
+        <span class="symbol">|</span> <span>状态:</span>
         <div class="drop-down">
           <div class="drop-down-selected">
-            <span class="selected-items" id="${ct}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
+            <span class="selected-items" id="${ct}StatusSpan">所有</span><i class="fa fa-angle-down"></i>
           </div>
           <div class="drop-down-menu">
             <ul class="list-unstyled ${ct}-status-selector">
@@ -70,5 +82,6 @@
 
   <input type="hidden" id="${ct}Status"/>
   <input type="hidden" id="${ct}Sort"/>
-  <input type="hidden" id="${ct}Template"/>
+  <input type="hidden" id="${ct}TemplateVal" value="-1"/>
+  <input type="hidden" id="${ct}System" value="-1"/>
 </div>

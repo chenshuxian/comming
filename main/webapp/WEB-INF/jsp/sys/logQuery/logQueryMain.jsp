@@ -6,40 +6,45 @@
 		<div class="flex-container flex-space-between">
 			<div class="search flex-container  flex-space-between">
 				<div class="option-time">
-					<span class="symbol"></span> 
-		      操作时间: <span class="selected-items"><input id="${logQ}beginTime" style="width:150px" class="easyui-datetimebox" value="${startDate}"></input></span>
-		      		<span class="symbol">-</span>
-					<span class="selected-items"><input id="${logQ}endTime" style="width:150px" class="easyui-datetimebox" value="${endDate}"></input>&nbsp;&nbsp;</span>
+
+		      操作时间:<span class="symbol"></span>  <span class="selected-items"><input type='text'  id="${logQ}beginTime" class="easyui-datetimebox" value="${startDate}" /></span>
+		      		<span style="margin-left:-10px;">-</span>
+					<span class="selected-items"><input type='text' id="${logQ}endTime"  class="easyui-datetimebox" value="${endDate}" /></span>
 				</div>
-				<span class="symbol"></span> <span>模块名称:</span>
+				<span class="symbol"></span>
+				<span class="drop-down-label">模块名称:</span>
+
 				<div class="drop-down">
 					<div class="drop-down-selected">
-						<span class="selected-items" id="${logQ}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
+						<span class="selected-items" id="${logQ}StatusSpan">请选择模块</span><i class="fa fa-angle-down "></i>
 					</div>
 					<div class="drop-down-menu">
-						<ul class="list-unstyled ${logQ}-status-selector" style="overflow-y:scroll;overflow-x:hidden;height:350px;">
+						<ul class="list-unstyled ${logQ}-status-selector scrollHeight ulDefaultWidth">
 							<c:forEach items="${resultList}" var="item" varStatus="status">
 								<li <c:if test="${item.moduleId == 1}"> class="selected" </c:if> el-value="${item.moduleId}">${item.moduleName} </li>							
 							</c:forEach>
 						</ul>
 					</div>
 				</div>
-				<span class="symbol">
-				<button class="control-icon text-center" id="${logQ}SearchBtn">
-					<i class="icon icon-search"></i>搜索
-				</button>
+				<div class="form-control-icon icon-right">
+					<input type="text" id="${logQ}SearchStr" class="form-control searchWidth" style="width:250px;" placeholder="搜索内容..."/>
+					<button class="control-icon text-center" id="${logQ}SearchBtn">
+						<i class="icon icon-search"></i>
+					</button>
+				</div>
 			</div>
 		
 			<div class="option icon-group-inline ">
-				<span onclick="logQuery.expExcel()"><i class="icon icon-pour-out"></i>导出</span>
+				<span id="${logQ}Export" onclick="logQuery.expExcel()"><i class="icon icon-export"></i>导出</span>
 			</div>
 		</div>
 	</div>
 	<div class="main-content-body">
-		<table id="${logQ}TypeList"></table>
+		<table id="${logQ}List"></table>
 	</div>
 	
-	<input type="hidden" id="${logQ}Status"/>
+	<%--<input type="hidden" id="${logQ}StatusNew" value="-1"/>--%>
+	<input type="hidden" id="${logQ}Status" value="-1"/>
 	
 </div>
 <%-- <!DOCTYPE html>

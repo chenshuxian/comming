@@ -12,22 +12,43 @@
   <div class="main-content-header">
     <div class="flex-container flex-space-between">
       <div class="search flex-container  flex-space-between">
-        <span class="drop-down-label">机构:</span>
-        <div class="J_ShowPop J_mechanismList md-size">
-          <span class="selected-items" id="${cst}SelectOrg" >请选择机构</span><i class="icon icon-angle-down"></i>
-        </div>
         <div class="form-control-icon icon-right">
-          <input type="text" id="${cst}SearchStr" class="form-control" placeholder="搜索内容..."/>
+          <input type="text" id="${cst}SearchStr" class="form-control searchWidth" style="width:200px;" placeholder="搜索内容..."/>
           <button class="control-icon text-center" id="${cst}SearchBtn">
             <i class="icon icon-search"></i>
           </button>
         </div>
-      </div>
-      <div class="search flex-container  flex-space-between">
-        <span class="symbol"></span> <span>状态:</span>
+        <span class="symbol"></span>
+        <span class="drop-down-label">机构:</span>
+        <div class="J_ShowPop J_mechanismList md-size">
+          <span class="selected-items blue" id="${cst}SelectOrg" >请选择机构</span><i class="fa fa-angle-down "></i>
+        </div>
+        <span class="symbol">|</span> <span>所属系统:</span>
         <div class="drop-down">
           <div class="drop-down-selected">
-            <span class="selected-items" id="${cst}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
+            <span class="selected-items" id="${cst}SystemSpan">选择系统</span><i class="fa fa-angle-down "></i>
+          </div>
+          <div class="drop-down-menu">
+            <ul class="list-unstyled ${cst}-system-selector" id="systemSelect"></ul>
+          </div>
+        </div>
+        <span class="symbol">|</span> <span>模板类型:</span>
+        <div class="drop-down">
+          <div class="drop-down-selected">
+            <span class="selected-items" id="${cst}Template">请选择</span><i class="fa fa-angle-down "></i>
+          </div>
+          <div class="drop-down-menu">
+            <ul class="list-unstyled ${cst}-template-selector">
+              <li el-value="0">报告</li>
+              <li el-value="1">条码标签</li>
+              <li el-value="2">报表</li>
+            </ul>
+          </div>
+        </div>
+        <span class="symbol">｜</span> <span>状态:</span>
+        <div class="drop-down">
+          <div class="drop-down-selected">
+            <span class="selected-items" id="${cst}StatusSpan">所有</span><i class="fa fa-angle-down "></i>
           </div>
           <div class="drop-down-menu">
             <ul class="list-unstyled ${cst}-status-selector">
@@ -38,21 +59,8 @@
             </ul>
           </div>
         </div>
-        <span class="symbol"></span> <span>模板类型:</span>
-        <div class="drop-down">
-          <div class="drop-down-selected">
-            <span class="selected-items" id="${ct}Template">全部</span><i class="icon icon-angle-down"></i>
-          </div>
-          <div class="drop-down-menu">
-            <ul class="list-unstyled ${ct}-template-selector">
-              <li class="selected" el-value="">全部</li>
-              <li el-value="0">报告</li>
-              <li el-value="1">条码标签</li>
-              <li el-value="2">报表</li>
-            </ul>
-          </div>
-        </div>
       </div>
+
       <div class="option icon-group-inline ">
         <div class="drop-down drop-down-icon">
           <div class="drop-down-selected">
@@ -81,6 +89,7 @@
 
   <input type="hidden" id="${cst}Status"/>
   <input type="hidden" id="${cst}Sort"/>
-  <input type="hidden" id="${cst}Template"/>
+  <input type="hidden" id="${cst}TemplateVal" value="-1"/>
+  <input type="hidden" id="${cst}System"/>
 
 </div>

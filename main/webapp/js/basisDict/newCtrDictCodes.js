@@ -81,6 +81,11 @@ var CtrDictCodes = (function($){
                 validType:  ['symbol','length[0,11]']
             });
             $("input[name='displayOrder']").attr('maxlength','11');
+            //备注
+            $("textarea").validatebox({
+                validType:  ['symbol','length[0,150]']
+            });
+            $("textarea").attr('maxlength','150');
 
 
         },

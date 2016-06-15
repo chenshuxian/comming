@@ -7,7 +7,7 @@
 		<div class="flex-container flex-space-between">
 			<div class="search flex-container  flex-space-between">
 				<div class="form-control-icon icon-right">
-					<input type="text" class="form-control" placeholder="搜索内容..." id="${ti}SearchStr"/>
+					<input type="text" class="form-control searchWidth" style="width:250px;" placeholder="搜索内容..." id="${ti}SearchStr"/>
 					<button class="control-icon text-center" id="${ti}SearchBtn">
 						<i class="icon icon-search"></i>
 					</button>
@@ -15,7 +15,7 @@
 				<span class="symbol"></span> <span>状态:</span>
 				<div class="drop-down">
 					 <div class="drop-down-selected">
-						<span class="selected-items" id="${ti}StatusSpan" >所有</span><i class="icon icon-angle-down"></i>
+						<span class="selected-items" id="${ti}StatusSpan" >全部</span><i class="fa fa-angle-down "></i>
 					</div> 
 					<div class="drop-down-menu">
 						<ul class="list-unstyled ${ti}-status-selector">
@@ -55,116 +55,4 @@
 	<input type="hidden" id="${ti}Status"/>
 	<input type="hidden" id="${ti}Sort"/>
 	
-</div>
-<!--基本信息-->
-
-<!--------------------------------------------------------------------------------
----------------------------默认样本类型下拉Grid数据源------------------------------------
---------------------------------------------------------------------------------->
-<div id="testItem_gridTestMethod" class="tablebox_02" style="width: 180px; height: 211px; display: none;">
-	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr class="tablehead">
-			<td style="width: 15px;">&nbsp;</td>
-			<td style="width: auto;">名称</td>
-		</tr>
-	</table>
-	<div class="tablelist" style="width: 100%; height: 176px;">
-		<!--tablebox_02 tablelist start-->
-		<table cellspacing="0" cellpadding="0" style="width: 200px;">
-			<c:forEach var="testMethod" items="${testMethodList}">
-				<tr id="${testMethod.id}">
-					<td style="width: 15px;">&nbsp;</td>
-					<td style="width: auto;">${testMethod.name}</td>
-				</tr>
-			</c:forEach>
-		</table>
-	</div>
-</div>
-<!--------------------------------------------------------------------------------
----------------------------医学专业组下拉Grid数据源--------------------------------------
---------------------------------------------------------------------------------->
-<div id="testItem_gridDiscipline" class="tablebox_02" style="width: 180px; height: 211px; display: none;">
-	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr class="tablehead">
-			<td style="width: 15px;">&nbsp;</td>
-			<td style="width: auto;">名称</td>
-		</tr>
-	</table>
-	<div class="tablelist" style="width: 100%; height: 176px;">
-		<!--tablebox_02 tablelist start-->
-		<table cellspacing="0" cellpadding="0" style="width: 200px;">
-			<c:forEach var="discipline" items="${disciplineList}">
-				<tr id="${discipline.id}">
-					<td style="width: 15px;">&nbsp;</td>
-					<td style="width: auto;"><c:out value="${discipline.name }" escapeXml="true"/></td>
-				</tr>
-			</c:forEach>
-		</table>
-	</div>
-</div>
-<!--------------------------------------------------------------------------------
----------------------------默认标本类型下拉Grid数据源-------------------------------------
---------------------------------------------------------------------------------->
-<div id="testItem_gridSampleType" class="tablebox_02" style="width: 180px; height: 211px; display: none;">
-	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr class="tablehead">
-			<td style="width: 15px;">&nbsp;</td>
-			<td style="width: auto;">名称</td>
-		</tr>
-	</table>
-	<div class="tablelist" style="width: 100%; height: 176px;">
-		<!--tablebox_02 tablelist start-->
-		<table cellspacing="0" cellpadding="0" style="width: 200px;">
-			<c:forEach var="sampleType" items="${sampleTypeList}">
-				<tr id="${sampleType.id}">
-					<td style="width: 15px;">&nbsp;</td>
-					<td style="width: auto;">${sampleType.name}</td>
-				</tr>
-			</c:forEach>
-		</table>
-	</div>
-</div>
-<!--------------------------------------------------------------------------------
----------------------------单位Grid数据源--------------------------------------------
---------------------------------------------------------------------------------->
-<div id="testItem_gridUnit" class="tablebox_02" style="width: 180px; height: 211px; display: none;">
-	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr class="tablehead">
-			<td style="width: 15px;">&nbsp;</td>
-			<td style="width: auto;">名称</td>
-		</tr>
-	</table>
-	<div class="tablelist" style="width: 100%; height: 176px;">
-		<!--tablebox_02 tablelist start-->
-		<table cellspacing="0" cellpadding="0" style="width: 200px;">
-			<c:forEach var="units" items="${unitList}">
-				<tr id="${units.id}">
-					<td style="width: 15px;">&nbsp;</td>
-					<td style="width: auto;">${units.name}</td>
-				</tr>
-			</c:forEach>
-		</table>
-	</div>
-</div>
-<!--------------------------------------------------------------------------------
----------------------------结果类型下拉Grid数据源--------------------------------------
---------------------------------------------------------------------------------->
-<div id="testItem_gridResultType" class="tablebox_02" style="width: 180px; height: 211px; display: none;">
-	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr class="tablehead">
-			<td style="width: 15px;">&nbsp;</td>
-			<td style="width: auto;">名称</td>
-		</tr>
-	</table>
-	<div class="tablelist" style="width: 100%; height: 176px;">
-		<!--tablebox_02 tablelist start-->
-		<table cellspacing="0" cellpadding="0" style="width: 200px;">
-			<c:forEach var="resultType" items="${resultTypesList}">
-				<tr id="${resultType.id}">
-					<td style="width: 15px;">&nbsp;</td>
-					<td style="width: auto;"><c:out value="${resultType.name }" escapeXml="true"/></td>
-				</tr>
-			</c:forEach>
-		</table>
-	</div>
 </div>

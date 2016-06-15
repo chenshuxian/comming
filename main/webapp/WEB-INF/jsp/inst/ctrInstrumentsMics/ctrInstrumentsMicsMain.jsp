@@ -8,7 +8,7 @@
 				<div class="search flex-container flex-space-between">
 					<span class="drop-down-label">仪器:</span>
 					<div class="J_ShowPop J_instrumentList md-size" id="${imr}instrumentList">
-						<span class="selected-items" id="instrumentName" >请选择仪器</span><i class="icon icon-angle-down"></i>
+						<span class="selected-items blue" id="instrumentName" >请选择仪器</span><i class="fa fa-angle-down "></i>
 					</div>
 				</div>
 			</div>
@@ -17,7 +17,7 @@
 		<div class="main-content-header">
 			<div class="flex-container flex-space-between">
 				<div class="search flex-container  flex-space-between">
-					<h5 class="tips">细菌列表</h5>
+					<h5>细菌列表</h5>
 				</div>
 				<div class="option icon-group-inline ">
 					<span class="J_addInstrumentGerm lg-size" id="${imr}Add">
@@ -33,11 +33,12 @@
 			</form>
 		</div>
 	</div>
+	<div class="line sm-size"></div>
 	<div class="flex-container layout-vertical main-content-bottom">
 		<div class="main-content-header">
 			<div class="flex-container flex-space-between">
 				<div class="search flex-container  flex-space-between">
-					<h5 class="tips">抗生素列表</h5>
+					<h5>抗生素列表</h5>
 				</div>
 				<div class="option icon-group-inline ">
 					<span class="J_instAntiDescAdd lg-size" id="${imr}Add2">

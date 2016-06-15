@@ -1,29 +1,32 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/jsp/common/pageIds.jsp" %>
 <script src="${ctx}/js/basisDict/specimenType.js?var=${randomVal}"></script>
+
 <div class="flex-container layout-vertical main-content-container" id="${sy}MainContentContainer">
     <div class="main-content-header">
         <div class="flex-container flex-space-between">
             <div class="search flex-container  flex-space-between">
                 <div class="form-control-icon icon-right">
-                    <input type="text" id="${sy}SearchStr" class="form-control" placeholder="搜索内容..."/>
+                    <input type="text" id="${sy}SearchStr" class="form-control searchWidth" style="width:250px;" placeholder="搜索内容..."/>
                     <button class="control-icon text-center" id="${sy}SearchBtn">
                         <i class="icon icon-search"></i>
                     </button>
                 </div>
-                <span class="symbol"></span> <span>状态:</span>
+                <div id="${sy}StatusDiv">
+                    <span class="symbol"></span> <span>状态:</span>
 
-                <div class="drop-down">
-                    <div class="drop-down-selected">
-                        <span class="selected-items" id="${sy}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
-                    </div>
-                    <div class="drop-down-menu">
-                        <ul class="list-unstyled ${sy}-status-selector">
-                            <c:forEach items="${isAbleList}" var="isAble">
-                                <li <c:if test="${isAble.index == 2}">selected="selected" el-value=""</c:if>
-                                    <c:if test="${isAble.index != 2}">selected="selected" el-value="${isAble.index}"</c:if> >${isAble.text}</li>
-                            </c:forEach>
-                        </ul>
+                    <div class="drop-down">
+                        <div class="drop-down-selected">
+                            <span class="selected-items" id="${sy}StatusSpan">所有</span><i class="fa fa-angle-down "></i>
+                        </div>
+                        <div class="drop-down-menu">
+                            <ul class="list-unstyled ${sy}-status-selector">
+                                <c:forEach items="${isAbleList}" var="isAble">
+                                    <li <c:if test="${isAble.index == 2}">selected="selected" el-value=""</c:if>
+                                        <c:if test="${isAble.index != 2}">selected="selected" el-value="${isAble.index}"</c:if> >${isAble.text}</li>
+                                </c:forEach>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -62,4 +65,5 @@
     <!--script src="${ctx}/comming/js/basisDict/newCtrDictCodes.js?var=${randomVal}"></script-->
 
 </div>
+
 

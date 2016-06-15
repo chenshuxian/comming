@@ -8,7 +8,7 @@
             <div class="flex-container flex-space-between">
                 <div class="search flex-container  flex-space-between">
                     <div class="form-control-icon icon-right">
-                        <input type="text" class="form-control" id="${tig}SearchStr" placeholder="搜索内容..."/>
+                        <input type="text" class="form-control searchWidth" id="${tig}SearchStr" style="width:250px;" placeholder="搜索内容..."/>
                         <%--<button class="control-icon text-center" onclick="testItemGroupMain.queryGroupProject();"><i class="icon icon-search"></i></button>--%>
                         <button class="control-icon text-center"  id="${tig}SearchBtn"><i class="icon icon-search"></i></button>
                     </div>
@@ -17,7 +17,7 @@
 
                     <div class="drop-down">
                         <div class="drop-down-selected">
-                            <span class="selected-items" id="${tig}StatusSpan">所有</span> <i class="icon icon-angle-down"></i>
+                            <span class="selected-items" id="${tig}StatusSpan">所有</span> <i class="fa fa-angle-down "></i>
                         </div>
                         <div class="drop-down-menu">
                             <ul class="list-unstyled ${tig}-status-selector">
@@ -56,6 +56,7 @@
             <table id="${tig}List"></table>
         </div>
     </div>
+    <div class="line sm-size"></div>
     <div class="flex-container layout-vertical main-content-bottom">
         <div class="main-content-header">
             <div class="flex-container flex-space-between">
@@ -209,7 +210,7 @@
                             <%--<div class="drop-down">--%>
                                 <%--<div class="drop-down-selected">--%>
                                     <%--<span class="selected-items"  id="${tig}instrument"></span>--%>
-                                    <%--<i class="icon icon-angle-down"></i>--%>
+                                    <%--<i class="fa fa-angle-down "></i>--%>
                                 <%--</div>--%>
                                 <%--<div class="drop-down-menu">--%>
                                     <%--<ul class="list-unstyled"  id="${tig}ul_instrument">--%>
@@ -220,7 +221,7 @@
                                 <%--</div>--%>
                             <%--</div>--%>
                             <%--<div class="form-control-icon icon-right">--%>
-                                <%--<input type="text" class="form-control" id="${tig}instrumentSearch" placeholder="搜索内容...">--%>
+                                <%--<input type="text" class="form-control" id="${tig}instrumentSearch" style="width:250px;" placeholder="搜索内容...">--%>
                                 <%--<button class="control-icon text-center" onclick="testItemGroupMain.queryNotContain();"><i class="icon icon-search"></i></button>--%>
                             <%--</div>--%>
                         <%--</div>--%>

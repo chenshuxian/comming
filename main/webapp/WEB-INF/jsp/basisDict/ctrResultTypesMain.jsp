@@ -7,7 +7,7 @@
 			<div class="flex-container flex-space-between">
 				<div class="search flex-container  flex-space-between">
 					<div class="form-control-icon icon-right">
-						<input type="text" id="${rt}SearchStr" class="form-control" placeholder="搜索内容..."/>
+						<input type="text" id="${rt}SearchStr" class="form-control searchWidth" style="width:250px;" placeholder=""/>
 						<button class="control-icon text-center" id="${rt}SearchBtn">
 							<i class="icon icon-search"></i>
 						</button>
@@ -16,7 +16,7 @@
 
 					<div class="drop-down">
 						<div class="drop-down-selected">
-							<span class="selected-items" id="${rt}StatusSpan">所有</span><i class="icon icon-angle-down"></i>
+							<span class="selected-items" id="${rt}StatusSpan">所有</span><i class="fa fa-angle-down "></i>
 						</div>
 						<div class="drop-down-menu">
 							<ul class="list-unstyled ${rt}-status-selector">
@@ -54,7 +54,7 @@
 			<table id="${rt}List"></table>
 		</div>
 	</div>
-
+	<div class="line sm-size"></div>
 	<div class="flex-container layout-vertical main-content-bottom">
 		<div class="main-content-header">
 			<div class="flex-container flex-space-between" style="float: right">

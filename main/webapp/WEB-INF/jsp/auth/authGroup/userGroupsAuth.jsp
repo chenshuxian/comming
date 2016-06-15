@@ -6,7 +6,7 @@
         <div class="wrapper-header flex-container flex-space-between">
           <h1>授权管理</h1>
         </div>
-        <div class="wrapper-content" style="overflow-y:auto;height: 500px">
+        <div class="wrapper-content" style="overflow-y:auto;height: 420px">
           <ul id="rolePermissionManagerData" class="easyui-tree"></ul>
         </div>
         <input type="hidden" id= "userGroupsId">

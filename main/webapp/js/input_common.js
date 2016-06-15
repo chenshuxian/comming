@@ -854,6 +854,7 @@ var TextCombo=function(param){
 			$("<input/>")
 			.attr("id",textId)
 			.attr("type","text")
+				.attr("autocomplete","off")
 			.width(inputWidth-2)//IE下不会换行
 		)
 		.append(

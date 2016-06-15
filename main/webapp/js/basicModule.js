@@ -10,7 +10,6 @@ var BasicModule,BM;
 
 BM = BasicModule = (function($){
 
-		//BM = Object.create(BasicModule);
 
 		var
 			BM = BasicModule = {},
@@ -20,6 +19,7 @@ BM = BasicModule = (function($){
 			_dataGrid = {},
 			_addUrl,_updateUrl,_exParams,
 			_addNewReload,_updateNewReload,
+
 
 
 			/* 批量删除
@@ -82,7 +82,10 @@ BM = BasicModule = (function($){
 							data: data,
 							success: function (data) {
 								//data = CB.DELSUCC;
-								resolutionData(data);
+								if(data.indexOf("succ|") == 0){
+									data = CB.DELSUCC;
+								}
+								BM.resolutionData(data);
 								dataGrid.datagrid('reload');
 
 							},
@@ -126,7 +129,7 @@ BM = BasicModule = (function($){
 									data = CB.DELSUCC;
 								}
 
-								resolutionData(data);
+								BM.resolutionData(data);
 								dataGrid.datagrid('reload');
 							},
 							error: function () {
@@ -171,6 +174,7 @@ BM = BasicModule = (function($){
 					operatioType = "Disable";
 					newVal = '0';
 				}
+
 				if (val == '0') {
 					confirmMeg = "是否启用当前记录？";
 					operatioType = "Enable";
@@ -190,7 +194,11 @@ BM = BasicModule = (function($){
 							type: METHOD,
 							data: data,
 							success: function (data) {
-								resolutionData(data);
+								BM.resolutionData(data);
+								if(data.indexOf("err|") == 0){
+									dataGrid.datagrid('refreshRow', index);
+									return;
+								}
 								dataGrid.datagrid('updateRow', {
 									index: index,
 									row: {
@@ -208,7 +216,6 @@ BM = BasicModule = (function($){
 							},
 							error: function () {
 								dataGrid.datagrid('refreshRow', index);
-
 							}
 						});
 					} else {
@@ -227,7 +234,6 @@ BM = BasicModule = (function($){
 				//_exParams = params.exParams;
 
 
-
 				$("#editBtn").attr("disabled", true);
 				//是否有过变更
 				if (!formIsDirty("InfoForm") && params.opType != "add") {
@@ -239,7 +245,6 @@ BM = BasicModule = (function($){
 					$("#editBtn").attr("disabled", false);
 					return;
 				}
-				//console.log("dataControl");
 
 				// 检查是否同名
 				if(params.existUrl){
@@ -248,15 +253,27 @@ BM = BasicModule = (function($){
 						url: params.existUrl,
 						type: params.Method,
 						data: params.data,
-						success: params.callback
+						success:function(data){
+							var next = BM.resolutionData(data);
+							if(next){
+								params.callback(data);
+							}
+
+						},error: function(data){
+							console.log(data);
+						}
+
 					});
 
 				}else{
 
-					if(params.opType == "add")
+
+					if(BM.currentEvent == "add"){
 						BasicModule.add();
-					else
+					} else {
 						BasicModule.update();
+					}
+
 				}
 
 			},
@@ -286,7 +303,7 @@ BM = BasicModule = (function($){
 						var err = response.indexOf("err|"),
 							info = response.indexOf("info|");
 
-						resolutionData(response);
+						BM.resolutionData(response);
 
 						if(err != 0 && info != 0) {
 							dataGrid.datagrid(dgAction, rd);
@@ -319,8 +336,14 @@ BM = BasicModule = (function($){
 
 				$('form').form({
 					onSubmit:function(){
-						console.log("onsubmit:"+ $(this).form('validate'));
-						return $(this).form('validate');
+						var check = $(this).form('validate');
+						if (check) {
+							return check;
+						}else {
+							$("#editBtn").attr("disabled",false);
+							return check;
+						}
+
 					},
 					success:successCallback
 				});
@@ -335,14 +358,18 @@ BM = BasicModule = (function($){
 					url = params.url,
 					focusId = params.focusId,
 					dialogWidth = params.popArea,
+					//dialogHeight = params.height,
 					beforeCB = params.BCB,
 					vbFunc = params.vbFunc,
 					obj = this;
 
+				//console.log(dialogHeight);
+
 
 				$("#"+POPDIV).load(url, data, function () {
 					dialog(POPDIV, {width: dialogWidth}, callbackFun);
-					obj[vbFunc]();
+					obj[vbFunc](); //资料验证函数名称
+					//$('input').validatebox('disableValidation');
 					_beforeSubmit(obj,beforeCB);
 					$("#"+focusId).focus();
 				});
@@ -379,6 +406,9 @@ BM = BasicModule = (function($){
 				};
 				return obj;
 			};
+
+
+
 
 	$.extend(BM,{
 
@@ -446,11 +476,16 @@ BM = BasicModule = (function($){
 
 			var tableList = this.tableList,
 				obj = this,
-				_preId = this.preId;
+				_preId = this.preId,
+				searchStr = this.searchHold == undefined ? CB.SEARCHHOLDER.COMMON : this.searchHold;
+
+			//权限验证
+			this.checkAuth(_preId);
 
 			//初始时发状态设为undefined;
 			//this.currentEvent = undefined;
 			newcommonjs.pageInit(_preId);
+
 			$(window).on('resize', function () {
 				newcommonjs.tableAuto(tableList);
 			});
@@ -487,7 +522,7 @@ BM = BasicModule = (function($){
 
 			/* search Btn */
 			$("#" + _preId + "SearchBtn").on("click",function() {
-				obj.searchGrid();;
+				obj.searchGrid();
 			});
 
 
@@ -500,16 +535,19 @@ BM = BasicModule = (function($){
 				obj.deleteBatch();
 			});
 
-			//导行栏收缩时进行DG宽度的设定
-			//$("#site-menu").on("mresize",function(){
-			//	var width =  $(".tabs-container").width(),
-			//		vt = $(".datagrid:visible").find("table.datagrid-f");
-			//
-			//		$(".tabs-panels").width(width);
-			//		$(".tabs-header").width(width);
-			//		vt.datagrid("resize", {width: width - 40});
-			//	//}
-			//});
+			//设置查询栏中的值
+			$("#" + _preId + "SearchStr").attr("placeholder",searchStr);
+			//设定 toolTip
+			$("#" + _preId + "SearchStr").tooltip({
+				content: "<span style='color:#000000'>" + searchStr + "</span>",
+				onShow: function() {
+					$(this).tooltip('tip').css({
+						backgroundColor: '#fff',
+						borderColor: '#666'
+					});
+				}
+			});
+
 
 		},
 
@@ -544,8 +582,9 @@ BM = BasicModule = (function($){
 			DDP = this.getNewParams(params,newParams);
 
 			editParams = {
-				id:rowData.stringId,
-				opType:"edit"
+				id: rowData.stringId,
+				opType: "edit",
+				orgId: this.orgId
 			};
 
 			editParams = _getType.call(this,editParams,rowData);
@@ -577,7 +616,8 @@ BM = BasicModule = (function($){
 
 				showParams = {
 					id:rowData.stringId,
-					opType:'view'
+					opType:'view',
+					orgId: this.orgId
 				};
 
 			showParams = _getType.call(this,showParams,rowData);
@@ -616,7 +656,7 @@ BM = BasicModule = (function($){
 		},
 
 		commonPop: function(newParams){
-
+			console.log("check");
 			var
 				params = _defaultDialogParams.call(this),
 				DDP =  this.getNewParams(params,newParams);
@@ -746,7 +786,6 @@ BM = BasicModule = (function($){
 
 			_dataControl(params);
 
-
 		},
 
 		add: function() {
@@ -790,6 +829,11 @@ BM = BasicModule = (function($){
 					searchObj: searchObj
 				};
 
+			if (newParams) {
+				if(newParams.searchObj.searchStr){
+					newParams.searchObj.searchStr = $.trim(newParams.searchObj.searchStr);
+				}
+			}
 
 			if(newParams)
 				params = this.getNewParams(params,newParams);
@@ -819,20 +863,23 @@ BM = BasicModule = (function($){
 			console.log("successcallback");
 			console.log(data);
 			$("#editBtn").attr("disable", false);
-			if (data.indexOf("confirm|") == 0) {
-				// 有同名
-				showConfirm(data.substring(8), function () {
-					// 确认继续
-					BasicModule.add();
+
+				if (data.indexOf("confirm|") == 0) {
+					// 有同名
+					showConfirm(data.substring(8), function () {
+						// 确认继续
+						BasicModule.add();
+						//_add();
+					})
+				} else {
+					// 无同名，确认继续
+					if(BM.resolutionData(data)){
+						BasicModule.add();
+					}
 					//_add();
-				})
-			} else {
-				// 无同名，确认继续
-				if(BM.resolutionData(data)){
-					BasicModule.add();
 				}
-				//_add();
-			}
+
+
 
 		},
 
@@ -936,33 +983,58 @@ BM = BasicModule = (function($){
 		},
 
 		submit: function() {
-
+			//$("#editBtn").attr("disabled","disabled");
 			$('form').submit(function(event){
 				//避免重复提交
 				console.log("sumbit1");
+				$("#editBtn").attr("disabled", true);
 				event.preventDefault();
 			});
 
 		},
 
 		//将右侧的DATA像左侧移的BUTTON
-		leftShiftBtn: function() {
+		leftShiftBtn: function(localArr) {
 			var rightProjectData = $("#addCheckProjectRight").datagrid('getSelections'),
-				stringId,rowIndex,rows;
+				leftData = $("#addCheckProjectLeft").datagrid('getRows'),
+				leftLen = leftData.length,
+				localArrLen = localArr.length,
+				stringId,rowIndex,rows,rightStringId,leftStringId,addCheck = true;
 			if(rightProjectData.length > 0) {
 
 				makeToArray(rightProjectData).forEach(function (element, index) {
 					var newrow = {
 						index:0,
 						row: element
-					}
+					};
+
 					rowIndex = $("#addCheckProjectRight").datagrid("getRowIndex", element);
-					$("#addCheckProjectRight").datagrid('deleteRow', rowIndex);
-					$("#addCheckProjectLeft").datagrid('insertRow', newrow);
-					stringId = element.idString;
-					if (element.stringId)
-						stringId = element.stringId;
-					BasicModule.addTestItemIds.push(stringId);
+					rightStringId = element.idString;
+					if (element.stringId) {
+						rightStringId = element.stringId;
+					}
+
+					if (leftLen > 0) {
+						makeToArray(leftData).forEach(function (el,index) {
+							if( rightStringId == el.stringId ) {
+								BM.showMessage(element.name + "已存在");
+								addCheck = false;
+							}
+						});
+					}
+					if (addCheck){
+						$("#addCheckProjectRight").datagrid('deleteRow', rowIndex);
+						$("#addCheckProjectLeft").datagrid('insertRow', newrow);
+						if ( BM.addDelCheck(BM.addTestItemIds,rightStringId) ) {
+							BasicModule.addTestItemIds.push(rightStringId);
+						}
+
+						//BM.addDelCheck(BM.delTestItemIds,rightStringId);
+						//本地数资料移除
+						BM.removeLocalArr(localArr,rightStringId);
+
+					}
+
 				});
 				rows = $("#addCheckProjectLeft").datagrid("getRows");
 				$("#containSize").html(rows.length);
@@ -974,11 +1046,12 @@ BM = BasicModule = (function($){
 		},
 
 		//将左侧的DATA像右侧移的BUTTON
-		rightShiftBtn: function() {
+		rightShiftBtn: function(localArr) {
 			var leftProjectData = $("#addCheckProjectLeft").datagrid('getSelections'),
+				localArrLen = localArr.length,
 				stringId,rowIndex,rows;
 			if(leftProjectData.length > 0) {
-				makeToArray(leftProjectData).forEach(function (element, index) {
+				(leftProjectData).forEach(function (element, index) {
 					var newrow = {
 						index:0,
 						row: element
@@ -989,7 +1062,16 @@ BM = BasicModule = (function($){
 					stringId = element.idString;
 					if (element.stringId)
 						stringId = element.stringId;
-					BasicModule.delTestItemIds.push(stringId);
+
+					//BM.addDelCheck(BM.addTestItemIds,stringId);
+					//添加本地数据
+					if(BM.addLocalArr(localArr,stringId)){
+						localArr.push(element);
+					}
+					if ( BM.addDelCheck(BM.delTestItemIds,stringId) ) {
+						BasicModule.delTestItemIds.push(stringId);
+					}
+
 				});
 				rows = $("#addCheckProjectLeft").datagrid("getRows");
 				$("#containSize").html(rows.length);
@@ -997,6 +1079,222 @@ BM = BasicModule = (function($){
 				BM.showMessage('请选择要移除的项目！');
 				return;
 			}
+		},
+
+		//移除本地资料
+		//避免资料已移至左grid，但本地查询时资料还存在
+		removeLocalArr: function (localArr,stringId) {
+			var len = localArr.length;
+			for (var i = 0; i < len; i++) {
+				if(localArr[i]){
+					if (localArr[i].stringId == stringId) {
+						localArr.splice(i,1);
+						break;
+					}
+				}
+			}
+		},
+		//新增本地资料
+		//避免资料已移至右grid，但本地查询时资料找不到资料
+		addLocalArr: function (localArr,stringId) {
+			var len = localArr.length;
+			for (var i = 0; i < len; i++) {
+				if(localArr[i]){
+					if (localArr[i].stringId == stringId) {
+						return false;
+						break;
+					}
+				}
+			}
+			return true;
+		},
+
+		//本地资料查询
+		localQuery: function (rightArr,searchStr,queryItem,combSearch) {
+			var len = rightArr.length,
+				queryArr = [],
+				qLen = queryItem.length;
+
+			//queryArr["source"] = "local";
+
+			//依查询字串找出所需的资料
+			if(combSearch){
+				for (var i = 0;  i < len; i++) {
+					//console.log("input:" + searchStr[0] + "," + searchStr[1]);
+					//console.log(rightArr[i]["codeNo"].indexOf($.trim(searchStr[0])));
+					//console.log(rightArr[i]["name"].indexOf($.trim(searchStr[0])));
+
+						if( (rightArr[i]["codeNo"].indexOf($.trim(searchStr[0])) != -1 ||
+							rightArr[i]["name"].indexOf($.trim(searchStr[0])) != -1) &&
+							rightArr[i]["regionName"].indexOf($.trim(searchStr[1])) != -1){
+							queryArr.push(rightArr[i]);
+						}
+
+				}
+
+			} else {
+				if(searchStr != ""){
+					for (var i = 0;  i < len; i++) {
+						for (var j = 0; j < qLen; j++){
+							if( rightArr[i][queryItem[j]].indexOf($.trim(searchStr)) != -1){
+								queryArr.push(rightArr[i]);
+								break;
+							}
+						}
+					}
+				} else {
+					//若为查询语句为空回传所有资料。
+					queryArr = rightArr;
+				}
+			}
+
+
+			//进行资料过滤，清除在左gird中出现过的资料
+			//queryArr = BM.dataFilter(queryArr);
+			BM.dataFilter(queryArr);
+
+		},
+
+		dataFilter: function (localArr) {
+			var
+				leftData = $("#addCheckProjectLeft").datagrid('getRows'),
+				leftLen = leftData.length,
+				localLen = localArr.length;
+
+			for ( var i = 0; i < leftLen; i++ ) {
+				for ( var j = 0; j < localLen; j++) {
+					if ( leftData[i].stringId == localArr[j].stringId ) {
+						localArr.splice(j,1);
+						localLen = localLen - 1;
+						break;
+					}
+				}
+			}
+
+			localArr["source"] = "local";
+
+			$("#addCheckProjectRight").datagrid("loadData",localArr);
+			//return localArr;
+
+		},
+		//进行id确认，id不可以同时在两个array中出现不然会报错。
+		//增加时remove del，减少时remove add
+		addDelCheck: function (Obj,stringId) {
+			var len = Obj.length,
+				push = true;
+			for (var i = 0; i < len; i++) {
+				if ( Obj[i] == stringId ) {
+					push = false;
+					break
+				}
+			}
+			return push;
+		},
+
+		arrayClean: function() {
+			////页面关闭按钮,解决 KH-826 BUG
+				//console.log("clean");
+				BM.addTestItemIds = [];
+				BM.delTestItemIds = [];
+
+		},
+
+		//机构选择
+		orgSelect: function(_preId, obj) {
+
+			$("#" +_preId + "OrgList").datagrid({
+
+				url: ctx + "/local_inst/instruments/centerOrgPageList",
+				method: 'POST',
+				queryParams: "",
+				height: ($(window).height() < 700) ? 400 : 400,
+				fitColumns : true,
+				striped : true,
+				checkOnSelect : false,
+
+				onClickCell: function(index, field){
+
+					var rows = $("#" + _preId + "OrgList").datagrid("getData").rows[index];
+					obj.orgId = rows.stringId;
+					obj.orgName = rows.name;
+
+					$("#"+ _preId +"OrgPop input[type='radio']:eq("+index+")").attr("checked",true);
+				},
+				loadFilter: function (data) {
+
+					// console.log(data);
+					var params = {total:0,rows:[]};
+					if(data)
+						return data;
+					else
+						return params;
+
+				},
+				columns:
+					[
+						[
+							{
+								field : 'idString',
+								width: 10,
+								formatter : function(value, row, index) {
+									return "<input type='radio' datagrid-row-index='"+index+"' name='instrument'>";
+								}
+							},
+							{title: "编码", field: 'codeNo', width: 50},
+							{title: "中文名称", field: 'name', flex: 1, width: 50},
+							{title: "地区", field: 'regionName', width: 50}
+						]
+					],
+				autoRowHeight: false,
+				pagination: true
+			});
+		},
+
+		comboboxCreate: function(obj,data,validate) {
+			var params = {
+				valueField: "id",
+				textField: "text",
+				height:30,
+				data:data
+			};
+			obj.combobox(params);
+			obj.combobox("setValue",obj.data('val'));
+		},
+
+		//上传档案
+		uploadSave: function() {
+			//var data =  $("#InfoForm").serialize();
+			var fd = new FormData(),
+				id = $("#editId").val(),
+				file = $("#upload").get(0).files[0],
+				obj = this;
+
+			if(!file){
+				BM.showMessage("请选择文件");
+				return;
+			}
+
+			//console.log(file.size);
+			if (file.size > 10485760) {
+				BM.showMessage("档案不可超出 10 MB!");
+				return;
+			}
+
+			fd.append("upload", 1);
+			fd.append("file", file);
+			fd.append("id",id);
+			$.ajax({
+				url: this.uploadUrl,
+				data: fd,
+				type: CB.METHOD,
+				processData: false,
+				contentType: false,
+				success: function(data){
+					BM.resolutionData(data);
+					obj.dataGrid.datagrid("reload");
+					$("#"+CB.POPDIV).hide();
+				}
+			});
 		}
 
 
@@ -1005,3 +1303,10 @@ BM = BasicModule = (function($){
 	return BM;
 
 }(jQuery));
+
+//千万不要删，删了会出现kh-913的bug
+$(function(){
+	$('#site-content').tabs({
+		fit: true
+	});
+});

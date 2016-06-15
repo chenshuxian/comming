@@ -4,7 +4,7 @@
             <div class="wrapper-container">
                 <form id="editForm">
                     <div class="wrapper-header flex-container flex-space-between"><h1>基本信息</h1>
-                        <small class="basic-code" id="regCodeNo">编號: ${formdata.codeNo}</small>
+                        <small class="basic-code" id="regCodeNo">编号: ${formdata.codeNo}</small>
                     </div>
                     <div class="wrapper-content">
                         <div class="flex-container">
@@ -55,12 +55,13 @@
 					<input type="hidden" name="regoldName" id="regoldName" value="${formdata.name}" />
 					<input type="hidden" name="regpid" id="regpid" value="" />
 					<input type="hidden" name="eidtType" id="editType" value="" />
-                </form>
-                <div class="wrapper-footer text-center">
-                    <button id="editBtn" class="btn btn-submit sm-size" onclick="EasyTree.save();">确定</button>
-                    <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
-                </div>
 
+                    <div class="wrapper-footer text-center">
+                        <%--<button id="editBtn" class="btn btn-submit sm-size" onclick="EasyTree.save();">确定</button>--%>
+                        <button id="editBtn" class="btn btn-submit sm-size" onclick="BasicModule.submit()">确定</button>
+                        <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

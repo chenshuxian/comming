@@ -12,13 +12,10 @@
     <div class="wrapper-container">
       <div class="wrapper-header flex-container flex-space-between">
         <h1>选择机构</h1>
-      </div>
-      <div class="wrapper-content">
-        <div class="main-content-header" style="margin-top: 10px;">
-          <div class="flex-container flex-space-between">
+          <div class="flex-space-between">
             <div class="search flex-container  flex-space-between">
               <div class="form-control-icon icon-right">
-                <input type="text" id="${oi}OrgSearchStr" class="form-control"
+                <input type="text" id="${oi}OrgSearchStr" style="width:200px" class="form-control"
                        placeholder="搜索内容..."/>
                 <button class="control-icon text-center" id="${oi}OrgSearchBtn">
                   <i class="icon icon-search"></i>
@@ -26,11 +23,9 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="main-content-body">
+      </div>
+      <div class="wrapper-content">
           <table id="${oi}OrgList"></table>
-        </div>
       </div>
       <div class="wrapper-footer text-center">
         <button id="${oi}selectOrgBtn" class="btn btn-submit sm-size">确定</button>
@@ -44,6 +39,7 @@
   $(function () {
     $("#oiOrgSearchBtn").click(function () {
       //OrgInit.reloadDatagrid();
+      OrgInit.orgId = undefined;
       var params = {
         dataGrid: $("#oiOrgList"),
         searchObj:{
@@ -59,11 +55,13 @@
       if(typeof OrgInit.orgId != "undefined") {
         $("#" + OrgInit.preId + "orgName").html(OrgInit.orgName);
         OrgInit.searchGrid();
+		$("#"+CB.POPDIV).hide();
       } else {
         OrgInit.orgId = OrgInit.tempOrgId;
         OrgInit.orgName = OrgInit.tempOrgName;
+		BM.showMessage("请选择机构");
       }
-      $("#"+CB.POPDIV).hide();
+      
     });
   });
 </script>

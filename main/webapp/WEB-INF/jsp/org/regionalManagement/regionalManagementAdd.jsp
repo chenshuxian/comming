@@ -4,7 +4,7 @@
 		<div class="wrapper-container">
 			<form id="InfoForm">
 				<div class="wrapper-header flex-container flex-space-between"><h1>基本信息</h1>
-					<small class="basic-code">编码: ${codeNo}<span id="spanEditCodeNo"></span></small>
+					<%--<small class="basic-code">编码: ${codeNo}<span id="spanEditCodeNo"></span></small>--%>
 				</div>
 				<div class="wrapper-content">
 					<div class="flex-container flex-space-between flex-space-10">

@@ -3,6 +3,7 @@
 <script>
 	$(document).ready(function () {
 		testItemGroupMain.sampleTypeGrid = new TextCombo(testItemGroupMain.sampleTypeParam);
+		testItemGroupMain.sampleTypeGrid.delay = 1;
 		setTimeout(function() {
 			$("input[name='sampleTypeId']").val("${ctrTestItems.sampleTypeId}");
 			testItemGroupMain.sampleTypeGrid.setText("${ctrTestItems.sampleTypeName}");
@@ -59,9 +60,9 @@
 						<div class="flex-col-6">
 							<div class="flex-container">
 								<div class="form-combo block-show">
-									<div class=" flex-container  flex-space-between">
+									<div class=" flex-container  form-combo">
 										<label for="sampleType"><span class="required-icon">*</span>默认标本类型:</label>
-										<div id="sampleType" style="width: 197px"></div>
+										<div id="sampleType" style="width: 160px"></div>
 									</div>
 								</div>
 							</div>
@@ -91,18 +92,18 @@
 						</div>
 					</div>
 
-					<div class="flex-container flex-space-between flex-space-10">
+					<!-- <div class="flex-container flex-space-between flex-space-10">
 						<div class="flex-col-12">
 							<div class="flex-container">
 								<div class="form-combo block-show">
 									<div class=" flex-container ">
-										<span style="padding-right: 5px;" for="isIndividualStat">按单项统计检测工作量 :</span>
-										<input type="checkbox"  id="isIndividualStat" />
+										<span style="padding: 5px;" for="isIndividualStat">按单项统计检测工作量 :</span>
+										<input style="margin-top: 8px;" type="checkbox"  id="isIndividualStat" />
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> -->
 				</div>
 				<div class="wrapper-footer text-center">
 					<%--<button data-show="addAreaUserSure" onclick="testItemGroupMain.saveGroupProject();" class="btn btn-submit sm-size J_ShowPop">确定</button>--%>
@@ -117,7 +118,7 @@
 <!--------------------------------------------------------------------------------
 ---------------------------默认标本类型下拉Grid数据源-------------------------------------
 --------------------------------------------------------------------------------->
-<div id="gridSampleType" class="tablebox_02" style="width: 180px; height: 211px; display: none;">
+<div id="gridSampleType" class="tablebox_02" style="width: 160px; height: 211px; display: none;">
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr class="tablehead">
 			<td style="width: 15px;">&nbsp;</td>
@@ -126,7 +127,7 @@
 	</table>
 	<div class="tablelist" style="width: 100%; height: 176px;">
 		<!--tablebox_02 tablelist start-->
-		<table cellspacing="0" cellpadding="0" style="width: 200px;">
+		<table cellspacing="0" cellpadding="0" style="width: 160px;">
 			<c:forEach var="sampleType" items="${sampleTypeList}">
 				<tr id="${sampleType.id}">
 					<td style="width: 15px;">&nbsp;</td>

@@ -27,13 +27,13 @@ var newcommonjs = {
     /* 自适应表格 */
     tableAuto: function (tableList) {
 
-        //var width = tableList.parents('.tabs-panels').width() - 40;
+        var width = tableList.parents('.tabs-panels').width() - 40;
         //console.log($(window).width());
-        var width = $(window).width() - 213;
+        //var width = $(window).width() - 213;
+        console.log(tableList.parents('.tabs-panels').height());
         var height = tableList.parents('.tabs-panels').height() - 70;
-        //console.log(tableList);
-        //console.log(width);
-        //console.log(height);
+        //var height = tableList.parents('.panel').height() - 70;
+
         tableList.datagrid('resize', {
             width: width,
             height: height
@@ -64,7 +64,7 @@ var newcommonjs = {
     /* 页面初始化 */
     pageInit: function (preId) {
         $("#" + preId + "SearchStr").focus();
-        this.setSearchConditions(preId,  "", 2, 0);
+        this.setSearchConditions(preId,  "", 0, 0);
     },
 
     /* 设置搜索条件 */

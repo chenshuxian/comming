@@ -1,5 +1,5 @@
 /**
- * 客户仪器信息
+ * 中心仪器信息
  * Created by chenshuxian on 2016/03/24
  */
 
@@ -114,6 +114,8 @@ var Instruments = (function($){
 						//reload DG1,2,3
 						_instRightControl(rowData.typeId,params);
 						$("#instCtrItemList").datagrid("reload",params);
+
+						dataGridM.loadSuccess(this);
 
 					},
 					onClickRow: function(index,row) {

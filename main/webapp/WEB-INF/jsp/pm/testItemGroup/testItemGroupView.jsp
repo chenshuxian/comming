@@ -42,9 +42,9 @@ $(document).ready(function () {
             <span>助记符</span><input type="text" id="fastCode" name="fastCode" value='<c:out value="${testItemGroup.fastCode}"/>' disabled="disabled">
             <span>顺序号</span><input type="text" id="displayOrder" name="displayOrder" value='<c:out value="${testItemGroup.displayOrder}"/>' maxlength="6" placeholder="数字型，最大长度6位" disabled="disabled">
         </div>
-        <div>
+       <%--  <div>
             <span>按单项统计检测工作量</span><input type="checkbox" id="isIndividualStat" name="isIndividualStat" value='0' <c:if test="${testItemGroup.isIndividualStat == 0}">checked="checked"</c:if>/ disabled="disabled">
-        </div>
+        </div> --%>
         <div class="btns">
             <input id = "closeBtn" type="button" value="关 闭" onclick="closeView();">
         </div>

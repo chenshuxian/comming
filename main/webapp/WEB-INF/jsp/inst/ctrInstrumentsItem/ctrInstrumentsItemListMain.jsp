@@ -14,10 +14,10 @@
                         <span>检验方法:</span>
                         <div class="drop-down">
                             <div class="drop-down-selected">
-                                <span class="selected-items" id="StatusSpan">全部</span><i class="icon icon-angle-down"></i>
+                                <span class="selected-items" id="StatusSpan">全部</span><i class="fa fa-angle-down "></i>
                             </div>
                             <div class="drop-down-menu">
-                                <ul class="list-unstyled status-selector">
+                                <ul class="list-unstyled status-selector scrollHeight ulDefaultWidth">
                                     <li class="selected" el-value="">全部</li>
                                     <c:forEach items="${methodList}" var="method">
                                         <li el-value="${method.stringId}" >${method.name}</li>
@@ -54,7 +54,7 @@
             </div>
             <div class="wrapper-footer text-center">
                 <button class="btn btn-submit sm-size" id="addBtn">确定</button>
-                <button class="btn btn-cancel sm-size J_ClosePop">关闭</button>
+                <button class="btn btn-cancel sm-size J_ClosePop" onclick="BM.arrayClean();">关闭</button>
             </div>
             <input type="hidden" id="testMethodId" />
         </div>
@@ -71,11 +71,20 @@
             return flg ? '' : 'selected';
         })
 
-        var statusVal = $(this).attr("el-value");
+        var
+                statusVal = $(this).attr("el-value"),
+                queryItem = ["testMethodName"],
+                searchStr = $(this).html();
 
         $("#testMethodId").val(statusVal);
+        //console.log($(this).html());
+        if (searchStr == "全部") {
+            searchStr = "";
+        }
+        BM.localQuery(CtrInstrItem.rightArr,searchStr,queryItem);
 
-        $("#addCheckProjectRight").datagrid("reload", getSearchObj());
+        //$("#addCheckProjectRight").datagrid("reload", getSearchObj());
+
     });
 
     getSearchObj = function() {
@@ -91,11 +100,16 @@
         return searchObj;
     };
 
-    $("#leftShiftBtn").on('click',BasicModule.leftShiftBtn);
-    $("#rightShiftBtn").on('click',BasicModule.rightShiftBtn);
+    $("#leftShiftBtn").on('click',function () { BasicModule.leftShiftBtn(CtrInstrItem.rightArr); });
+    $("#rightShiftBtn").on('click',function () { BasicModule.rightShiftBtn(CtrInstrItem.rightArr); });
 
     $("#searchBtn2").on('click', function () {
-        $("#addCheckProjectRight").datagrid("reload", getSearchObj());
+        var
+                searchStr = $("#searchStr").val(),
+                queryItem = ["codeNo","name","enName","enShortName","fastCode"];
+
+        BM.localQuery(CtrInstrItem.rightArr,searchStr,queryItem);
+
     });
 
     $("#addBtn").on('click', function () {

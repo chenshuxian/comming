@@ -19,7 +19,7 @@ message = (function($,BM){
                 var data = msg.indexOf("data|");
                 var succ = msg.indexOf("succ|");
                 if (err == 0) {
-                    showMessage(msg.substring(4));
+                    this.showMessage(msg.substring(4));
                     $("#editBtn").attr("disabled", false);
                     return false;
                 }
@@ -33,7 +33,7 @@ message = (function($,BM){
                             showType: 'slide'
                         });
                     } else {
-                        showMessage(mess, "提示信息");
+                        this.showMessage(mess, "提示信息");
                     }
 
                 }
@@ -50,15 +50,15 @@ message = (function($,BM){
                 }
                 return true;
             } else {
-               // showMessage("获取数据异常！");
-            	 return true;
+                // showMessage("获取数据异常！");
+                return true;
             }
 
             return true;
         },
 
         showMessage: function(msg, callback) {
-           // $.messager.alert("提示",msg);
+            // $.messager.alert("提示",msg);
             if (callback) {
                 jAlert(msg, '提示', callback);
             } else {

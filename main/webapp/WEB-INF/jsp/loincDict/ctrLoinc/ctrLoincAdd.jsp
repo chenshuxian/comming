@@ -17,55 +17,55 @@
 				<div class="wrapper-content">
 
 					<div class="flex-container flex-space-between horizontal-group">
-						<div class=" flex-container  block-show">
+						<div class=" flex-container   flex-space-between">
 							<label for="${cl}_component"><span class="required-icon">*</span>受检成份:</label>
-							<div id="${cl}_component" style="width: 353px" ></div>
+							<div id="${cl}_component" style="width: 358px" ></div>
 						</div>
 					</div>
 					<div class="flex-container flex-space-between horizontal-group">
-						<div class=" flex-container  block-show">
+						<div class=" flex-container   flex-space-between">
 							<label for="${cl}_property"><span class="required-icon">*</span>受检属性:</label>
-							<div id="${cl}_property" style="width: 353px" ></div>
+							<div id="${cl}_property" style="width: 358px" ></div>
 						</div>
 					</div>
 					<div class="flex-container flex-space-between horizontal-group">
-						<div class=" flex-container  block-show">
+						<div class=" flex-container   flex-space-between">
 							<label for="${cl}_testMethod"><span class="required-icon">*</span>检验方法:</label>
-							<div id="${cl}_testMethod" style="width: 353px"></div>
+							<div id="${cl}_testMethod" style="width: 358px"></div>
 						</div>
 					</div>
 					<div class="flex-container flex-space-between horizontal-group">
-						<div class=" flex-container  block-show">
+						<div class=" flex-container   flex-space-between">
 							<label for="${cl}_typeOfScale"><span class="required-icon">*</span>样本标识:</label>
-							<div id="${cl}_typeOfScale" style="width: 353px"></div>
+							<div id="${cl}_typeOfScale" style="width: 358px"></div>
 						</div>
 					</div>
 					<div class="flex-container flex-space-between horizontal-group">
-						<div class=" flex-container  block-show">
+						<div class=" flex-container   flex-space-between">
 							<label for="${cl}_timeAspect"><span class="required-icon">*</span>时间特征:</label>
-							<div id="${cl}_timeAspect" style="width: 353px"></div>
+							<div id="${cl}_timeAspect" style="width: 358px"></div>
 						</div>
 					</div>
 					<div class="flex-container flex-space-between horizontal-group">
-						<div class=" flex-container  block-show">
+						<div class=" flex-container   flex-space-between">
 							<label for="${cl}_sampleType"><span class="required-icon">*</span>标本类型:</label>
-							<div id="${cl}_sampleType" style="width: 353px"></div>
+							<div id="${cl}_sampleType" style="width: 358px"></div>
 						</div>
 					</div>
 					<div class="flex-container flex-space-between horizontal-group">
-						<div class=" flex-container  block-show">
+						<div class=" flex-container block-show  flex-space-between">
 							<label for="${cl}_fastCode">助记符:</label>
 							<input type="text" class="form-control block-show" id="${cl}_fastCode" name="fastCode" value='<c:out value="${crtTestItemDto.fastCode}" escapeXml="true"/>' maxlength="9">
 						</div>
 					</div>
 					<div class="flex-container flex-space-between horizontal-group">
-						<div class=" flex-container  block-show">
+						<div class=" flex-container  block-show flex-space-between">
 							<label for="${cl}_displayOrder">顺序号:</label>
 							<input type="text" class="form-control block-show"  id="displayOrder" name="displayOrder"  value="${displayOrder}" maxlength="6">
 						</div>
 					</div>
 					<div class="flex-container flex-space-between horizontal-group">
-						<div class=" flex-container flex-vertical-center  block-show">
+						<div class=" flex-container flex-vertical-center  block-show flex-space-between">
 							<label for="${cl}_memo">备注: </label>
 							<textarea class="form-control block-show" id="${cl}_memo" name="memo"></textarea>
 						</div>
@@ -89,6 +89,139 @@
 			<input id="${cl}_timeAspectId" name="timeAspectId" type="hidden" value="<c:out value="${crtTestItemDto.name}" escapeXml="true"/>">
 			<input id="${cl}_sampleTypeId" name="sampleTypeId" type="hidden" value="<c:out value="${crtTestItemDto.name}" escapeXml="true"/>">
 		</div>
+	</div>
+</div>
+
+<!--------------------------------------------------------------------------------
+---------------------------检验方法下拉Grid数据源------------------------------------
+--------------------------------------------------------------------------------->
+<div id="${cl}_gridTestMethod" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr class="tablehead">
+			<td style="width: 15px;">&nbsp;</td>
+			<td style="width: auto;">名称</td>
+		</tr>
+	</table>
+	<div class="tablelist" style="width: 100%; height: 176px;">
+		<!--tablebox_02 tablelist start-->
+		<table cellspacing="0" cellpadding="0" style="width: 353px;">
+			<c:forEach var="testMethod" items="${testMethodList}">
+				<tr id="${testMethod.id}">
+					<td style="width: 15px;">&nbsp;</td>
+					<td style="width: auto;">${testMethod.name}</td>
+				</tr>
+			</c:forEach>
+		</table>
+	</div>
+</div>
+<!--------------------------------------------------------------------------------
+---------------------------受检成份下拉Grid数据源--------------------------------------
+--------------------------------------------------------------------------------->
+<div id="${cl}_gridComponent" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr class="tablehead">
+			<td style="width: 15px;">&nbsp;</td>
+			<td style="width: auto;">名称</td>
+		</tr>
+	</table>
+	<div class="tablelist" style="width: 100%; height: 176px;">
+		<!--tablebox_02 tablelist start-->
+		<table cellspacing="0" cellpadding="0" style="width: 353px;">
+			<c:forEach var="discipline" items="${componentList}">
+				<tr id="${discipline.id}">
+					<td style="width: 15px;">&nbsp;</td>
+					<td style="width: auto;"><c:out value="${discipline.name }" escapeXml="true"/></td>
+				</tr>
+			</c:forEach>
+		</table>
+	</div>
+</div>
+<!--------------------------------------------------------------------------------
+---------------------------默认标本类型下拉Grid数据源-------------------------------------
+--------------------------------------------------------------------------------->
+<div id="${cl}_gridSampleType" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr class="tablehead">
+			<td style="width: 15px;">&nbsp;</td>
+			<td style="width: auto;">名称</td>
+		</tr>
+	</table>
+	<div class="tablelist" style="width: 100%; height: 176px;">
+		<!--tablebox_02 tablelist start-->
+		<table cellspacing="0" cellpadding="0" style="width: 353px;">
+			<c:forEach var="sampleType" items="${sampleTypeList}">
+				<tr id="${sampleType.id}">
+					<td style="width: 15px;">&nbsp;</td>
+					<td style="width: auto;">${sampleType.name}</td>
+				</tr>
+			</c:forEach>
+		</table>
+	</div>
+</div>
+<!--------------------------------------------------------------------------------
+---------------------------受检属性Grid数据源--------------------------------------------
+--------------------------------------------------------------------------------->
+<div id="${cl}_gridProperty" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr class="tablehead">
+			<td style="width: 15px;">&nbsp;</td>
+			<td style="width: auto;">名称</td>
+		</tr>
+	</table>
+	<div class="tablelist" style="width: 100%; height: 176px;">
+		<!--tablebox_02 tablelist start-->
+		<table cellspacing="0" cellpadding="0" style="width: 353px;">
+			<c:forEach var="units" items="${propertyList}">
+				<tr id="${units.id}">
+					<td style="width: 15px;">&nbsp;</td>
+					<td style="width: auto;">${units.name}</td>
+				</tr>
+			</c:forEach>
+		</table>
+	</div>
+</div>
+<!--------------------------------------------------------------------------------
+---------------------------样本类型下拉Grid数据源--------------------------------------
+--------------------------------------------------------------------------------->
+<div id="${cl}_gridTypeOfScale" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr class="tablehead">
+			<td style="width: 15px;">&nbsp;</td>
+			<td style="width: auto;">名称</td>
+		</tr>
+	</table>
+	<div class="tablelist" style="width: 100%; height: 176px;">
+		<!--tablebox_02 tablelist start-->
+		<table cellspacing="0" cellpadding="0" style="width: 353px;">
+			<c:forEach var="resultType" items="${typeOfScaleList}">
+				<tr id="${resultType.id}">
+					<td style="width: 15px;">&nbsp;</td>
+					<td style="width: auto;"><c:out value="${resultType.name }" escapeXml="true"/></td>
+				</tr>
+			</c:forEach>
+		</table>
+	</div>
+</div>
+<!--------------------------------------------------------------------------------
+---------------------------时间特征下拉Grid数据源--------------------------------------
+--------------------------------------------------------------------------------->
+<div id="${cl}_gridTimeAspect" class="tablebox_02" style="width: 353px; height: 211px; display: none;">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tr class="tablehead">
+			<td style="width: 15px;">&nbsp;</td>
+			<td style="width: auto;">名称</td>
+		</tr>
+	</table>
+	<div class="tablelist" style="width: 100%; height: 176px;">
+		<!--tablebox_02 tablelist start-->
+		<table cellspacing="0" cellpadding="0" style="width: 353px;">
+			<c:forEach var="resultType" items="${timeAspectList}">
+				<tr id="${resultType.id}">
+					<td style="width: 15px;">&nbsp;</td>
+					<td style="width: auto;"><c:out value="${resultType.name }" escapeXml="true"/></td>
+				</tr>
+			</c:forEach>
+		</table>
 	</div>
 </div>
 
