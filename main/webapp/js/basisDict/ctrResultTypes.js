@@ -441,6 +441,7 @@ function deleteResultType(id) {
 				id : id
 			},
 			success : function(data) {
+				console.log(data)
 				resolutionData(data);
 				pageQuery();// 刷新list
 			},

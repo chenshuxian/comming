@@ -128,6 +128,17 @@ CB = ConstBox = (function($){
             UNIT: "单位",
             DISCIPLINE: "医学专业",
             RESULTTYPE: "结果类型"
+        },
+
+        COMBOINPUT: {
+            SAMPLE: "sampleTypeId",
+            TESTMETHOD: "testMethodId",
+            DISCIPLINE: "disciplineId",
+            RESULT: "resultTypeId",
+            COMPON: "componentId",
+            TESTPROP: "testPropertyId",
+            TYPESCALE: "typeOfScaleId",
+            TIMEASP: "timeAspectId"
         }
 
 

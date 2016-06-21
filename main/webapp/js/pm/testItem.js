@@ -452,7 +452,7 @@ var TestItem = (function($){
 }(jQuery));
 
 $(function(){
-    var _preId = CB.PREID.TT;
+    var _preId = CB.PREID.TI;
     TestItem.init();
 
     $("#" + _preId + "Add").unbind();

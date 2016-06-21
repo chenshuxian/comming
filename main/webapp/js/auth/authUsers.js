@@ -196,10 +196,10 @@ var AuthUsers = (function($){
 
         showUserGroupDialog: function (index,rowData) {
 
-            if (rowData.status == 1) {
-                BM.showMessage("状态启用，不允许分配角色");
-                return;
-            }
+            //if (rowData.status == 1) {
+            //    BM.showMessage("状态启用，不允许分配角色");
+            //    return;
+            //}
 
             var params = {
                 data: {id: rowData.id, opType: "userGroup"},

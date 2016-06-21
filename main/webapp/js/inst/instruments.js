@@ -221,6 +221,7 @@ var Inst = (function($){
                 typeId: rowData.typeName,
                 sampleTypeDiv: rowData.sampleTypeName,
                 reportTemplateDiv: rowData.reportTemplateName,
+                sampleTypeId: rowData.sampleTypeSId,
                 orgTypeId: Inst.orgTypeId,
                 id:rowData.stringId,
                 codeNo:rowData.codeNo,
@@ -230,10 +231,12 @@ var Inst = (function($){
             $("#typeId").val(rowData.typeId);
             $("#spanEditCodeNo").html(rowData.codeNo);
             newcommonjs.oldName = rowData.name;
+            Inst.sampleTypeGrid.setText(rowData.sampleTypeName);
+            //setTimeout(function() {
+            //    Inst.sampleTypeGrid.setValue(rowData.sampleTypeSId, rowData.sampleTypeName);
+            //},500);
             setTimeout(function() {
-                //alert(rowData.sampleTypeName);
-                Inst.sampleTypeGrid.setValue(rowData.sampleTypeSId, rowData.sampleTypeName);
-                //Inst.reportTemplateGrid.setValue(rowData.reportTemplateSId, rowData.reportTemplateName);
+                BM.comboGridEdit(Inst.sampleTypeGrid,CB.COMBOINPUT.SAMPLE,rowData.sampleTypeSId);
             },500);
 
         },

@@ -436,14 +436,17 @@ ColCollect = (function($){
 					var str = "";
 					var rowData = JSON.stringify(row);
 					rowData = _replaceBlank(rowData);
-						if (authStr.indexOf("edit") != -1) {
-							str += _helpTip + "<a class='icon icon-page' onclick=" + obj + ".editRow(" + rowData + ")></a>" + _editStr ;
-						}
+						if(row.userNo != "admindc"){
 
-						str += _helpTip + "<a class=\"icon icon-setting\" onclick=" + obj + ".resetPassword(" + index + "," + rowData + ")></a>" + _resetStr ;
+							if (authStr.indexOf("edit") != -1) {
+								str += _helpTip + "<a class='icon icon-page' onclick=" + obj + ".editRow(" + rowData + ")></a>" + _editStr ;
+							}
 
-						if (authStr.indexOf("dist") != -1) {
-							str += _helpTip + "<a class=\"icon icon-setting J_ShowPop J_DataRest\" onclick=" + obj + ".showUserGroupDialog(" + index + "," + rowData + ")></a>" + _roleStr;
+							str += _helpTip + "<a class=\"icon icon-setting\" onclick=" + obj + ".resetPassword(" + index + "," + rowData + ")></a>" + _resetStr ;
+
+							if (authStr.indexOf("dist") != -1) {
+								str += _helpTip + "<a class=\"icon icon-setting J_ShowPop J_DataRest\" onclick=" + obj + ".showUserGroupDialog(" + index + "," + rowData + ")></a>" + _roleStr;
+							}
 						}
 
 					return str;
@@ -1048,18 +1051,20 @@ ColCollect = (function($){
 							rowData = _replaceBlank(rowData);
 							//授权权限
 							//if(UserGroupsMain.offerAuthrized){
-							if (authStr.indexOf("admit") != -1) {
-								str  += _helpTip + "<a class='icon icon-setting'  onclick="+ obj +".authorization(" + rowData + ")></a><i class='helpers-content'>授权</i></span>";
-							}
-							//编辑权限
-							//if(UserGroupsMain.editAuthrized){
-							if (authStr.indexOf("edit") != -1) {
-								str += _helpTip + "<a class='icon icon-page' onclick="+ obj +".editRow(" + rowData + ")></a>" + _editStr ;
-							}
-							//删除权限
-							//if(UserGroupsMain.deleteAuthrized){
-							if(authStr.indexOf("del") != -1) {
-								str += _helpTip + "<a class=\"icon-trash\" onclick="+ obj +".deleteRow(" + index + "," + rowData + ")></a>" + _delStr;
+							if (row.codeNo != "10000") {
+								if (authStr.indexOf("admit") != -1) {
+									str  += _helpTip + "<a class='icon icon-setting'  onclick="+ obj +".authorization(" + rowData + ")></a><i class='helpers-content'>授权</i></span>";
+								}
+								//编辑权限
+								//if(UserGroupsMain.editAuthrized){
+								if (authStr.indexOf("edit") != -1) {
+									str += _helpTip + "<a class='icon icon-page' onclick="+ obj +".editRow(" + rowData + ")></a>" + _editStr ;
+								}
+								//删除权限
+								//if(UserGroupsMain.deleteAuthrized){
+								if(authStr.indexOf("del") != -1) {
+									str += _helpTip + "<a class=\"icon-trash\" onclick="+ obj +".deleteRow(" + index + "," + rowData + ")></a>" + _delStr;
+								}
 							}
                             return str;
 						}

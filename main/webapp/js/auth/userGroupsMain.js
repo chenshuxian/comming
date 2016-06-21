@@ -133,10 +133,10 @@ var UserGroupsMain  = (function($){
 				id = rowData.stringId;
 
 			//console.log("授权:" + status);
-			if (status != 0) {
-				BM.showMessage("当前选中记录状态为可用，不允许授权！");
-				return;
-			}
+			//if (status != 0) {
+			//	BM.showMessage("当前选中记录状态为可用，不允许授权！");
+			//	return;
+			//}
 
 			var params = {
 				data: {opType: "auth"},

@@ -64,7 +64,8 @@ var CtrInstrItem = (function($){
 				} else {
 					CtrInstrItem.haveRow = true;
 					dataGridM.firstRow.call(this);
-					_reloadDG2(rows[0]);
+					_reloadDG2(rows[0].testItemId);
+
 				}
 
 				dataGridM.loadSuccess(this);
@@ -73,10 +74,10 @@ var CtrInstrItem = (function($){
 			onClickRow: function(index, row) {
 				dataGridM.clickRow.call(this, index,row);
 				CtrInstrItem.haveRow = true;
-				_reloadDG2(row);
+				_reloadDG2(row.testItemId);
 			},
 			onCheck: function(index, row) {
-				_reloadDG2(row);
+				_reloadDG2(row.testItemId);
 			},
 			onCellEdit: function(index,field,value){
 				//记录最后一个编辑时的index
@@ -142,8 +143,8 @@ var CtrInstrItem = (function($){
 
 	var
 		//重新载入 dataGrid2
-		_reloadDG2 = function(row) {
-			CtrInstrItem.testItemId = row.testItemId;
+		_reloadDG2 = function(id) {
+			CtrInstrItem.testItemId = id;
 			CtrInstrItem.exParams =  {
 				testItemId: CtrInstrItem.testItemId,
 				instrumentId: CtrInstrItem.instrumentId
@@ -341,14 +342,7 @@ var CtrInstrItem = (function($){
 			//依年龄单位分别计算
 			//1岁、2月、3周、4天、5小时、6
 			var ageType = $("#ageUnitId").val(),
-				//max = parseInt($("#ageMax").val()),
-				//min = parseInt($("#ageMin").val()),
-				//ys = parseInt( $("#yearStart").val()),
-				//ms = parseInt($("#monthStart").val()),
-				//ds = parseInt($("#dayStart").val()),
-				//ye = parseInt($("#yearEnd").val()),
-				//me = parseInt($("#monthEnd").val()),
-				//de = parseInt($("#dayEnd").val()),
+
 				max = +$("#ageMax").val(),
 				min = +$("#ageMin").val(),
 				ys = +$("#yearStart").val(),
@@ -512,7 +506,7 @@ var CtrInstrItem = (function($){
 		/*END url 定義*/
 		dataGrid:_dataGrid,
 		instrumentId: null,
-		testItemId: null,
+		testItemId: "null",
 		instrumentName: null,
 		loadContainList: _loadContainList,
 		loadNoContainList: _loadNoContainList,
@@ -688,6 +682,16 @@ var CtrInstrItem = (function($){
 			this.editDictCode(params);
 		},
 
+		deleteRow: function(index,rowData) {
+			var
+				params = {
+					url: this.delUrl,
+					dataGrid: this.dataGrid2
+				};
+
+			BM.deleteRow(index,rowData,params);
+		},
+
 		addSuccess: function(data) {
 
 			$("#editBtn").attr("disabled", false);
@@ -761,4 +765,5 @@ $(function(){
 		CtrInstrItem.addPop(params);
 
 	});
+
 });

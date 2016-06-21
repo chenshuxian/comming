@@ -106,7 +106,13 @@ var CtrLoinc = (function($){
 
         editCallBack: function() {
 
-            var rowData = BasicModule.rowData;
+            var rowData = BasicModule.rowData,
+                comId = rowData.componentIdString,
+                testPropId = rowData.testPropertyIdString,
+                testMeId = rowData.testMethodIdString,
+                typeSId = rowData.typeOfScaleIdString,
+                timeId = rowData.timeAspectIdString,
+                samId = rowData.sampleTypeIdString;
             //console.log(CtrLoinc.rowData);
             $("#InfoForm").form("load", {
                 id: rowData.stringId,
@@ -133,6 +139,18 @@ var CtrLoinc = (function($){
             CtrLoinc.typeOfScaleGrid.setText(rowData.typeOfScaleName);
             CtrLoinc.timeAspectGrid.setText(rowData.timeAspectName);
             CtrLoinc.sampleTypeGrid.setText(rowData.sampleTypeName);
+
+            setTimeout(function(){
+                BM.comboGridEdit(CtrLoinc.sampleTypeGrid,CB.COMBOINPUT.SAMPLE,samId);
+                BM.comboGridEdit(CtrLoinc.componentGrid,CB.COMBOINPUT.COMPON,comId);
+                BM.comboGridEdit(CtrLoinc.testPropertyGrid,CB.COMBOINPUT.TESTPROP,testPropId);
+                BM.comboGridEdit(CtrLoinc.typeOfScaleGrid,CB.COMBOINPUT.TYPESCALE,typeSId);
+                BM.comboGridEdit(CtrLoinc.testMethodGrid,CB.COMBOINPUT.TESTMETHOD,testMeId);
+                BM.comboGridEdit(CtrLoinc.timeAspectGrid,CB.COMBOINPUT.TIMEASP,timeId);
+            },500);
+
+
+
 
         },
 

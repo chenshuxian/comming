@@ -54,19 +54,6 @@ var CusTemplate = (function($){
 
         _gridObj = dataGridM.init(_dgParams),
 
-        //_upObj = {
-        //    loadFilter: function(data){
-        //        console.log(data);
-        //        var params = {total:0,rows:[]};
-        //        if(data)
-        //            return data;
-        //        else
-        //            return params;
-        //    }
-        //};
-
-        //_gridObj = $.extend({},_gridObj,_upObj);
-
     // render dataGrid
          _dataGrid = _tableList.datagrid(_gridObj),
 

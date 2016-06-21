@@ -10,6 +10,8 @@ validate = (function($,BM){
 	//var validate = {};
 	//var _init = function(){
 
+	var _stopStr = "(此选择已被停用)";
+
 	//验证清单建立
 	$.extend($.fn.validatebox.defaults.rules,{
 		symbol:{
@@ -352,27 +354,47 @@ validate = (function($,BM){
 		//进行comboGrid 验证
 		comboGrid: function(obj,msg,parentId,req) {
 			var
-				checkNull = obj.getText(),
+				comboText = obj.getText(),
 				require = true;
 
-			if(req == 0 && checkNull == "") {
+			if(req == 0 && comboText == "") {
 				require = false
 			}
 
 
 			if (require) {	//必填
-				if (checkNull == "") {
+				if (comboText == "") {
 					BM.showMessage(msg +"数据为空,，请从下拉列表中添加！",function(){
 						$("#" + parentId + "input:text").select();
 					});
 					return true;
 				}
-				if(!obj.checkValue(false)){
+				if(!obj.checkValue(false) && obj.comboEditText != comboText){
 					BM.showMessage(msg +"数据不存在,，请从下拉列表中添加！",function(){
 						$("#" + parentId + "input:text").select();
 					});
 					return true;
 				}
+			}
+
+		},
+
+		/*comboGrid 编辑时进行验证
+		当编辑打开始进行栏位值验证
+		如为空代表已被停用，但是需要可以进行存储
+		若进来后有做修正动作时，且值有更动时，就需进行重新验证。
+		运用于 editCallBack 中
+		*/
+		comboGridEdit: function(obj,inputName,id) {
+
+			var comboText = obj.getText(),
+				setText = comboText + _stopStr;
+
+			//已被停用
+			if(!obj.checkValue(false) && comboText != "") {
+				obj.setText(setText);
+				$("input[name='" + inputName + "']").val(id);
+				obj.comboEditText = setText;
 			}
 
 		}

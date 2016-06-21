@@ -298,8 +298,8 @@ var testItemGroupMain = (function($){
 
         //默认标本类型Grid
         sampleTypeParam: {					//下拉Grid参数,所有参数均为必填
-            div_id:"sampleType", 				//对应表单DIV的id
-            grid_id:"gridSampleType", 			//对应数据源Grid的Id
+            div_id:"tg_sampleType", 				//对应表单DIV的id
+            grid_id:"tg_gridSampleType", 			//对应数据源Grid的Id
             name:"sampleTypeId",				//在表单中对应的提交name
             columnShow:1,						//将要在文本框中显示的列序号
             width : 100, 					    //Combo的宽度
